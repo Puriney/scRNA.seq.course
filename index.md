@@ -1,0 +1,35 @@
+--- 
+title: "Analysis of single-cell RNA-seq data"
+author: "Vladimir Kiselev, Tallulah Andrews and Martin Hemberg"
+date: "2016-03-24"
+knit: "bookdown::render_book"
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+always_allow_html: yes
+---
+
+# About the course
+
+Recent technological advances have made it possible to obtain genome-wide transcriptome data from single cells using high-throughput sequencing (scRNA-seq). Even though scRNA-seq makes it possible to address problems that are intractable with bulk RNA-seq data, analysing scRNA-seq is also more challenging.
+
+In this course we will be surveying the existing problems as well as the available computational and statistical frameworks available for the analysis of scRNA-seq.
+
+## Registration  
+
+<a href="http://training.csx.cam.ac.uk/bioinformatics/event/1626698" target="blank">http://training.csx.cam.ac.uk/bioinformatics/event/1626698</a>
+
+## GitHub
+<a href="https://github.com/hemberg-lab/scRNA.seq.course" target="blank">https://github.com/hemberg-lab/scRNA.seq.course</a>
+
+## License
+<a href="http://creativecommons.org/licenses/by-nd/4.0" target="blank">Creative Commons Attribution-NoDerivatives 4.0 International License</a>
+
+## Prerequisites
+
+The course is intended for those who have basic familiarity with Unix and the R scripting language.
+
+We will also assume that you are familiar with mapping and analysing bulk RNA-seq data as well as with the commonly available computational tools.
+
+We recommend attending the [Introduction to RNA-seq and ChIP-seq data analysis](http://training.csx.cam.ac.uk/bioinformatics/event/1544785) or the [Analysis of high-throughput sequencing data with Bioconductor](http://training.csx.cam.ac.uk/bioinformatics/event/1614561) before attending this course.

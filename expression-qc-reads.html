@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-03-23">
+<meta name="date" content="2016-03-24">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -240,10 +240,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="expression-qc-reads" class="section level1">
 <h1><span class="header-section-number">7</span> Expression QC (Reads)</h1>
 <table>
-<caption><span id="tab:unnamed-chunk-42">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
 <tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">NA19098.r1.A01</th>
 <th align="right">NA19098.r1.A02</th>
 <th align="right">NA19098.r1.A03</th>
@@ -251,37 +251,37 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </thead>
 <tbody>
 <tr class="odd">
-<td>ENSG00000237683</td>
+<td align="left">ENSG00000237683</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187634</td>
+<td align="left">ENSG00000187634</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td>ENSG00000188976</td>
+<td align="left">ENSG00000188976</td>
 <td align="right">57</td>
 <td align="right">140</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187961</td>
+<td align="left">ENSG00000187961</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td>ENSG00000187583</td>
+<td align="left">ENSG00000187583</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187642</td>
+<td align="left">ENSG00000187642</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -289,7 +289,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 <table>
-<caption><span id="tab:unnamed-chunk-42">Table 7.2: </span>A table of the first 6 rows of the anno table.</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 7.2: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
 <tr class="header">
 <th align="left">individual</th>
@@ -345,19 +345,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span id="fig:dropout-overview-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/dropout-overview-reads-1.png" alt="Dropout rate vs mean expression" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="Dropout rate vs mean expression" width="90%" />
 <p class="caption">
 Figure 7.1: Dropout rate vs mean expression
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:top50-gene-expr-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/top50-gene-expr-reads-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">
 Figure 7.2: Number of total counts consumed by the top 50 expressed genes
 </p>
 </div>
 <table>
-<caption><span id="tab:unnamed-chunk-48">Table 7.3: </span>The number of genes removed by gene filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 7.3: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_genes</th>
@@ -376,13 +376,13 @@ Figure 7.2: Number of total counts consumed by the top 50 expressed genes
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span id="fig:total-counts-hist-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/total-counts-hist-reads-1.png" alt="Histogram of library sizes for all cells" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="Histogram of library sizes for all cells" width="90%" />
 <p class="caption">
 Figure 7.3: Histogram of library sizes for all cells
 </p>
 </div>
 <table>
-<caption><span id="tab:unnamed-chunk-50">Table 7.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-11">Table 7.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_total_counts</th>
@@ -401,13 +401,13 @@ Figure 7.3: Histogram of library sizes for all cells
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span id="fig:total-features-hist-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/total-features-hist-reads-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
 <p class="caption">
 Figure 7.4: Histogram of the number of detected genes in all cells
 </p>
 </div>
 <table>
-<caption><span id="tab:unnamed-chunk-52">Table 7.5: </span>The number of cells removed by total features filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-13">Table 7.5: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_expr_features</th>
@@ -426,25 +426,25 @@ Figure 7.4: Histogram of the number of detected genes in all cells
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span id="fig:total-features-vs-counts-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
 <p class="caption">
 Figure 7.5: Library size vs number of detected genes
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:mt-vs-counts-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/mt-vs-counts-reads-1.png" alt="Percentage of counts in MT genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="Percentage of counts in MT genes" width="90%" />
 <p class="caption">
 Figure 7.6: Percentage of counts in MT genes
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:ercc-vs-counts-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/ercc-vs-counts-reads-1.png" alt="Percentage of counts in ERCCs" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="Percentage of counts in ERCCs" width="90%" />
 <p class="caption">
 Figure 7.7: Percentage of counts in ERCCs
 </p>
 </div>
 <table>
-<caption><span id="tab:unnamed-chunk-54">Table 7.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-15">Table 7.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_ERCC</th>
@@ -463,7 +463,7 @@ Figure 7.7: Percentage of counts in ERCCs
 </tbody>
 </table>
 <table>
-<caption><span id="tab:unnamed-chunk-56">Table 7.7: </span>The number of cells removed by MT filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-17">Table 7.7: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_MT</th>
@@ -482,7 +482,7 @@ Figure 7.7: Percentage of counts in ERCCs
 </tbody>
 </table>
 <table>
-<caption><span id="tab:unnamed-chunk-58">Table 7.8: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-19">Table 7.8: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -623,13 +623,13 @@ Figure 7.7: Percentage of counts in ERCCs
 ## total_features                      -0.4655518   0.2219694
 ## log10_counts_endogenous_features    -0.5223679   0.1278782</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:auto-cell-filt-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/auto-cell-filt-reads-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
 <p class="caption">
 Figure 7.8: PCA plot used for automatic detection of cell outliers
 </p>
 </div>
 <table>
-<caption><span id="tab:unnamed-chunk-59">Table 7.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-20">Table 7.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -648,7 +648,7 @@ Figure 7.8: PCA plot used for automatic detection of cell outliers
 </tbody>
 </table>
 <table>
-<caption><span id="tab:unnamed-chunk-61">Table 7.10: </span>The number of cells removed by manual filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-22">Table 7.10: </span>The number of cells removed by manual filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -667,7 +667,7 @@ Figure 7.8: PCA plot used for automatic detection of cell outliers
 </tbody>
 </table>
 <div class="figure" style="text-align: center"><span id="fig:cell-filt-comp-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/cell-filt-comp-reads-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">
 Figure 7.9: Comparison of the default, automatic and manual cell filters
 </p>

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-03-23">
+<meta name="date" content="2016-03-24">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -261,10 +261,10 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-18">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
 <tr class="header">
-<th></th>
+<th align="left"></th>
 <th align="right">NA19098.r1.A01</th>
 <th align="right">NA19098.r1.A02</th>
 <th align="right">NA19098.r1.A03</th>
@@ -272,37 +272,37 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 </thead>
 <tbody>
 <tr class="odd">
-<td>ENSG00000237683</td>
+<td align="left">ENSG00000237683</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187634</td>
+<td align="left">ENSG00000187634</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td>ENSG00000188976</td>
+<td align="left">ENSG00000188976</td>
 <td align="right">3</td>
 <td align="right">6</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187961</td>
+<td align="left">ENSG00000187961</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td>ENSG00000187583</td>
+<td align="left">ENSG00000187583</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td>ENSG00000187642</td>
+<td align="left">ENSG00000187642</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -314,7 +314,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-18">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
 <tr class="header">
 <th align="left">individual</th>
@@ -400,7 +400,7 @@ mt &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quo
 <p>First, one can look at the gene expression frequency versus mean expression level to assess the effects of technical dropout in the dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotQC</span>(umi, <span class="dt">type =</span> <span class="st">&quot;exprs-freq-vs-mean&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:dropout-overview"></span>
-<img src="scRNA-seq-course_files/figure-html/dropout-overview-1.png" alt="Dropout rate vs mean expression" width="90%" />
+<img src="05-exprs-qc_files/figure-html/dropout-overview-1.png" alt="Dropout rate vs mean expression" width="90%" />
 <p class="caption">
 Figure 6.1: Dropout rate vs mean expression
 </p>
@@ -412,7 +412,7 @@ Figure 6.1: Dropout rate vs mean expression
 <p>One can also look at the number of reads consumed by the top 50 expressed genes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotQC</span>(umi, <span class="dt">type =</span> <span class="st">&quot;highest-expression&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:top50-gene-expr"></span>
-<img src="scRNA-seq-course_files/figure-html/top50-gene-expr-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
+<img src="05-exprs-qc_files/figure-html/top50-gene-expr-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">
 Figure 6.2: Number of total counts consumed by the top 50 expressed genes
 </p>
@@ -432,7 +432,7 @@ Figure 6.2: Number of total counts consumed by the top 50 expressed genes
     <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-24">Table 6.3: </span>The number of genes removed by gene filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 6.3: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_genes</th>
@@ -462,7 +462,7 @@ Figure 6.2: Number of total counts consumed by the top 50 expressed genes
     <span class="dt">breaks =</span> <span class="dv">100</span>
 )</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:total-counts-hist"></span>
-<img src="scRNA-seq-course_files/figure-html/total-counts-hist-1.png" alt="Histogram of library sizes for all cells" width="90%" />
+<img src="05-exprs-qc_files/figure-html/total-counts-hist-1.png" alt="Histogram of library sizes for all cells" width="90%" />
 <p class="caption">
 Figure 6.3: Histogram of library sizes for all cells
 </p>
@@ -478,7 +478,7 @@ Figure 6.3: Histogram of library sizes for all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total counts filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-26">Table 6.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-11">Table 6.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_total_counts</th>
@@ -505,7 +505,7 @@ Figure 6.3: Histogram of library sizes for all cells
     <span class="dt">breaks =</span> <span class="dv">100</span>
 )</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:total-features-hist"></span>
-<img src="scRNA-seq-course_files/figure-html/total-features-hist-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
+<img src="05-exprs-qc_files/figure-html/total-features-hist-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
 <p class="caption">
 Figure 6.4: Histogram of the number of detected genes in all cells
 </p>
@@ -519,7 +519,7 @@ Figure 6.4: Histogram of the number of detected genes in all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total features filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-28">Table 6.5: </span>The number of cells removed by total features filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-13">Table 6.5: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_expr_features</th>
@@ -546,7 +546,7 @@ Figure 6.4: Histogram of the number of detected genes in all cells
     <span class="kw">aes</span>(<span class="dt">x =</span> total_features, <span class="dt">y =</span> <span class="kw">log10</span>(total_counts), <span class="dt">colour =</span> batch)
 )</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:total-features-vs-counts"></span>
-<img src="scRNA-seq-course_files/figure-html/total-features-vs-counts-1.png" alt="Library size vs number of detected genes" width="90%" />
+<img src="05-exprs-qc_files/figure-html/total-features-vs-counts-1.png" alt="Library size vs number of detected genes" width="90%" />
 <p class="caption">
 Figure 6.5: Library size vs number of detected genes
 </p>
@@ -562,7 +562,7 @@ Figure 6.5: Library size vs number of detected genes
                <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)
 )</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:mt-vs-counts"></span>
-<img src="scRNA-seq-course_files/figure-html/mt-vs-counts-1.png" alt="Percentage of counts in MT genes" width="90%" />
+<img src="05-exprs-qc_files/figure-html/mt-vs-counts-1.png" alt="Percentage of counts in MT genes" width="90%" />
 <p class="caption">
 Figure 6.6: Percentage of counts in MT genes
 </p>
@@ -574,7 +574,7 @@ Figure 6.6: Percentage of counts in MT genes
                <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)
 )</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ercc-vs-counts"></span>
-<img src="scRNA-seq-course_files/figure-html/ercc-vs-counts-1.png" alt="Percentage of counts in ERCCs" width="90%" />
+<img src="05-exprs-qc_files/figure-html/ercc-vs-counts-1.png" alt="Percentage of counts in ERCCs" width="90%" />
 <p class="caption">
 Figure 6.7: Percentage of counts in ERCCs
 </p>
@@ -591,7 +591,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by ERCC filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-30">Table 6.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-15">Table 6.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_ERCC</th>
@@ -617,7 +617,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by MT filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-32">Table 6.7: </span>The number of cells removed by MT filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-17">Table 6.7: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_MT</th>
@@ -667,7 +667,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-34">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-19">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -792,7 +792,7 @@ scater::<span class="kw">plotPCA</span>(umi,
 ## total_features                      -0.5016681   0.2936705
 ## log10_counts_endogenous_features    -0.5081855   0.2757918</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:auto-cell-filt"></span>
-<img src="scRNA-seq-course_files/figure-html/auto-cell-filt-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
+<img src="05-exprs-qc_files/figure-html/auto-cell-filt-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
 <p class="caption">
 Figure 6.8: PCA plot used for automatic detection of cell outliers
 </p>
@@ -804,7 +804,7 @@ Figure 6.8: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-35">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-20">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -843,7 +843,7 @@ Figure 6.8: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-37">Table 6.10: </span>The number of cells removed by manual filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-22">Table 6.10: </span>The number of cells removed by manual filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -879,7 +879,7 @@ limma::<span class="kw">vennDiagram</span>(venn.diag,
                    <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;Default&quot;</span>, <span class="st">&quot;Automatic&quot;</span>, <span class="st">&quot;Manual&quot;</span>),
                    <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:cell-filt-comp"></span>
-<img src="scRNA-seq-course_files/figure-html/cell-filt-comp-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
+<img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">
 Figure 6.9: Comparison of the default, automatic and manual cell filters
 </p>

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-03-23">
+<meta name="date" content="2016-03-24">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -250,6 +250,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Ideally, we would like to compensate for all of these differences and biases when comparing data from two different experiments.</p>
 <p>Many methods to correct for library size have been developped for bulk RNA-seq and can be equally applied to scRNA-seq (eg. UQ, SF, CPM, RPKM, FPKM, TPM). Some quantification methods (eg. <a href="http://cole-trapnell-lab.github.io/cufflinks/">Cufflinks</a>, <a href="http://deweylab.github.io/RSEM/">RSEM</a>) incorporated library size when determining gene expression estimates thus do not require this normalization.</p>
 <p>We will continue to work with the Blischak data that was used in the previous chapter and show how scater makes it easy to perform different types of size-factor normalizations.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(knitr)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+opts_chunk$<span class="kw">set</span>(<span class="dt">out.width=</span><span class="st">&#39;90%&#39;</span>, <span class="dt">fig.align =</span> <span class="st">&#39;center&#39;</span>)
+umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
+umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
 <div id="normalisations" class="section level2">
 <h2><span class="header-section-number">12.3</span> Normalisations</h2>
@@ -260,8 +267,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Let’s compare all these methods.</p>
 <div id="raw" class="section level3">
 <h3><span class="header-section-number">12.3.1</span> Raw</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-raw"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-raw-1.png" alt="PCA plot of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-raw-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
 Figure 12.1: PCA plot of the blischak data
 </p>
@@ -269,8 +281,13 @@ Figure 12.1: PCA plot of the blischak data
 </div>
 <div id="cpm" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> CPM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;cpm&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-cpm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-cpm-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-cpm-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
 <p class="caption">
 Figure 12.2: PCA plot of the blischak data after CPM normalisation
 </p>
@@ -278,8 +295,13 @@ Figure 12.2: PCA plot of the blischak data after CPM normalisation
 </div>
 <div id="log2cpm" class="section level3">
 <h3><span class="header-section-number">12.3.3</span> log2(CPM)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;exprs&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-log2-cpm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-log2-cpm-1.png" alt="PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-log2-cpm-1.png" alt="PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
 <p class="caption">
 Figure 12.3: PCA plot of the blischak data after log2(CPM) normalisation
 </p>
@@ -287,8 +309,18 @@ Figure 12.3: PCA plot of the blischak data after log2(CPM) normalisation
 </div>
 <div id="tmm" class="section level3">
 <h3><span class="header-section-number">12.3.4</span> TMM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
+<span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
+                           <span class="dt">method =</span> <span class="st">&quot;TMM&quot;</span>,
+                           <span class="dt">feature_set =</span> endog_genes,
+                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tmm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-tmm-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-tmm-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
 <p class="caption">
 Figure 12.4: PCA plot of the blischak data after TMM normalisation
 </p>
@@ -296,8 +328,18 @@ Figure 12.4: PCA plot of the blischak data after TMM normalisation
 </div>
 <div id="rle" class="section level3">
 <h3><span class="header-section-number">12.3.5</span> RLE</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
+<span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
+                           <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>,
+                           <span class="dt">feature_set =</span> endog_genes,
+                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-rle"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
 Figure 12.5: PCA plot of the blischak data after RLE normalisation
 </p>
@@ -305,8 +347,19 @@ Figure 12.5: PCA plot of the blischak data after RLE normalisation
 </div>
 <div id="upperquantile" class="section level3">
 <h3><span class="header-section-number">12.3.6</span> Upperquantile</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
+<span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
+                           <span class="dt">method =</span> <span class="st">&quot;upperquartile&quot;</span>, 
+                           <span class="dt">feature_set =</span> endog_genes,
+                           <span class="dt">p =</span> <span class="fl">0.99</span>,
+                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-uq"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-uq-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">
 Figure 12.6: PCA plot of the blischak data after UQ normalisation
 </p>
@@ -327,12 +380,60 @@ Figure 12.6: PCA plot of the blischak data after UQ normalisation
 </ul>
 <p>These methods are not applicable to our dataset since the end of the transcript which contains the UMI was preferentially sequenced. Furthermore in general these should only be calculated using appropriate quantification software from aligned BAM files not from read counts since often only a portion of the entire gene/transcript is sequenced, not the entire length.</p>
 <p>However, here we show how these normalisations can be calculated using scater. First, we need to find the effective transcript length in Kilobases. However, our dataset containes only gene IDs, therefore we will be using the gene lengths instead of transcripts. scater uses the <a href="https://bioconductor.org/packages/release/bioc/html/biomaRt.html">biomaRt</a> package, which allows one to annotate genes by other attributes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-
+<span class="st">    </span>scater::<span class="kw">getBMFeatureAnnos</span>(umi.qc,
+                              <span class="dt">filters =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>, 
+                              <span class="dt">attributes =</span> <span class="kw">c</span>(<span class="st">&quot;ensembl_gene_id&quot;</span>,
+                                             <span class="st">&quot;hgnc_symbol&quot;</span>,
+                                             <span class="st">&quot;chromosome_name&quot;</span>,
+                                             <span class="st">&quot;start_position&quot;</span>,
+                                             <span class="st">&quot;end_position&quot;</span>), 
+                              <span class="dt">feature_symbol =</span> <span class="st">&quot;hgnc_symbol&quot;</span>,
+                              <span class="dt">feature_id =</span> <span class="st">&quot;ensembl_gene_id&quot;</span>,
+                              <span class="dt">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>, 
+                              <span class="dt">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>,
+                              <span class="dt">host =</span> <span class="st">&quot;www.ensembl.org&quot;</span>)
+
+<span class="co"># If you have mouse data, change the arguments based on this example:</span>
+<span class="co"># scater::getBMFeatureAnnos(object,</span>
+<span class="co">#                           filters = &quot;ensembl_transcript_id&quot;, </span>
+<span class="co">#                           attributes = c(&quot;ensembl_transcript_id&quot;, </span>
+<span class="co">#                                        &quot;ensembl_gene_id&quot;, &quot;mgi_symbol&quot;, </span>
+<span class="co">#                                        &quot;chromosome_name&quot;,</span>
+<span class="co">#                                        &quot;transcript_biotype&quot;,</span>
+<span class="co">#                                        &quot;transcript_start&quot;,</span>
+<span class="co">#                                        &quot;transcript_end&quot;, </span>
+<span class="co">#                                        &quot;transcript_count&quot;), </span>
+<span class="co">#                           feature_symbol = &quot;mgi_symbol&quot;,</span>
+<span class="co">#                           feature_id = &quot;ensembl_gene_id&quot;,</span>
+<span class="co">#                           biomart = &quot;ENSEMBL_MART_ENSEMBL&quot;, </span>
+<span class="co">#                           dataset = &quot;mmusculus_gene_ensembl&quot;,</span>
+<span class="co">#                           host = &quot;www.ensembl.org&quot;) </span></code></pre></div>
 <p>Some of the genes were not annotated, therefore we filter them out:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc.ann &lt;-
+<span class="st">    </span>umi.qc[!<span class="kw">is.na</span>(<span class="kw">fData</span>(umi.qc)$ensembl_gene_id), ]</code></pre></div>
 <p>Now we compute the effective gene length in Kilobases by using the <code>end_position</code> and <code>start_position</code> fields:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eff_length &lt;-<span class="st"> </span><span class="kw">abs</span>(<span class="kw">fData</span>(umi.qc.ann)$end_position -
+<span class="st">                      </span><span class="kw">fData</span>(umi.qc.ann)$start_position)/<span class="dv">1000</span></code></pre></div>
 <p>Now we are ready to perform the normalisations:</p>
-Plot the results as a PCA plot:
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tpm</span>(umi.qc.ann) &lt;-
+<span class="st">    </span><span class="kw">calculateTPM</span>(
+        umi.qc.ann,
+        eff_length
+    )
+<span class="kw">fpkm</span>(umi.qc.ann) &lt;-
+<span class="st">    </span><span class="kw">calculateFPKM</span>(
+        umi.qc.ann,
+        eff_length
+    )</code></pre></div>
+<p>Plot the results as a PCA plot:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc.ann,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;fpkm&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
 Figure 12.7: PCA plot of the blischak data after FPKM normalisation
 </p>
@@ -344,8 +445,13 @@ Figure 12.7: PCA plot of the blischak data after FPKM normalisation
 <p>Now after the normalisation we are ready to visualise the gene expression:</p>
 <div id="raw-1" class="section level3">
 <h3><span class="header-section-number">12.6.1</span> Raw</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-raw"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-raw-1.png" alt="Expression of the first 6 genes of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-raw-1.png" alt="Expression of the first 6 genes of the blischak data" width="90%" />
 <p class="caption">
 Figure 12.8: Expression of the first 6 genes of the blischak data
 </p>
@@ -353,8 +459,13 @@ Figure 12.8: Expression of the first 6 genes of the blischak data
 </div>
 <div id="cpm-1" class="section level3">
 <h3><span class="header-section-number">12.6.2</span> CPM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;cpm&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-cpm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
 <p class="caption">
 Figure 12.9: Expression of the first 6 genes of the blischak data after the CPM normalisation
 </p>
@@ -362,8 +473,13 @@ Figure 12.9: Expression of the first 6 genes of the blischak data after the CPM 
 </div>
 <div id="log2cpm-1" class="section level3">
 <h3><span class="header-section-number">12.6.3</span> log2(CPM)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;exprs&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-log2-cpm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-log2-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-log2-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
 <p class="caption">
 Figure 12.10: Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation
 </p>
@@ -371,8 +487,13 @@ Figure 12.10: Expression of the first 6 genes of the blischak data after the log
 </div>
 <div id="upperquantile-1" class="section level3">
 <h3><span class="header-section-number">12.6.4</span> Upperquantile</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-UQ"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-UQ-1.png" alt="Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-UQ-1.png" alt="Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
 <p class="caption">
 Figure 12.11: Expression of the first 6 genes of the blischak data after the UQ normalisation
 </p>
@@ -380,8 +501,13 @@ Figure 12.11: Expression of the first 6 genes of the blischak data after the UQ 
 </div>
 <div id="fpkm" class="section level3">
 <h3><span class="header-section-number">12.6.5</span> FPKM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;fpkm&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-fpkm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-fpkm-1.png" alt="Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-fpkm-1.png" alt="Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
 <p class="caption">
 Figure 12.12: Expression of the first 6 genes of the blischak data after the FPKM normalisation
 </p>
@@ -389,8 +515,13 @@ Figure 12.12: Expression of the first 6 genes of the blischak data after the FPK
 </div>
 <div id="tpm" class="section level3">
 <h3><span class="header-section-number">12.6.6</span> TPM</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
+                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
+                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
+                       <span class="dt">exprs_values =</span> <span class="st">&quot;tpm&quot;</span>,
+                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-tpm"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-tpm-1.png" alt="Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-genes-tpm-1.png" alt="Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
 <p class="caption">
 Figure 12.13: Expression of the first 6 genes of the blischak data after the TPM normalisation
 </p>

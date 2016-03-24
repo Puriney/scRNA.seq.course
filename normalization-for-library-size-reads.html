@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-03-23">
+<meta name="date" content="2016-03-24">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -240,79 +240,79 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="normalization-for-library-size-reads" class="section level1">
 <h1><span class="header-section-number">13</span> Normalization for library size (Reads)</h1>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-raw-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-raw-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-raw-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
 Figure 13.1: PCA plot of the blischak data
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-cpm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-cpm-reads-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-cpm-reads-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
 <p class="caption">
 Figure 13.2: PCA plot of the blischak data after CPM normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-log2-cpm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-log2-cpm-reads-1.png" alt="PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-log2-cpm-reads-1.png" alt="PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
 <p class="caption">
 Figure 13.3: PCA plot of the blischak data after log2(CPM) normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tmm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-tmm-reads-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-tmm-reads-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
 <p class="caption">
 Figure 13.4: PCA plot of the blischak data after TMM normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-rle-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
 Figure 13.5: PCA plot of the blischak data after RLE normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-uq-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-uq-reads-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-uq-reads-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">
 Figure 13.6: PCA plot of the blischak data after UQ normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-pca-fpkm-reads-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-fpkm-reads-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
 Figure 13.7: PCA plot of the blischak data after FPKM normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-raw-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-raw-reads-1.png" alt="Expression of the first 6 genes of the blischak data" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-raw-reads-1.png" alt="Expression of the first 6 genes of the blischak data" width="90%" />
 <p class="caption">
 Figure 13.8: Expression of the first 6 genes of the blischak data
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-cpm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-cpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-cpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
 <p class="caption">
 Figure 13.9: Expression of the first 6 genes of the blischak data after the CPM normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-log2-cpm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-log2-cpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-log2-cpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
 <p class="caption">
 Figure 13.10: Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-UQ-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-UQ-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-UQ-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
 <p class="caption">
 Figure 13.11: Expression of the first 6 genes of the blischak data after the UQ normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-fpkm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-fpkm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-fpkm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
 <p class="caption">
 Figure 13.12: Expression of the first 6 genes of the blischak data after the FPKM normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-genes-tpm-reads"></span>
-<img src="scRNA-seq-course_files/figure-html/norm-genes-tpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
+<img src="12-exprs-norm-reads_files/figure-html/norm-genes-tpm-reads-1.png" alt="Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
 <p class="caption">
 Figure 13.13: Expression of the first 6 genes of the blischak data after the TPM normalisation
 </p>
