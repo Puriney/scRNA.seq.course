@@ -13,13 +13,13 @@ Several methods (eg. [BASiCS](https://github.com/catavallejos/BASiCS), [scLVM](h
 We will demonstrate some of the methods starting from the simplest one proposed by [Brennecke et al.](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html), which identifies genes with significant variation above technical noise (ERCCs).
 
 
+
+
 ```r
 library(scRNA.seq.funcs)
 library(RUVSeq)
 library(scater, quietly = TRUE)
-library(knitr)
 options(stringsAsFactors = FALSE)
-opts_chunk$set(out.width='90%', fig.align = 'center')
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
 endog_genes <- !fData(umi.qc)$is_feature_control

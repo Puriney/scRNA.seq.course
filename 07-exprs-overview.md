@@ -9,11 +9,11 @@ knit: bookdown::preview_chapter
 Here we will continue to work with the filtered __blischak__ dataset produced in the previous chapter. We will look at what happened to the expression matrix after the quality control step.
 
 
+
+
 ```r
 library(scater, quietly = TRUE)
-library(knitr)
 options(stringsAsFactors = FALSE)
-opts_chunk$set(out.width='90%', fig.align = 'center')
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
 endog_genes <- !fData(umi.qc)$is_feature_control

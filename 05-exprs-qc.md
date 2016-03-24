@@ -30,11 +30,11 @@ To illustrate how one can standardise the analysis of scRNA-seq data we will als
 ## Blischak dataset
 
 
+
+
 ```r
 library(scater, quietly = TRUE)
-library(knitr)
 options(stringsAsFactors = FALSE)
-opts_chunk$set(out.width='90%', fig.align = 'center')
 ```
 
 Load the data and annotations:
@@ -55,7 +55,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows and 3 columns of the molecules table.
+Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.
 
                    NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
 ----------------  ---------------  ---------------  ---------------
@@ -75,7 +75,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows of the anno table.
+Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows of the anno table.
 
 individual   replicate   well   batch        sample_id      
 -----------  ----------  -----  -----------  ---------------
@@ -182,7 +182,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-9)The number of genes removed by gene filter (FALSE)
+Table: (\#tab:unnamed-chunk-10)The number of genes removed by gene filter (FALSE)
 
 filter_genes     Freq
 -------------  ------
@@ -237,7 +237,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-11)The number of cells removed by total counts filter (FALSE)
+Table: (\#tab:unnamed-chunk-12)The number of cells removed by total counts filter (FALSE)
 
 filter_by_total_counts    Freq
 -----------------------  -----
@@ -289,7 +289,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-13)The number of cells removed by total features filter (FALSE)
+Table: (\#tab:unnamed-chunk-14)The number of cells removed by total features filter (FALSE)
 
 filter_by_expr_features    Freq
 ------------------------  -----
@@ -375,7 +375,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-15)The number of cells removed by ERCC filter (FALSE)
+Table: (\#tab:unnamed-chunk-16)The number of cells removed by ERCC filter (FALSE)
 
 filter_by_ERCC    Freq
 ---------------  -----
@@ -397,7 +397,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-17)The number of cells removed by MT filter (FALSE)
+Table: (\#tab:unnamed-chunk-18)The number of cells removed by MT filter (FALSE)
 
 filter_by_MT    Freq
 -------------  -----
@@ -446,7 +446,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-19)The number of cells removed by default filter (FALSE)
+Table: (\#tab:unnamed-chunk-20)The number of cells removed by default filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -585,7 +585,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-20)The number of cells removed by automatic filter (FALSE)
+Table: (\#tab:unnamed-chunk-21)The number of cells removed by automatic filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -622,7 +622,7 @@ knitr::kable(
 
 
 
-Table: (\#tab:unnamed-chunk-22)The number of cells removed by manual filter (FALSE)
+Table: (\#tab:unnamed-chunk-23)The number of cells removed by manual filter (FALSE)
 
 Var1     Freq
 ------  -----

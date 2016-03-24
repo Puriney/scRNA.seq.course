@@ -245,9 +245,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The <a href="https://github.com/davismcc/scater">scater</a> package provides a set of methods specifically for quality control of experimental and explanatory variables.</p>
 <p>Here we will continue to work with the Blischak data that was used in the previous chapter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-<span class="kw">library</span>(knitr)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-opts_chunk$<span class="kw">set</span>(<span class="dt">out.width=</span><span class="st">&#39;90%&#39;</span>, <span class="dt">fig.align =</span> <span class="st">&#39;center&#39;</span>)
 umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>

@@ -12,11 +12,12 @@ The [scater](https://github.com/davismcc/scater) package provides a set of metho
 
 Here we will continue to work with the Blischak data that was used in the previous chapter.
 
+
+
+
 ```r
 library(scater, quietly = TRUE)
-library(knitr)
 options(stringsAsFactors = FALSE)
-opts_chunk$set(out.width='90%', fig.align = 'center')
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
 endog_genes <- !fData(umi.qc)$is_feature_control

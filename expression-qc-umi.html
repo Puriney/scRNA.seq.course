@@ -249,9 +249,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="blischak-dataset" class="section level2">
 <h2><span class="header-section-number">6.2</span> Blischak dataset</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-<span class="kw">library</span>(knitr)
-<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-opts_chunk$<span class="kw">set</span>(<span class="dt">out.width=</span><span class="st">&#39;90%&#39;</span>, <span class="dt">fig.align =</span> <span class="st">&#39;center&#39;</span>)</code></pre></div>
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Load the data and annotations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">molecules &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/molecules.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
 anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/annotation.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -261,7 +259,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -314,7 +312,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
 <tr class="header">
 <th align="left">individual</th>
@@ -432,7 +430,7 @@ Figure 6.2: Number of total counts consumed by the top 50 expressed genes
     <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-9">Table 6.3: </span>The number of genes removed by gene filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-10">Table 6.3: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_genes</th>
@@ -478,7 +476,7 @@ Figure 6.3: Histogram of library sizes for all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total counts filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-11">Table 6.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-12">Table 6.4: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_total_counts</th>
@@ -519,7 +517,7 @@ Figure 6.4: Histogram of the number of detected genes in all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total features filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-13">Table 6.5: </span>The number of cells removed by total features filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-14">Table 6.5: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_expr_features</th>
@@ -591,7 +589,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by ERCC filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-15">Table 6.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-16">Table 6.6: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_ERCC</th>
@@ -617,7 +615,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by MT filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-17">Table 6.7: </span>The number of cells removed by MT filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-18">Table 6.7: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_MT</th>
@@ -667,7 +665,7 @@ Figure 6.7: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-19">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-20">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -804,7 +802,7 @@ Figure 6.8: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-20">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-21">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -843,7 +841,7 @@ Figure 6.8: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-22">Table 6.10: </span>The number of cells removed by manual filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-23">Table 6.10: </span>The number of cells removed by manual filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
