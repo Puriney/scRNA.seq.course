@@ -8,133 +8,208 @@ knit: bookdown::preview_chapter
 
 
 
+\begin{table}
 
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows and 3 columns of the molecules table.
+\caption{(\#tab:unnamed-chunk-3)A table of the first 6 rows and 3 columns of the molecules table.}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & NA19098.r1.A01 & NA19098.r1.A02 & NA19098.r1.A03\\
+\midrule
+ENSG00000237683 & 0 & 0 & 0\\
+ENSG00000187634 & 0 & 0 & 0\\
+ENSG00000188976 & 57 & 140 & 1\\
+ENSG00000187961 & 0 & 0 & 0\\
+ENSG00000187583 & 0 & 0 & 0\\
+ENSG00000187642 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-                   NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
-----------------  ---------------  ---------------  ---------------
-ENSG00000237683                 0                0                0
-ENSG00000187634                 0                0                0
-ENSG00000188976                57              140                1
-ENSG00000187961                 0                0                0
-ENSG00000187583                 0                0                0
-ENSG00000187642                 0                0                0
+\begin{table}
 
-
-
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows of the anno table.
-
-individual   replicate   well   batch        sample_id      
------------  ----------  -----  -----------  ---------------
-NA19098      r1          A01    NA19098.r1   NA19098.r1.A01 
-NA19098      r1          A02    NA19098.r1   NA19098.r1.A02 
-NA19098      r1          A03    NA19098.r1   NA19098.r1.A03 
-NA19098      r1          A04    NA19098.r1   NA19098.r1.A04 
-NA19098      r1          A05    NA19098.r1   NA19098.r1.A05 
-NA19098      r1          A06    NA19098.r1   NA19098.r1.A06 
-
-
-
-
-
-
-
-
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="(\#fig:dropout-overview-reads)Dropout rate vs mean expression" width="90%" />
-<p class="caption">(\#fig:dropout-overview-reads)Dropout rate vs mean expression</p>
-</div>
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
-<p class="caption">(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes</p>
-</div>
+\caption{(\#tab:unnamed-chunk-3)A table of the first 6 rows of the anno table.}
+\centering
+\begin{tabular}[t]{lllll}
+\toprule
+individual & replicate & well & batch & sample\_id\\
+\midrule
+NA19098 & r1 & A01 & NA19098.r1 & NA19098.r1.A01\\
+NA19098 & r1 & A02 & NA19098.r1 & NA19098.r1.A02\\
+NA19098 & r1 & A03 & NA19098.r1 & NA19098.r1.A03\\
+NA19098 & r1 & A04 & NA19098.r1 & NA19098.r1.A04\\
+NA19098 & r1 & A05 & NA19098.r1 & NA19098.r1.A05\\
+NA19098 & r1 & A06 & NA19098.r1 & NA19098.r1.A06\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 
 
-Table: (\#tab:unnamed-chunk-9)The number of genes removed by gene filter (FALSE)
-
-filter_genes     Freq
--------------  ------
-FALSE            2445
-TRUE            16281
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells" width="90%" />
-<p class="caption">(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells</p>
-</div>
 
 
 
 
-Table: (\#tab:unnamed-chunk-11)The number of cells removed by total counts filter (FALSE)
 
-filter_by_total_counts    Freq
------------------------  -----
-FALSE                      180
-TRUE                       684
+\begin{figure}
 
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="(\#fig:total-features-hist-reads)Histogram of the number of detected genes in all cells" width="90%" />
-<p class="caption">(\#fig:total-features-hist-reads)Histogram of the number of detected genes in all cells</p>
-</div>
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/dropout-overview-reads-1} 
 
+}
 
+\caption{Dropout rate vs mean expression}(\#fig:dropout-overview-reads)
+\end{figure}
 
+\begin{figure}
 
-Table: (\#tab:unnamed-chunk-13)The number of cells removed by total features filter (FALSE)
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/top50-gene-expr-reads-1} 
 
-filter_by_expr_features    Freq
-------------------------  -----
-FALSE                        16
-TRUE                        848
+}
 
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes" width="90%" />
-<p class="caption">(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes</p>
-</div>
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes" width="90%" />
-<p class="caption">(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes</p>
-</div>
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="(\#fig:ercc-vs-counts-reads)Percentage of counts in ERCCs" width="90%" />
-<p class="caption">(\#fig:ercc-vs-counts-reads)Percentage of counts in ERCCs</p>
-</div>
+\caption{Number of total counts consumed by the top 50 expressed genes}(\#fig:top50-gene-expr-reads)
+\end{figure}
 
 
 
+\begin{table}
 
-Table: (\#tab:unnamed-chunk-15)The number of cells removed by ERCC filter (FALSE)
+\caption{(\#tab:unnamed-chunk-9)The number of genes removed by gene filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_genes & Freq\\
+\midrule
+FALSE & 2445\\
+TRUE & 16281\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-filter_by_ERCC    Freq
----------------  -----
-FALSE              103
-TRUE               761
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/total-counts-hist-reads-1} 
+
+}
+
+\caption{Histogram of library sizes for all cells}(\#fig:total-counts-hist-reads)
+\end{figure}
 
 
 
+\begin{table}
 
-Table: (\#tab:unnamed-chunk-17)The number of cells removed by MT filter (FALSE)
+\caption{(\#tab:unnamed-chunk-11)The number of cells removed by total counts filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_total\_counts & Freq\\
+\midrule
+FALSE & 180\\
+TRUE & 684\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-filter_by_MT    Freq
--------------  -----
-FALSE             18
-TRUE             846
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/total-features-hist-reads-1} 
+
+}
+
+\caption{Histogram of the number of detected genes in all cells}(\#fig:total-features-hist-reads)
+\end{figure}
 
 
 
+\begin{table}
 
-Table: (\#tab:unnamed-chunk-19)The number of cells removed by default filter (FALSE)
+\caption{(\#tab:unnamed-chunk-13)The number of cells removed by total features filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_expr\_features & Freq\\
+\midrule
+FALSE & 16\\
+TRUE & 848\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-Var1     Freq
-------  -----
-FALSE      37
-TRUE      827
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/total-features-vs-counts-reads-1} 
+
+}
+
+\caption{Library size vs number of detected genes}(\#fig:total-features-vs-counts-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/mt-vs-counts-reads-1} 
+
+}
+
+\caption{Percentage of counts in MT genes}(\#fig:mt-vs-counts-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/ercc-vs-counts-reads-1} 
+
+}
+
+\caption{Percentage of counts in ERCCs}(\#fig:ercc-vs-counts-reads)
+\end{figure}
+
+
+
+\begin{table}
+
+\caption{(\#tab:unnamed-chunk-15)The number of cells removed by ERCC filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_ERCC & Freq\\
+\midrule
+FALSE & 103\\
+TRUE & 761\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}
+
+\caption{(\#tab:unnamed-chunk-17)The number of cells removed by MT filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_MT & Freq\\
+\midrule
+FALSE & 18\\
+TRUE & 846\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}
+
+\caption{(\#tab:unnamed-chunk-19)The number of cells removed by default filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 37\\
+TRUE & 827\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
 ```
@@ -251,44 +326,72 @@ TRUE      827
 ## NA19239.r3.H02
 ## NA19239.r3.H10
 ## Variables with highest loadings for PC1 and PC2:
-## 
-##                                            PC1         PC2
-## ---------------------------------  -----------  ----------
-## pct_counts_feature_controls          0.5057646   0.2473134
-## pct_counts_top_100_features          0.4888852   0.2277068
-## n_detected_feature_controls          0.0231277   0.6235516
-## log10_counts_feature_controls       -0.1226860   0.6576822
-## total_features                      -0.4655518   0.2219694
-## log10_counts_endogenous_features    -0.5223679   0.1278782
+## \begin{tabular}{l|r|r}
+## \hline
+##   & PC1 & PC2\\
+## \hline
+## pct\_counts\_feature\_controls & 0.5057646 & 0.2473134\\
+## \hline
+## pct\_counts\_top\_100\_features & 0.4888852 & 0.2277068\\
+## \hline
+## n\_detected\_feature\_controls & 0.0231277 & 0.6235516\\
+## \hline
+## log10\_counts\_feature\_controls & -0.1226860 & 0.6576822\\
+## \hline
+## total\_features & -0.4655518 & 0.2219694\\
+## \hline
+## log10\_counts\_endogenous\_features & -0.5223679 & 0.1278782\\
+## \hline
+## \end{tabular}
 ```
 
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="(\#fig:auto-cell-filt-reads)PCA plot used for automatic detection of cell outliers" width="90%" />
-<p class="caption">(\#fig:auto-cell-filt-reads)PCA plot used for automatic detection of cell outliers</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/auto-cell-filt-reads-1} 
+
+}
+
+\caption{PCA plot used for automatic detection of cell outliers}(\#fig:auto-cell-filt-reads)
+\end{figure}
+
+\begin{table}
+
+\caption{(\#tab:unnamed-chunk-20)The number of cells removed by automatic filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 753\\
+TRUE & 111\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 
-Table: (\#tab:unnamed-chunk-20)The number of cells removed by automatic filter (FALSE)
 
-Var1     Freq
-------  -----
-FALSE     753
-TRUE      111
+\begin{table}
 
+\caption{(\#tab:unnamed-chunk-22)The number of cells removed by manual filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 254\\
+TRUE & 610\\
+\bottomrule
+\end{tabular}
+\end{table}
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.9\linewidth]{06-exprs-qc-reads_files/figure-latex/cell-filt-comp-reads-1} 
 
-Table: (\#tab:unnamed-chunk-22)The number of cells removed by manual filter (FALSE)
+}
 
-Var1     Freq
-------  -----
-FALSE     254
-TRUE      610
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters" width="90%" />
-<p class="caption">(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters</p>
-</div>
+\caption{Comparison of the default, automatic and manual cell filters}(\#fig:cell-filt-comp-reads)
+\end{figure}
 
 
 ```

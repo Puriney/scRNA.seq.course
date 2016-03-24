@@ -53,18 +53,23 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.
-
-                   NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
-----------------  ---------------  ---------------  ---------------
-ENSG00000237683                 0                0                0
-ENSG00000187634                 0                0                0
-ENSG00000188976                 3                6                1
-ENSG00000187961                 0                0                0
-ENSG00000187583                 0                0                0
-ENSG00000187642                 0                0                0
+\caption{(\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.}
+\centering
+\begin{tabular}[t]{lrrr}
+\toprule
+  & NA19098.r1.A01 & NA19098.r1.A02 & NA19098.r1.A03\\
+\midrule
+ENSG00000237683 & 0 & 0 & 0\\
+ENSG00000187634 & 0 & 0 & 0\\
+ENSG00000188976 & 3 & 6 & 1\\
+ENSG00000187961 & 0 & 0 & 0\\
+ENSG00000187583 & 0 & 0 & 0\\
+ENSG00000187642 & 0 & 0 & 0\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ```r
 knitr::kable(
@@ -73,18 +78,23 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows of the anno table.
-
-individual   replicate   well   batch        sample_id      
------------  ----------  -----  -----------  ---------------
-NA19098      r1          A01    NA19098.r1   NA19098.r1.A01 
-NA19098      r1          A02    NA19098.r1   NA19098.r1.A02 
-NA19098      r1          A03    NA19098.r1   NA19098.r1.A03 
-NA19098      r1          A04    NA19098.r1   NA19098.r1.A04 
-NA19098      r1          A05    NA19098.r1   NA19098.r1.A05 
-NA19098      r1          A06    NA19098.r1   NA19098.r1.A06 
+\caption{(\#tab:unnamed-chunk-4)A table of the first 6 rows of the anno table.}
+\centering
+\begin{tabular}[t]{lllll}
+\toprule
+individual & replicate & well & batch & sample\_id\\
+\midrule
+NA19098 & r1 & A01 & NA19098.r1 & NA19098.r1.A01\\
+NA19098 & r1 & A02 & NA19098.r1 & NA19098.r1.A02\\
+NA19098 & r1 & A03 & NA19098.r1 & NA19098.r1.A03\\
+NA19098 & r1 & A04 & NA19098.r1 & NA19098.r1.A04\\
+NA19098 & r1 & A05 & NA19098.r1 & NA19098.r1.A05\\
+NA19098 & r1 & A06 & NA19098.r1 & NA19098.r1.A06\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 The data consists of 3 individuals and 3 replicates and therefore has 9 batches in total.
 
@@ -137,10 +147,14 @@ First, one can look at the gene expression frequency versus mean expression leve
 scater::plotQC(umi, type = "exprs-freq-vs-mean")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/dropout-overview-1.png" alt="(\#fig:dropout-overview)Dropout rate vs mean expression" width="90%" />
-<p class="caption">(\#fig:dropout-overview)Dropout rate vs mean expression</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/dropout-overview-1} 
+
+}
+
+\caption{Dropout rate vs mean expression}(\#fig:dropout-overview)
+\end{figure}
 
 Interestingly, only less than half of the genes are expressed in more than 50% of the cells.
 
@@ -153,10 +167,14 @@ One can also look at the number of reads consumed by the top 50 expressed genes.
 scater::plotQC(umi, type = "highest-expression")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/top50-gene-expr-1.png" alt="(\#fig:top50-gene-expr)Number of total counts consumed by the top 50 expressed genes" width="90%" />
-<p class="caption">(\#fig:top50-gene-expr)Number of total counts consumed by the top 50 expressed genes</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/top50-gene-expr-1} 
+
+}
+
+\caption{Number of total counts consumed by the top 50 expressed genes}(\#fig:top50-gene-expr)
+\end{figure}
 
 Not surprisingly, most of the very top expressed genes are either ERCCs or MT genes (Feature controls).
 
@@ -180,14 +198,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-10)The number of genes removed by gene filter (FALSE)
-
-filter_genes     Freq
--------------  ------
-FALSE            4512
-TRUE            14214
+\caption{(\#tab:unnamed-chunk-10)The number of genes removed by gene filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_genes & Freq\\
+\midrule
+FALSE & 4512\\
+TRUE & 14214\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Depending on the cell-type, protocol and sequencing depth, other cut-offs may be appropriate.
 
@@ -208,10 +231,14 @@ hist(
 )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/total-counts-hist-1.png" alt="(\#fig:total-counts-hist)Histogram of library sizes for all cells" width="90%" />
-<p class="caption">(\#fig:total-counts-hist)Histogram of library sizes for all cells</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/total-counts-hist-1} 
+
+}
+
+\caption{Histogram of library sizes for all cells}(\#fig:total-counts-hist)
+\end{figure}
 
 __Exercise__
 
@@ -235,14 +262,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-12)The number of cells removed by total counts filter (FALSE)
-
-filter_by_total_counts    Freq
------------------------  -----
-FALSE                        2
-TRUE                       862
+\caption{(\#tab:unnamed-chunk-12)The number of cells removed by total counts filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_total\_counts & Freq\\
+\midrule
+FALSE & 2\\
+TRUE & 862\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ### Detected genes (1)
 
@@ -258,10 +290,14 @@ hist(
 )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/total-features-hist-1.png" alt="(\#fig:total-features-hist)Histogram of the number of detected genes in all cells" width="90%" />
-<p class="caption">(\#fig:total-features-hist)Histogram of the number of detected genes in all cells</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/total-features-hist-1} 
+
+}
+
+\caption{Histogram of the number of detected genes in all cells}(\#fig:total-features-hist)
+\end{figure}
 
 Here we see that most cells have between 5,000-11,000 detected genes,
 which is normal for high-depth scRNA-seq. However this varies by
@@ -287,14 +323,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-14)The number of cells removed by total features filter (FALSE)
-
-filter_by_expr_features    Freq
-------------------------  -----
-FALSE                        16
-TRUE                        848
+\caption{(\#tab:unnamed-chunk-14)The number of cells removed by total features filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_expr\_features & Freq\\
+\midrule
+FALSE & 16\\
+TRUE & 848\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ### Detected genes (2)
 
@@ -308,10 +349,14 @@ scater::plotPhenoData(
 )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/total-features-vs-counts-1.png" alt="(\#fig:total-features-vs-counts)Library size vs number of detected genes" width="90%" />
-<p class="caption">(\#fig:total-features-vs-counts)Library size vs number of detected genes</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/total-features-vs-counts-1} 
+
+}
+
+\caption{Library size vs number of detected genes}(\#fig:total-features-vs-counts)
+\end{figure}
 
 ### ERCCs and MTs
 
@@ -331,10 +376,14 @@ scater::plotPhenoData(
 )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/mt-vs-counts-1.png" alt="(\#fig:mt-vs-counts)Percentage of counts in MT genes" width="90%" />
-<p class="caption">(\#fig:mt-vs-counts)Percentage of counts in MT genes</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/mt-vs-counts-1} 
+
+}
+
+\caption{Percentage of counts in MT genes}(\#fig:mt-vs-counts)
+\end{figure}
 
 
 ```r
@@ -346,10 +395,14 @@ scater::plotPhenoData(
 )
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/ercc-vs-counts-1.png" alt="(\#fig:ercc-vs-counts)Percentage of counts in ERCCs" width="90%" />
-<p class="caption">(\#fig:ercc-vs-counts)Percentage of counts in ERCCs</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/ercc-vs-counts-1} 
+
+}
+
+\caption{Percentage of counts in ERCCs}(\#fig:ercc-vs-counts)
+\end{figure}
 
 This analysis shows that majority of the cells from NA19098.r2 batch have a very high ERCC/Endo ratio. Indeed, it has been shown by the authors that this batch contains cells of smaller size. 
 
@@ -373,14 +426,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-16)The number of cells removed by ERCC filter (FALSE)
-
-filter_by_ERCC    Freq
----------------  -----
-FALSE               96
-TRUE               768
+\caption{(\#tab:unnamed-chunk-16)The number of cells removed by ERCC filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_ERCC & Freq\\
+\midrule
+FALSE & 96\\
+TRUE & 768\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ```r
 filter_by_MT <- umi$pct_counts_feature_controls_MT < 10
@@ -395,14 +453,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-18)The number of cells removed by MT filter (FALSE)
-
-filter_by_MT    Freq
--------------  -----
-FALSE             31
-TRUE             833
+\caption{(\#tab:unnamed-chunk-18)The number of cells removed by MT filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+filter\_by\_MT & Freq\\
+\midrule
+FALSE & 31\\
+TRUE & 833\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ## Cell filtering
 
@@ -444,14 +507,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-20)The number of cells removed by default filter (FALSE)
-
-Var1     Freq
-------  -----
-FALSE       6
-TRUE      858
+\caption{(\#tab:unnamed-chunk-20)The number of cells removed by default filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 6\\
+TRUE & 858\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 This filtering can be performed even without looking at the plots above.
 
@@ -557,21 +625,33 @@ scater::plotPCA(umi,
 ## NA19101.r3.D01
 ## NA19101.r3.E08
 ## Variables with highest loadings for PC1 and PC2:
-## 
-##                                            PC1         PC2
-## ---------------------------------  -----------  ----------
-## pct_counts_top_100_features          0.4771343   0.3009332
-## pct_counts_feature_controls          0.4735839   0.3309562
-## n_detected_feature_controls          0.1332811   0.5367629
-## log10_counts_feature_controls       -0.1427373   0.5911762
-## total_features                      -0.5016681   0.2936705
-## log10_counts_endogenous_features    -0.5081855   0.2757918
+## \begin{tabular}{l|r|r}
+## \hline
+##   & PC1 & PC2\\
+## \hline
+## pct\_counts\_top\_100\_features & 0.4771343 & 0.3009332\\
+## \hline
+## pct\_counts\_feature\_controls & 0.4735839 & 0.3309562\\
+## \hline
+## n\_detected\_feature\_controls & 0.1332811 & 0.5367629\\
+## \hline
+## log10\_counts\_feature\_controls & -0.1427373 & 0.5911762\\
+## \hline
+## total\_features & -0.5016681 & 0.2936705\\
+## \hline
+## log10\_counts\_endogenous\_features & -0.5081855 & 0.2757918\\
+## \hline
+## \end{tabular}
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/auto-cell-filt-1.png" alt="(\#fig:auto-cell-filt)PCA plot used for automatic detection of cell outliers" width="90%" />
-<p class="caption">(\#fig:auto-cell-filt)PCA plot used for automatic detection of cell outliers</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/auto-cell-filt-1} 
+
+}
+
+\caption{PCA plot used for automatic detection of cell outliers}(\#fig:auto-cell-filt)
+\end{figure}
 
 
 ```r
@@ -583,14 +663,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-21)The number of cells removed by automatic filter (FALSE)
-
-Var1     Freq
-------  -----
-FALSE     791
-TRUE       73
+\caption{(\#tab:unnamed-chunk-21)The number of cells removed by automatic filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 791\\
+TRUE & 73\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ### Manual
 
@@ -620,14 +705,19 @@ knitr::kable(
 )
 ```
 
+\begin{table}
 
-
-Table: (\#tab:unnamed-chunk-23)The number of cells removed by manual filter (FALSE)
-
-Var1     Freq
-------  -----
-FALSE     141
-TRUE      723
+\caption{(\#tab:unnamed-chunk-23)The number of cells removed by manual filter (FALSE)}
+\centering
+\begin{tabular}[t]{lr}
+\toprule
+Var1 & Freq\\
+\midrule
+FALSE & 141\\
+TRUE & 723\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 ## Compare filterings
 
@@ -652,10 +742,14 @@ limma::vennDiagram(venn.diag,
                    circle.col = c("magenta", "blue", "green"))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters" width="90%" />
-<p class="caption">(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{05-exprs-qc_files/figure-latex/cell-filt-comp-1} 
+
+}
+
+\caption{Comparison of the default, automatic and manual cell filters}(\#fig:cell-filt-comp)
+\end{figure}
 
 ## Save the data
 

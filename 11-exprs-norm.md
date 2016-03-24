@@ -60,10 +60,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "counts")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-raw-1.png" alt="(\#fig:norm-pca-raw)PCA plot of the blischak data" width="90%" />
-<p class="caption">(\#fig:norm-pca-raw)PCA plot of the blischak data</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-raw-1} 
+
+}
+
+\caption{PCA plot of the blischak data}(\#fig:norm-pca-raw)
+\end{figure}
 
 ### CPM
 
@@ -75,10 +79,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "cpm")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-cpm-1.png" alt="(\#fig:norm-pca-cpm)PCA plot of the blischak data after CPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-cpm)PCA plot of the blischak data after CPM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-cpm-1} 
+
+}
+
+\caption{PCA plot of the blischak data after CPM normalisation}(\#fig:norm-pca-cpm)
+\end{figure}
 
 ### log2(CPM)
 
@@ -90,10 +98,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "exprs")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-log2-cpm-1.png" alt="(\#fig:norm-pca-log2-cpm)PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-log2-cpm)PCA plot of the blischak data after log2(CPM) normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-log2-cpm-1} 
+
+}
+
+\caption{PCA plot of the blischak data after log2(CPM) normalisation}(\#fig:norm-pca-log2-cpm)
+\end{figure}
 
 ### TMM
 
@@ -110,10 +122,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "norm_counts")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-tmm-1.png" alt="(\#fig:norm-pca-tmm)PCA plot of the blischak data after TMM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-tmm)PCA plot of the blischak data after TMM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-tmm-1} 
+
+}
+
+\caption{PCA plot of the blischak data after TMM normalisation}(\#fig:norm-pca-tmm)
+\end{figure}
 
 ### RLE
 
@@ -130,10 +146,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "norm_counts")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="(\#fig:norm-pca-rle)PCA plot of the blischak data after RLE normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-rle)PCA plot of the blischak data after RLE normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-rle-1} 
+
+}
+
+\caption{PCA plot of the blischak data after RLE normalisation}(\#fig:norm-pca-rle)
+\end{figure}
 
 ### Upperquantile
 
@@ -151,10 +171,14 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "norm_counts")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="(\#fig:norm-pca-uq)PCA plot of the blischak data after UQ normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-uq)PCA plot of the blischak data after UQ normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-uq-1} 
+
+}
+
+\caption{PCA plot of the blischak data after UQ normalisation}(\#fig:norm-pca-uq)
+\end{figure}
 
 ## Interpretation
 
@@ -248,10 +272,14 @@ scater::plotPCA(umi.qc.ann,
                 exprs_values = "fpkm")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="(\#fig:norm-pca-fpkm)PCA plot of the blischak data after FPKM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-fpkm)PCA plot of the blischak data after FPKM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-pca-fpkm-1} 
+
+}
+
+\caption{PCA plot of the blischak data after FPKM normalisation}(\#fig:norm-pca-fpkm)
+\end{figure}
 
 TPM normalisation produce a zero-matrix, we are not sure why, it maybe a bug in scater.
 
@@ -269,10 +297,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-raw-1.png" alt="(\#fig:norm-genes-raw)Expression of the first 6 genes of the blischak data" width="90%" />
-<p class="caption">(\#fig:norm-genes-raw)Expression of the first 6 genes of the blischak data</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-raw-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data}(\#fig:norm-genes-raw)
+\end{figure}
 
 ### CPM
 
@@ -284,10 +316,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-cpm-1.png" alt="(\#fig:norm-genes-cpm)Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-cpm)Expression of the first 6 genes of the blischak data after the CPM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-cpm-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the CPM normalisation}(\#fig:norm-genes-cpm)
+\end{figure}
 
 ### log2(CPM)
 
@@ -299,10 +335,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-log2-cpm-1.png" alt="(\#fig:norm-genes-log2-cpm)Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-log2-cpm)Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-log2-cpm-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation}(\#fig:norm-genes-log2-cpm)
+\end{figure}
 
 ### Upperquantile
 
@@ -314,10 +354,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-UQ-1.png" alt="(\#fig:norm-genes-UQ)Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-UQ)Expression of the first 6 genes of the blischak data after the UQ normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-UQ-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the UQ normalisation}(\#fig:norm-genes-UQ)
+\end{figure}
 
 ### FPKM
 
@@ -329,10 +373,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-fpkm-1.png" alt="(\#fig:norm-genes-fpkm)Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-fpkm)Expression of the first 6 genes of the blischak data after the FPKM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-fpkm-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the FPKM normalisation}(\#fig:norm-genes-fpkm)
+\end{figure}
 
 ### TPM
 
@@ -344,10 +392,14 @@ scater::plotExpression(umi.qc.ann,
                        colour = "batch")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-genes-tpm-1.png" alt="(\#fig:norm-genes-tpm)Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-tpm)Expression of the first 6 genes of the blischak data after the TPM normalisation</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{11-exprs-norm_files/figure-latex/norm-genes-tpm-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the TPM normalisation}(\#fig:norm-genes-tpm)
+\end{figure}
 
 ## Exercise
 

@@ -6,35 +6,59 @@ knit: bookdown::preview_chapter
 
 
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-raw-reads-1.png" alt="(\#fig:norm-pca-raw-reads)PCA plot of the blischak data" width="90%" />
-<p class="caption">(\#fig:norm-pca-raw-reads)PCA plot of the blischak data</p>
-</div>
+\begin{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-cpm-reads-1.png" alt="(\#fig:norm-pca-cpm-reads)PCA plot of the blischak data after CPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-cpm-reads)PCA plot of the blischak data after CPM normalisation</p>
-</div>
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-raw-reads-1} 
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-log2-cpm-reads-1.png" alt="(\#fig:norm-pca-log2-cpm-reads)PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-log2-cpm-reads)PCA plot of the blischak data after log2(CPM) normalisation</p>
-</div>
+}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-tmm-reads-1.png" alt="(\#fig:norm-pca-tmm-reads)PCA plot of the blischak data after TMM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-tmm-reads)PCA plot of the blischak data after TMM normalisation</p>
-</div>
+\caption{PCA plot of the blischak data}(\#fig:norm-pca-raw-reads)
+\end{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-rle-reads-1.png" alt="(\#fig:norm-pca-rle-reads)PCA plot of the blischak data after RLE normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-rle-reads)PCA plot of the blischak data after RLE normalisation</p>
-</div>
+\begin{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-uq-reads-1.png" alt="(\#fig:norm-pca-uq-reads)PCA plot of the blischak data after UQ normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-uq-reads)PCA plot of the blischak data after UQ normalisation</p>
-</div>
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-cpm-reads-1} 
+
+}
+
+\caption{PCA plot of the blischak data after CPM normalisation}(\#fig:norm-pca-cpm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-log2-cpm-reads-1} 
+
+}
+
+\caption{PCA plot of the blischak data after log2(CPM) normalisation}(\#fig:norm-pca-log2-cpm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-tmm-reads-1} 
+
+}
+
+\caption{PCA plot of the blischak data after TMM normalisation}(\#fig:norm-pca-tmm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-rle-reads-1} 
+
+}
+
+\caption{PCA plot of the blischak data after RLE normalisation}(\#fig:norm-pca-rle-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-uq-reads-1} 
+
+}
+
+\caption{PCA plot of the blischak data after UQ normalisation}(\#fig:norm-pca-uq-reads)
+\end{figure}
 
 
 
@@ -44,37 +68,65 @@ knit: bookdown::preview_chapter
 
 
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-fpkm-reads-1.png" alt="(\#fig:norm-pca-fpkm-reads)PCA plot of the blischak data after FPKM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-fpkm-reads)PCA plot of the blischak data after FPKM normalisation</p>
-</div>
+\begin{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-raw-reads-1.png" alt="(\#fig:norm-genes-raw-reads)Expression of the first 6 genes of the blischak data" width="90%" />
-<p class="caption">(\#fig:norm-genes-raw-reads)Expression of the first 6 genes of the blischak data</p>
-</div>
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-pca-fpkm-reads-1} 
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-cpm-reads-1.png" alt="(\#fig:norm-genes-cpm-reads)Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-cpm-reads)Expression of the first 6 genes of the blischak data after the CPM normalisation</p>
-</div>
+}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-log2-cpm-reads-1.png" alt="(\#fig:norm-genes-log2-cpm-reads)Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-log2-cpm-reads)Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation</p>
-</div>
+\caption{PCA plot of the blischak data after FPKM normalisation}(\#fig:norm-pca-fpkm-reads)
+\end{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-UQ-reads-1.png" alt="(\#fig:norm-genes-UQ-reads)Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-UQ-reads)Expression of the first 6 genes of the blischak data after the UQ normalisation</p>
-</div>
+\begin{figure}
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-fpkm-reads-1.png" alt="(\#fig:norm-genes-fpkm-reads)Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-fpkm-reads)Expression of the first 6 genes of the blischak data after the FPKM normalisation</p>
-</div>
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-raw-reads-1} 
 
-<div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-genes-tpm-reads-1.png" alt="(\#fig:norm-genes-tpm-reads)Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
-<p class="caption">(\#fig:norm-genes-tpm-reads)Expression of the first 6 genes of the blischak data after the TPM normalisation</p>
-</div>
+}
+
+\caption{Expression of the first 6 genes of the blischak data}(\#fig:norm-genes-raw-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-cpm-reads-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the CPM normalisation}(\#fig:norm-genes-cpm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-log2-cpm-reads-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation}(\#fig:norm-genes-log2-cpm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-UQ-reads-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the UQ normalisation}(\#fig:norm-genes-UQ-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-fpkm-reads-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the FPKM normalisation}(\#fig:norm-genes-fpkm-reads)
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.9\linewidth]{12-exprs-norm-reads_files/figure-latex/norm-genes-tpm-reads-1} 
+
+}
+
+\caption{Expression of the first 6 genes of the blischak data after the TPM normalisation}(\#fig:norm-genes-tpm-reads)
+\end{figure}
