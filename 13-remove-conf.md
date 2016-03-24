@@ -59,14 +59,10 @@ highly.var.genes <- scRNA.seq.funcs::Brennecke_getVariableGenes(
 ## fit.
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{13-remove-conf_files/figure-latex/rm-conf-brennecke-1} 
-
-}
-
-\caption{Results of using the Brennecke method on the Blischak dataset}(\#fig:rm-conf-brennecke)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="13-remove-conf_files/figure-html/rm-conf-brennecke-1.png" alt="(\#fig:rm-conf-brennecke)Results of using the Brennecke method on the Blischak dataset" width="90%" />
+<p class="caption">(\#fig:rm-conf-brennecke)Results of using the Brennecke method on the Blischak dataset</p>
+</div>
 
 In the figure above blue points are the ERCC spike-ins. The red curve
 is the fitted technical noise model and the dashed line is the 95%
@@ -113,14 +109,10 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "norm_counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{13-remove-conf_files/figure-latex/rm-conf-pca-rle-1} 
-
-}
-
-\caption{PCA plot of the blischak data after RLE normalisation}(\#fig:rm-conf-pca-rle)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation" width="90%" />
+<p class="caption">(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation</p>
+</div>
 
 
 ```r
@@ -131,14 +123,10 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "ruv_counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{13-remove-conf_files/figure-latex/rm-conf-pca-rle-ruv-1} 
-
-}
-
-\caption{PCA plot of the blischak data after RLE and RUV normalisations}(\#fig:rm-conf-pca-rle-ruv)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations" width="90%" />
+<p class="caption">(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations</p>
+</div>
 
 ## Effectiveness 2
 
@@ -151,14 +139,10 @@ boxplot(list(scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$norm_counts),
              scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$ruv_counts)))
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{13-remove-conf_files/figure-latex/rm-conf-rle-comp-1} 
-
-}
-
-\caption{Comparison of the relative log expression of the blischak data before and after the RUV normalisation}(\#fig:rm-conf-rle-comp)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />
+<p class="caption">(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation</p>
+</div>
 
 ## Exercise
 

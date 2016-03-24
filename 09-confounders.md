@@ -36,14 +36,10 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{09-confounders_files/figure-latex/confound-pca-1} 
-
-}
-
-\caption{PCA plot of the blischak data}(\#fig:confound-pca)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="09-confounders_files/figure-html/confound-pca-1.png" alt="(\#fig:confound-pca)PCA plot of the blischak data" width="90%" />
+<p class="caption">(\#fig:confound-pca)PCA plot of the blischak data</p>
+</div>
 
 scater allows one to identify principle components that correlate with experimental and QC variables of interest (it ranks principle components by $R^2$ from a linear model regressing PC value against the variable of interest).
 
@@ -58,14 +54,10 @@ scater::plotQC(umi.qc[endog_genes, ],
                variable = "total_features")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{09-confounders_files/figure-latex/confound-find-pcs-total-features-1} 
-
-}
-
-\caption{PC correlation with the number of detected genes}(\#fig:confound-find-pcs-total-features)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="09-confounders_files/figure-html/confound-find-pcs-total-features-1.png" alt="(\#fig:confound-find-pcs-total-features)PC correlation with the number of detected genes" width="90%" />
+<p class="caption">(\#fig:confound-find-pcs-total-features)PC correlation with the number of detected genes</p>
+</div>
 
 Indeed, we can see that PC1 can be completely explained by the number of the detected genes. In fact, it was also visible on the PCA plot above. This is a well-known issue in scRNA-seq and was described [here](http://biorxiv.org/content/early/2015/12/27/025528).
 
@@ -78,14 +70,10 @@ scater::plotQC(umi.qc[endog_genes, ],
                variable = "pct_counts_feature_controls_ERCC")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{09-confounders_files/figure-latex/confound-find-pcs-erccs-1} 
-
-}
-
-\caption{PC correlation with the percentage of reads in ERCCs}(\#fig:confound-find-pcs-erccs)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="09-confounders_files/figure-html/confound-find-pcs-erccs-1.png" alt="(\#fig:confound-find-pcs-erccs)PC correlation with the percentage of reads in ERCCs" width="90%" />
+<p class="caption">(\#fig:confound-find-pcs-erccs)PC correlation with the percentage of reads in ERCCs</p>
+</div>
 
 ### Control MTs
 
@@ -96,14 +84,10 @@ scater::plotQC(umi.qc[endog_genes, ],
                variable = "pct_counts_feature_controls_MT")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{09-confounders_files/figure-latex/confound-find-pcs-mts-1} 
-
-}
-
-\caption{PC correlation with the percentage of reads in MT genes}(\#fig:confound-find-pcs-mts)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="09-confounders_files/figure-html/confound-find-pcs-mts-1.png" alt="(\#fig:confound-find-pcs-mts)PC correlation with the percentage of reads in MT genes" width="90%" />
+<p class="caption">(\#fig:confound-find-pcs-mts)PC correlation with the percentage of reads in MT genes</p>
+</div>
 
 
 
@@ -124,14 +108,10 @@ scater::plotQC(umi.qc[endog_genes, ],
                              "pct_counts_feature_controls_MT"))
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{09-confounders_files/figure-latex/confound-find-expl-vars-1} 
-
-}
-
-\caption{Explanatory variables}(\#fig:confound-find-expl-vars)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="09-confounders_files/figure-html/confound-find-expl-vars-1.png" alt="(\#fig:confound-find-expl-vars)Explanatory variables" width="90%" />
+<p class="caption">(\#fig:confound-find-expl-vars)Explanatory variables</p>
+</div>
 
 This analysis indicates that the number of detected genes (again) and also the sequencing depth (number of counts) have substantial explanatory power for many genes, so these variables are good candidates for conditioning out in a normalisation step, or including in downstream statistical models. Expression of ERCCs also appears to be an important explanatory variable.
 

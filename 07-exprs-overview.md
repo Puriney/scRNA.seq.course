@@ -34,14 +34,10 @@ scater::plot(umi[endog_genes, ],
              exprs_values = "counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-top500-before-qc-1} 
-
-}
-
-\caption{Proportion of reads accounted by the top 500}(\#fig:expr-overview-top500-before-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-top500-before-qc-1.png" alt="(\#fig:expr-overview-top500-before-qc)Proportion of reads accounted by the top 500" width="90%" />
+<p class="caption">(\#fig:expr-overview-top500-before-qc)Proportion of reads accounted by the top 500</p>
+</div>
 
 ### After QC
 
@@ -54,14 +50,10 @@ scater::plot(umi.qc[endog_genes, ],
              exprs_values = "counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-top500-after-qc-1} 
-
-}
-
-\caption{Proportion of reads accounted by the top 500}(\#fig:expr-overview-top500-after-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-top500-after-qc-1.png" alt="(\#fig:expr-overview-top500-after-qc)Proportion of reads accounted by the top 500" width="90%" />
+<p class="caption">(\#fig:expr-overview-top500-after-qc)Proportion of reads accounted by the top 500</p>
+</div>
 
 ## PCA plot
 
@@ -77,14 +69,10 @@ scater::plotPCA(umi[endog_genes, ],
                 exprs_values = "counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-pca-before-qc-1} 
-
-}
-
-\caption{PCA plot of the blischak data}(\#fig:expr-overview-pca-before-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="(\#fig:expr-overview-pca-before-qc)PCA plot of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-before-qc)PCA plot of the blischak data</p>
+</div>
 
 ### After QC
 
@@ -96,14 +84,10 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 exprs_values = "counts")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-pca-after-qc-1} 
-
-}
-
-\caption{PCA plot of the blischak data}(\#fig:expr-overview-pca-after-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="(\#fig:expr-overview-pca-after-qc)PCA plot of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-after-qc)PCA plot of the blischak data</p>
+</div>
 
 ## Diffusion map
 
@@ -120,14 +104,10 @@ scater::plotDiffusionMap(umi[endog_genes, ],
                          rand_seed = 123456)
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-diff-before-qc-1} 
-
-}
-
-\caption{Diffusion map of the blischak data}(\#fig:expr-overview-diff-before-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-diff-before-qc-1.png" alt="(\#fig:expr-overview-diff-before-qc)Diffusion map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-diff-before-qc)Diffusion map of the blischak data</p>
+</div>
 
 ### After QC
 
@@ -140,14 +120,10 @@ scater::plotDiffusionMap(umi.qc[endog_genes, ],
                          rand_seed = 123456)
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-diff-after-qc-1} 
-
-}
-
-\caption{Diffusion map of the blischak data}(\#fig:expr-overview-diff-after-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-diff-after-qc-1.png" alt="(\#fig:expr-overview-diff-after-qc)Diffusion map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-diff-after-qc)Diffusion map of the blischak data</p>
+</div>
 
 ## tSNE map
 
@@ -164,14 +140,10 @@ scater::plotTSNE(umi[endog_genes, ],
                  rand_seed = 123456)
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-tsne-before-qc-1} 
-
-}
-
-\caption{tSNE map of the blischak data}(\#fig:expr-overview-tsne-before-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="(\#fig:expr-overview-tsne-before-qc)tSNE map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-before-qc)tSNE map of the blischak data</p>
+</div>
 
 ### After QC
 
@@ -184,14 +156,10 @@ scater::plotTSNE(umi.qc[endog_genes, ],
                  rand_seed = 123456)
 ```
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{07-exprs-overview_files/figure-latex/expr-overview-tsne-after-qc-1} 
-
-}
-
-\caption{tSNE map of the blischak data}(\#fig:expr-overview-tsne-after-qc)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="(\#fig:expr-overview-tsne-after-qc)tSNE map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-after-qc)tSNE map of the blischak data</p>
+</div>
 
 ## Exercise
 

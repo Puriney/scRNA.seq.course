@@ -6,74 +6,42 @@ knit: bookdown::preview_chapter
 
 
 
-\begin{figure}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-top500-before-qc-reads-1.png" alt="(\#fig:expr-overview-top500-before-qc-reads)Proportion of reads accounted by the top 500" width="90%" />
+<p class="caption">(\#fig:expr-overview-top500-before-qc-reads)Proportion of reads accounted by the top 500</p>
+</div>
 
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-top500-before-qc-reads-1} 
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-top500-after-qc-reads-1.png" alt="(\#fig:expr-overview-top500-after-qc-reads)Proportion of reads accounted by the top 500" width="90%" />
+<p class="caption">(\#fig:expr-overview-top500-after-qc-reads)Proportion of reads accounted by the top 500</p>
+</div>
 
-}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-pca-before-qc-reads-1.png" alt="(\#fig:expr-overview-pca-before-qc-reads)PCA plot of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-before-qc-reads)PCA plot of the blischak data</p>
+</div>
 
-\caption{Proportion of reads accounted by the top 500}(\#fig:expr-overview-top500-before-qc-reads)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-pca-after-qc-reads-1.png" alt="(\#fig:expr-overview-pca-after-qc-reads)PCA plot of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-after-qc-reads)PCA plot of the blischak data</p>
+</div>
 
-\begin{figure}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-diff-before-qc-reads-1.png" alt="(\#fig:expr-overview-diff-before-qc-reads)Diffusion map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-diff-before-qc-reads)Diffusion map of the blischak data</p>
+</div>
 
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-top500-after-qc-reads-1} 
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-diff-after-qc-reads-1.png" alt="(\#fig:expr-overview-diff-after-qc-reads)Diffusion map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-diff-after-qc-reads)Diffusion map of the blischak data</p>
+</div>
 
-}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-tsne-before-qc-reads-1.png" alt="(\#fig:expr-overview-tsne-before-qc-reads)tSNE map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-before-qc-reads)tSNE map of the blischak data</p>
+</div>
 
-\caption{Proportion of reads accounted by the top 500}(\#fig:expr-overview-top500-after-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-pca-before-qc-reads-1} 
-
-}
-
-\caption{PCA plot of the blischak data}(\#fig:expr-overview-pca-before-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-pca-after-qc-reads-1} 
-
-}
-
-\caption{PCA plot of the blischak data}(\#fig:expr-overview-pca-after-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-diff-before-qc-reads-1} 
-
-}
-
-\caption{Diffusion map of the blischak data}(\#fig:expr-overview-diff-before-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-diff-after-qc-reads-1} 
-
-}
-
-\caption{Diffusion map of the blischak data}(\#fig:expr-overview-diff-after-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-tsne-before-qc-reads-1} 
-
-}
-
-\caption{tSNE map of the blischak data}(\#fig:expr-overview-tsne-before-qc-reads)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.9\linewidth]{08-exprs-overview-reads_files/figure-latex/expr-overview-tsne-after-qc-reads-1} 
-
-}
-
-\caption{tSNE map of the blischak data}(\#fig:expr-overview-tsne-after-qc-reads)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="08-exprs-overview-reads_files/figure-html/expr-overview-tsne-after-qc-reads-1.png" alt="(\#fig:expr-overview-tsne-after-qc-reads)tSNE map of the blischak data" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-after-qc-reads)tSNE map of the blischak data</p>
+</div>
