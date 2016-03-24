@@ -26,8 +26,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="normalization-for-library-size-reads.html">
-<link rel="next" href="remove-confounders-using-controls-reads.html">
+<link rel="prev" href="remove-confounders-using-controls-reads.html">
+
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -258,96 +258,114 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="remove-confounders-using-controls" class="section level1">
-<h1><span class="header-section-number">14</span> Remove confounders using controls</h1>
-<div id="introduction-5" class="section level2">
-<h2><span class="header-section-number">14.1</span> Introduction</h2>
-<p>In the previous chapter we saw that the library size normalisation is able to remove major confounders. Let us see whether further use of the controls (ERCC and MT) can provide us with more insights into the data.</p>
-<p>Several methods (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>) have been developed for normalisation using ERCCs using different noise models and different fitting procedures.</p>
-<p>We will demonstrate some of the methods starting from the simplest one proposed by <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Brennecke et al.</a>, which identifies genes with significant variation above technical noise (ERCCs).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
-<span class="kw">library</span>(RUVSeq)
-<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
-<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
-umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
-umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
-endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
+<div id="clustering-analysis" class="section level1">
+<h1><span class="header-section-number">16</span> Clustering analysis</h1>
+<p>Once we have normalized the data and removed confounders we can carry out analyses that will allow us to interpret the data biologically. The exact nature of the analysis depends on the dataset and the biological question at hand. Nevertheless, there are a few operations which are useful in a wide range of contexts and we will be discussing some of them. We will start with the clustering of scRNA-seq data.</p>
+<div id="introduction-6" class="section level2">
+<h2><span class="header-section-number">16.1</span> Introduction</h2>
+<p>One of the most promising applications of scRNA-seq is the discovery and annotation of cell-types based on the transcription profiles. Computationally, this is a hard problem as it amounts to <strong>unsupervised clustering</strong>. That is, we need to identify groups of cells based on the similarities of the transcriptomes without any prior knowledge of the labels. The problem is made more challenging due to the high level of noise and the large number of dimensions (i.e. genes).</p>
 </div>
-<div id="brennecke-method" class="section level2">
-<h2><span class="header-section-number">14.2</span> Brennecke method</h2>
-<p>To use the method, we first normalize for library size then calculate the mean and the square coefficient of variation (variation divided by the squared mean expression). A curve is fit for the relationship between these two variables for the ERCC spike-in (subject to just technical variation) then a chi-square test is used to find genes significantly above the curve. This has been provided for you as the Brenneck_getVariableGenes(counts, spikes) function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
-<span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
-                           <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>,
-                           <span class="dt">feature_set =</span> endog_genes,
-                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
-erccs &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;ERCC-&quot;</span>, <span class="kw">rownames</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts))
-highly.var.genes &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">Brennecke_getVariableGenes</span>(
-            <span class="kw">assayData</span>(umi.qc)$norm_counts,
-            erccs
-)</code></pre></div>
-<pre><code>## Loading required package: statmod</code></pre>
-<pre><code>## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(umi.qc)
-## $norm_counts, : Only 21 spike-ins to be used in fitting, may result in poor
-## fit.</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-brennecke"></span>
-<img src="13-remove-conf_files/figure-html/rm-conf-brennecke-1.png" alt="Results of using the Brennecke method on the Blischak dataset" width="90%" />
+<div id="dimensionality-reductions" class="section level2">
+<h2><span class="header-section-number">16.2</span> Dimensionality reductions</h2>
+<p>When working with large datasets, it can often be beneficial to apply some sort of dimensionality reduction method. By projecting the data onto a lower-dimensional sub-space, one is often able to significantly reduce the amount of noise. An additional benefit is that it is typically much easier to visualize the data in a 2 or 3-dimensional subspace. Here we will introduce some of the popular dimensionality reduction methods.</p>
+<div id="clust-pca" class="section level3">
+<h3><span class="header-section-number">16.2.1</span> PCA</h3>
+<p><a href="https://en.wikipedia.org/wiki/Principal_component_analysis">Principal component analysis (PCA)</a> is a statistical procedure that uses a transformation to convert a set of observations into a set of values of linearly uncorrelated variables called principal components (PCs). The number of principal components is less than or equal to the number of original variables.</p>
+<p>PCA is defined in such a way that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.</p>
+<div class="figure" style="text-align: center"><span id="fig:clust-pca"></span>
+<img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
 <p class="caption">
-Figure 14.1: Results of using the Brennecke method on the Blischak dataset
-</p>
-</div>
-<p>In the figure above blue points are the ERCC spike-ins. The red curve is the fitted technical noise model and the dashed line is the 95% CI. Pink dots are the genes with significant biological variability after multiple-testing correction. Since our dataset is relatively homogeneous only 148 genes are identified as significantly variable.</p>
-</div>
-<div id="remove-unwanted-variation" class="section level2">
-<h2><span class="header-section-number">14.3</span> Remove Unwanted Variation</h2>
-<p>Factors contributing to technical noise frequently appear as “batch effects” where cells processed on different days or by different technicians systematically vary from one another. Removing technical noise and correcting for batch effects can frequently be performed using the same tool or slight variants on it. We will be considering the <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">Remove Unwanted Variation (RUV)</a> method which uses <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a> (similar to PCA) on subsets of the dataset which should be invariant (e.g. <a href="https://www.thermofisher.com/order/catalog/product/4456740">ERCC spike-ins</a>). Then the method removes the identified unwanted factors.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assayData</span>(umi.qc)$ruv_counts &lt;-<span class="st"> </span>RUVSeq::<span class="kw">RUVg</span>(
-    <span class="kw">round</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts),
-    erccs,
-    <span class="dt">k =</span> <span class="dv">1</span>)$normalizedCounts</code></pre></div>
-</div>
-<div id="effectiveness-1" class="section level2">
-<h2><span class="header-section-number">14.4</span> Effectiveness 1</h2>
-<p>We evaluate the effectiveness of the normalization by inspecting the PCA plot where shape corresponds the technical replicate and colour corresponds to different biological samples (individuals from whom the iPSC lines where derived). Separation of biological samples and interspersed batches indicates that technical variation has been removed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
-                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
-                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
-                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
-                <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle"></span>
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
-<p class="caption">
-Figure 14.2: PCA plot of the blischak data after RLE normalisation
-</p>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
-                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
-                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
-                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
-                <span class="dt">exprs_values =</span> <span class="st">&quot;ruv_counts&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle-ruv"></span>
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="PCA plot of the blischak data after RLE and RUV normalisations" width="90%" />
-<p class="caption">
-Figure 14.3: PCA plot of the blischak data after RLE and RUV normalisations
+Figure 16.1: Schematic representation of PCA dimensionality reduction (taken from <a href="http://www.nlpca.org/pca_principal_component_analysis.html">here</a>)
 </p>
 </div>
 </div>
-<div id="effectiveness-2" class="section level2">
-<h2><span class="header-section-number">14.5</span> Effectiveness 2</h2>
-<p>We can also examine the relative log expression (RLE) across cells to confirm technical noise has been removed from the dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">list</span>(scRNA.seq.funcs::<span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts),
-             scRNA.seq.funcs::<span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruv_counts)))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-rle-comp"></span>
-<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />
+<div id="spectral" class="section level3">
+<h3><span class="header-section-number">16.2.2</span> Spectral</h3>
+<p>Spectral decomposition is the factorization of a matrix into a canonical form, whereby the matrix is represented in terms of its eigenvalues and eigenvectors.</p>
+<p>In application to scRNA-seq data, the matrix can be either an input expression matrix, or matrix of distances between the cells. The computed eigenvectors are similar to the projections of the data to PCs (chapter <a href="clustering-analysis.html#clust-pca">16.2.1</a>).</p>
+</div>
+<div id="tsne" class="section level3">
+<h3><span class="header-section-number">16.2.3</span> tSNE</h3>
+</div>
+</div>
+<div id="clustering-methods" class="section level2">
+<h2><span class="header-section-number">16.3</span> Clustering methods</h2>
+<p><strong>Unsupervised clustering</strong> is useful in many different applications and it has been widely studied in machine learning. Some of the most popular approaches are discussed below.</p>
+<div id="hierarchical-clustering" class="section level3">
+<h3><span class="header-section-number">16.3.1</span> Hierarchical clustering</h3>
+<p>In <a href="https://en.wikipedia.org/wiki/Hierarchical_clustering">hierarchical clustering</a>, one can use either a bottom-up or a top-down approach. In the former case, each cell is initially assigned to its own cluster and pairs of clusters are subsequently merged to create a hieararchy:</p>
+<div class="figure" style="text-align: center"><span id="fig:clust-hierarch-raw"></span>
+<img src="figures/hierarchical_clustering1.png" alt="Raw data" width="30%" />
 <p class="caption">
-Figure 14.4: Comparison of the relative log expression of the blischak data before and after the RUV normalisation
+Figure 16.2: Raw data
 </p>
 </div>
+<div class="figure" style="text-align: center"><span id="fig:clust-hierarch-dendr"></span>
+<img src="figures/hierarchical_clustering2.png" alt="The hierarchical clustering dendrogram" width="50%" />
+<p class="caption">
+Figure 16.3: The hierarchical clustering dendrogram
+</p>
 </div>
-<div id="exercise-4" class="section level2">
-<h2><span class="header-section-number">14.6</span> Exercise</h2>
-<p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter). Additionally, experiment with other combinations of normalizations and compare the results.</p>
+<p>With a top-down strategy, one instead starts with all observations in one cluster and then recursively split each cluster to form a hierarchy. One of the advantages of this strategy is that the method is deterministic.</p>
+</div>
+<div id="k-means" class="section level3">
+<h3><span class="header-section-number">16.3.2</span> k-means</h3>
+<p>In <a href="https://en.wikipedia.org/wiki/K-means_clustering"><em>k</em>-means clustering</a>, the goal is to partition <em>N</em> cells into <em>k</em> different clusters. In an iterative manner, cluster centers are assigned and each cell is assigned to its nearest cluster:</p>
+<div class="figure" style="text-align: center"><span id="fig:clust-k-means"></span>
+<img src="figures/k-means.png" alt="Schematic representation of the _k_-means clustering" width="100%" />
+<p class="caption">
+Figure 16.4: Schematic representation of the <em>k</em>-means clustering
+</p>
+</div>
+<p>Most methods for scRNA-seq analysis includes a <em>k</em>-means step at some point.</p>
+</div>
+<div id="graph-based-methods" class="section level3">
+<h3><span class="header-section-number">16.3.3</span> Graph-based methods</h3>
+<p>Over the last two decades there has been a lot of interest in analyzing networks in various domains. One goal is to identify groups or modules of nodes in a network. Some of these methods can be applied to scRNA-seq data and one example is the method, which is based on the concept of identifying groups of tightly connected nodes.</p>
+</div>
+</div>
+<div id="challenges-in-clustering" class="section level2">
+<h2><span class="header-section-number">16.4</span> Challenges in clustering</h2>
+<ul>
+<li>What is the number of clusters <em>k</em>?</li>
+<li><strong>Scalability</strong>: in the last 2 years the number of cells in scRNA-seq experiments has grown by 2 orders of magnitude from ~<span class="math inline">\(10^2\)</span> to ~<span class="math inline">\(10^4\)</span></li>
+<li>Tools are not user-friendly</li>
+</ul>
+</div>
+<div id="tools-for-scrna-seq-data" class="section level2">
+<h2><span class="header-section-number">16.5</span> Tools for scRNA-seq data</h2>
+<div id="sincera" class="section level3">
+<h3><span class="header-section-number">16.5.1</span> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></h3>
+<ul>
+<li>Based on hierarchical clustering</li>
+<li>Data is converted to <em>z</em>-scores before clustering</li>
+<li>Identify <em>k</em> by finding the first singleton cluster in the hierarchy</li>
+</ul>
+</div>
+<div id="pcareduce" class="section level3">
+<h3><span class="header-section-number">16.5.2</span> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></h3>
+<ul>
+<li>Based on PCA</li>
+</ul>
+</div>
+<div id="sc3" class="section level3">
+<h3><span class="header-section-number">16.5.3</span> <a href="http://bioconductor.org/packages/SC3/">SC3</a></h3>
+<ul>
+<li>Based on PCA and spectral dimensionality reductions</li>
+<li>Utilises <em>k</em>-means</li>
+<li>Additionally performs the consensus clustering</li>
+</ul>
+</div>
+<div id="tsnek-means" class="section level3">
+<h3><span class="header-section-number">16.5.4</span> tSNE+<em>k</em>-means</h3>
+</div>
+<div id="snn-cliq" class="section level3">
+<h3><span class="header-section-number">16.5.5</span> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></h3>
 
+<div id="refs" class="references">
+
+</div>
+</div>
 </div>
 </div>
             </section>
@@ -355,8 +373,8 @@ Figure 14.4: Comparison of the relative log expression of the blischak data befo
           </div>
         </div>
       </div>
-<a href="normalization-for-library-size-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="remove-confounders-using-controls-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="remove-confounders-using-controls-reads.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -383,7 +401,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/wikiselev/bookdown-demo/edit/master/13-remove-conf.Rmd",
+"link": "https://github.com/wikiselev/bookdown-demo/edit/master/15-clustering.Rmd",
 "text": "Edit"
 },
 "download": null,
