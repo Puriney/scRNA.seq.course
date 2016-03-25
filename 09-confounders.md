@@ -61,36 +61,6 @@ scater::plotQC(umi.qc[endog_genes, ],
 
 Indeed, we can see that PC1 can be completely explained by the number of the detected genes. In fact, it was also visible on the PCA plot above. This is a well-known issue in scRNA-seq and was described [here](http://biorxiv.org/content/early/2015/12/27/025528).
 
-### Control ERCCs
-
-
-```r
-scater::plotQC(umi.qc[endog_genes, ],
-               type = "find-pcs",
-               variable = "pct_counts_feature_controls_ERCC")
-```
-
-<div class="figure" style="text-align: center">
-<img src="09-confounders_files/figure-html/confound-find-pcs-erccs-1.png" alt="(\#fig:confound-find-pcs-erccs)PC correlation with the percentage of reads in ERCCs" width="90%" />
-<p class="caption">(\#fig:confound-find-pcs-erccs)PC correlation with the percentage of reads in ERCCs</p>
-</div>
-
-### Control MTs
-
-
-```r
-scater::plotQC(umi.qc[endog_genes, ],
-               type = "find-pcs",
-               variable = "pct_counts_feature_controls_MT")
-```
-
-<div class="figure" style="text-align: center">
-<img src="09-confounders_files/figure-html/confound-find-pcs-mts-1.png" alt="(\#fig:confound-find-pcs-mts)PC correlation with the percentage of reads in MT genes" width="90%" />
-<p class="caption">(\#fig:confound-find-pcs-mts)PC correlation with the percentage of reads in MT genes</p>
-</div>
-
-
-
 ## Explanatory variables
 
 scater can also compute the marginal $R^2$ for each variable when fitting a linear model regressing expression values for each gene against just that variable, and display a density plot of the gene-wise marginal $R^2$ values for the variables.
