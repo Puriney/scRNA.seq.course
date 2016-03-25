@@ -107,10 +107,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#bulk-rna-seq"><i class="fa fa-check"></i><b>3.1</b> Bulk RNA-seq</a></li>
 <li class="chapter" data-level="3.2" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#scrna-seq"><i class="fa fa-check"></i><b>3.2</b> scRNA-seq</a></li>
 <li class="chapter" data-level="3.3" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#protocol"><i class="fa fa-check"></i><b>3.3</b> Protocol</a></li>
-<li class="chapter" data-level="3.4" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#analysis"><i class="fa fa-check"></i><b>3.4</b> Analysis</a></li>
+<li class="chapter" data-level="3.4" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#computational-analysis"><i class="fa fa-check"></i><b>3.4</b> Computational Analysis</a></li>
 <li class="chapter" data-level="3.5" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#challenges"><i class="fa fa-check"></i><b>3.5</b> Challenges</a></li>
 <li class="chapter" data-level="3.6" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#controls"><i class="fa fa-check"></i><b>3.6</b> Controls</a><ul>
-<li class="chapter" data-level="3.6.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#ercc-spike-ins"><i class="fa fa-check"></i><b>3.6.1</b> ERCC <em>spike-ins</em></a></li>
+<li class="chapter" data-level="3.6.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#spike-ins"><i class="fa fa-check"></i><b>3.6.1</b> Spike-ins</a></li>
 <li class="chapter" data-level="3.6.2" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#umis"><i class="fa fa-check"></i><b>3.6.2</b> UMIs</a></li>
 </ul></li>
 </ul></li>
@@ -254,7 +254,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">3.1</span> Bulk RNA-seq</h2>
 <ul>
 <li>A major breakthrough (replaced microarrays) in the late 00’s and has been widely used since</li>
-<li>Provides an <strong>average expression level</strong> for each gene from a large population of input cells</li>
+<li>Measures the <strong>average expression level</strong> for each gene across a large population of input cells</li>
 <li>Useful for comparative transcriptomics, e.g. samples of the same tissue from different species</li>
 <li>Useful for quantifying expression signatures from ensembles, e.g. in disease studies</li>
 <li><strong>Insufficient</strong> for studying heterogeneous systems, e.g. early development studies, complex tissues (brain)</li>
@@ -265,8 +265,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">3.2</span> scRNA-seq</h2>
 <ul>
 <li>A <strong>new</strong> technology, first publication by <a href="http://www.nature.com/nmeth/journal/v6/n5/abs/nmeth.1315.html">Tang et al</a> in 2009</li>
-<li>Instead of providing an average of expression of a population of cells, scRNA-seq provides a <strong>distribution of expression levels</strong> from a population of cells</li>
-<li>Allows to study new biological questions in which <strong>cell-specific changes in transcriptome are important</strong>, e.g. cell type identification, inference of gene regulatory networks across the cells, stochastic component of transcription</li>
+<li>Measures the <strong>distribution of expression levels</strong> for each gene across a population of cells</li>
+<li>Allows to study new biological questions in which <strong>cell-specific changes in transcriptome are important</strong>, e.g. cell type identification, heterogeneity of cell responses, stochasticity of gene expression, inference of gene regulatory networks across the cells.</li>
 <li>Datasets range <strong>from <span class="math inline">\(10^2\)</span> to <span class="math inline">\(10^4\)</span> cells</strong> and increase in size every year</li>
 <li>Currently there are several different protocols in use, e.g. <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2639.html">SMART-seq2</a>, <a href="http://www.cell.com/cell-reports/abstract/S2211-1247%2812%2900228-8">CELL-seq</a> and <a href="http://mccarrolllab.com/dropseq/">Drop-seq</a></li>
 <li>Several computational analysis methods from bulk RNA-seq <strong>can</strong> be used</li>
@@ -282,9 +282,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>image from <a href="https://en.wikipedia.org/wiki/Single_cell_sequencing">Wikipedia - Single cell sequencing</a></p>
 <p>Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by <a href="http://nar.oxfordjournals.org/content/42/14/8845">Saliba et al</a>, <a href="http://www.sciencedirect.com/science/article/pii/S1097276515003068">Handley et al</a> or <a href="http://www.sciencedirect.com/science/article/pii/S1097276515002610">Kolodziejczyk et al</a>.</p>
 </div>
-<div id="analysis" class="section level2">
-<h2><span class="header-section-number">3.4</span> Analysis</h2>
-<p>This course is concerned with the computational analysis of the data obtained from scRNA-seq experiments. Even though the format of the data is the same as for bulk RNA-seq, the fact that individual cells are sampled means that the data <strong>should</strong> be analyzed differently. We will provide an overview of how to process a scRNA-seq sample and how to analyze the data to provide biological insights.</p>
+<div id="computational-analysis" class="section level2">
+<h2><span class="header-section-number">3.4</span> Computational Analysis</h2>
+<p>This course is concerned with the computational analysis of the data obtained from scRNA-seq experiments. The first steps (yellow) are general for any highthroughput sequencing data. Later steps (orange) require a mix of existing RNASeq analysis methods and novel methods to address the technical difference of scRNASeq. Finally the biological interpretation <strong>should</strong> be analyzed with methods specific to scRNASeq.</p>
 <div class="figure">
 <img src="figures/flowchart.png" alt="" />
 
@@ -303,13 +303,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="controls" class="section level2">
 <h2><span class="header-section-number">3.6</span> Controls</h2>
 <p>To address challenges in technical variation between scRNA sequencing libraries two quantitative standards were introduced. They allow to normalize gene expression levels across different cells.</p>
-<div id="ercc-spike-ins" class="section level3">
-<h3><span class="header-section-number">3.6.1</span> ERCC <em>spike-ins</em></h3>
-<p>One standard, strongly recommended for all scRNA-seq experiments is to use extrinsic <em>spike-in</em> molecules. These molecules are added to the lysate before the reverse transcription. The most popular and widely used artificial spike-ins are from <a href="https://www.thermofisher.com/order/catalog/product/4456740">External RNA Control Consortium (ERCC)</a>. It contains 92 synthetic spikes based on bacterial sequences. Normalization using <em>spike-ins</em> is based on the fact that the number of molecules of each <em>spike-in</em> RNA species should be the same across all single-cell libraries.</p>
+<div id="spike-ins" class="section level3">
+<h3><span class="header-section-number">3.6.1</span> Spike-ins</h3>
+<p>Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the <a href="https://www.thermofisher.com/order/catalog/product/4456740">External RNA Control Consortium (ERCC)</a>. This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences (<a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3166838/">Jiang et al.</a>).</p>
 </div>
 <div id="umis" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> UMIs</h3>
-<p>Another method of standartisation is to use <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique Molecular Identifiers (UMIs)</a>. Instead of sequencing the amplified reads from a cell library, it allows for sequencing reads derived solely from 3’ or 5’ end of the amplified transcript. UMIs are added as barcodes to the individual RNA molecules. This approach provides an estimate of the number of transcripts that is independent of amplification biases.</p>
+<p>Another method of standardisation is to use <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique Molecular Identifiers (UMIs)</a>. These are 4-20 bp barcode sequences which are added to the 3’ or 5’ end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. These barcodes enable the estimate of the number of transcripts without amplification biases.</p>
 
 </div>
 </div>
