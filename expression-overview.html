@@ -153,23 +153,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
 <li class="chapter" data-level="8" data-path="expression-overview.html"><a href="expression-overview.html"><i class="fa fa-check"></i><b>8</b> Expression overview</a><ul>
 <li class="chapter" data-level="8.1" data-path="expression-overview.html"><a href="expression-overview.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
-<li class="chapter" data-level="8.2" data-path="expression-overview.html"><a href="expression-overview.html#top-500-genes"><i class="fa fa-check"></i><b>8.2</b> Top 500 genes</a><ul>
+<li class="chapter" data-level="8.2" data-path="expression-overview.html"><a href="expression-overview.html#pca-plot"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
 <li class="chapter" data-level="8.2.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.2.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="expression-overview.html"><a href="expression-overview.html#pca-plot"><i class="fa fa-check"></i><b>8.3</b> PCA plot</a><ul>
+<li class="chapter" data-level="8.3" data-path="expression-overview.html"><a href="expression-overview.html#tsne-map"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
 <li class="chapter" data-level="8.3.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.3.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.4" data-path="expression-overview.html"><a href="expression-overview.html#diffusion-map"><i class="fa fa-check"></i><b>8.4</b> Diffusion map</a><ul>
-<li class="chapter" data-level="8.4.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc-2"><i class="fa fa-check"></i><b>8.4.1</b> Before QC</a></li>
-<li class="chapter" data-level="8.4.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc-2"><i class="fa fa-check"></i><b>8.4.2</b> After QC</a></li>
-</ul></li>
-<li class="chapter" data-level="8.5" data-path="expression-overview.html"><a href="expression-overview.html#tsne-map"><i class="fa fa-check"></i><b>8.5</b> tSNE map</a><ul>
-<li class="chapter" data-level="8.5.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc-3"><i class="fa fa-check"></i><b>8.5.1</b> Before QC</a></li>
-<li class="chapter" data-level="8.5.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc-3"><i class="fa fa-check"></i><b>8.5.2</b> After QC</a></li>
-</ul></li>
-<li class="chapter" data-level="8.6" data-path="expression-overview.html"><a href="expression-overview.html#exercise-1"><i class="fa fa-check"></i><b>8.6</b> Exercise</a></li>
+<li class="chapter" data-level="8.4" data-path="expression-overview.html"><a href="expression-overview.html#exercise-1"><i class="fa fa-check"></i><b>8.4</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="expression-overview-reads.html"><a href="expression-overview-reads.html"><i class="fa fa-check"></i><b>9</b> Expression overview (Reads)</a></li>
 <li class="chapter" data-level="10" data-path="confounding-factors.html"><a href="confounding-factors.html"><i class="fa fa-check"></i><b>10</b> Confounding factors</a><ul>
@@ -267,43 +259,11 @@ umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="s
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
-<div id="top-500-genes" class="section level2">
-<h2><span class="header-section-number">8.2</span> Top 500 genes</h2>
-<p>With scater one can look at the proportion of reads accounted by the top 500 expressed genes.</p>
+<div id="pca-plot" class="section level2">
+<h2><span class="header-section-number">8.2</span> PCA plot</h2>
+<p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components. Again the <a href="https://github.com/davismcc/scater">scater</a> package provides several very useful functions to make this analysis straightforward.</p>
 <div id="before-qc" class="section level3">
 <h3><span class="header-section-number">8.2.1</span> Before QC</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plot</span>(umi[endog_genes, ],
-             <span class="dt">block1 =</span> <span class="st">&quot;individual&quot;</span>,
-             <span class="dt">block2 =</span> <span class="st">&quot;replicate&quot;</span>,
-             <span class="dt">colour_by =</span> <span class="st">&quot;use&quot;</span>,
-             <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:expr-overview-top500-before-qc"></span>
-<img src="07-exprs-overview_files/figure-html/expr-overview-top500-before-qc-1.png" alt="Proportion of reads accounted by the top 500" width="90%" />
-<p class="caption">
-Figure 8.1: Proportion of reads accounted by the top 500
-</p>
-</div>
-</div>
-<div id="after-qc" class="section level3">
-<h3><span class="header-section-number">8.2.2</span> After QC</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plot</span>(umi.qc[endog_genes, ],
-             <span class="dt">block1 =</span> <span class="st">&quot;individual&quot;</span>,
-             <span class="dt">block2 =</span> <span class="st">&quot;replicate&quot;</span>,
-             <span class="dt">colour_by =</span> <span class="st">&quot;use&quot;</span>,
-             <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:expr-overview-top500-after-qc"></span>
-<img src="07-exprs-overview_files/figure-html/expr-overview-top500-after-qc-1.png" alt="Proportion of reads accounted by the top 500" width="90%" />
-<p class="caption">
-Figure 8.2: Proportion of reads accounted by the top 500
-</p>
-</div>
-</div>
-</div>
-<div id="pca-plot" class="section level2">
-<h2><span class="header-section-number">8.3</span> PCA plot</h2>
-<p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components. Again the <a href="https://github.com/davismcc/scater">scater</a> package provides several very useful functions to make this analysis straightforward.</p>
-<div id="before-qc-1" class="section level3">
-<h3><span class="header-section-number">8.3.1</span> Before QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi[endog_genes, ],
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -311,12 +271,12 @@ Figure 8.2: Proportion of reads accounted by the top 500
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-before-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.3: PCA plot of the blischak data
+Figure 8.1: PCA plot of the blischak data
 </p>
 </div>
 </div>
-<div id="after-qc-1" class="section level3">
-<h3><span class="header-section-number">8.3.2</span> After QC</h3>
+<div id="after-qc" class="section level3">
+<h3><span class="header-section-number">8.2.2</span> After QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -324,48 +284,16 @@ Figure 8.3: PCA plot of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.4: PCA plot of the blischak data
-</p>
-</div>
-</div>
-</div>
-<div id="diffusion-map" class="section level2">
-<h2><span class="header-section-number">8.4</span> Diffusion map</h2>
-<p>Another way of representing the data is a diffusion map. It is very useful if the cells represent a continuous process (e.g. development).</p>
-<div id="before-qc-2" class="section level3">
-<h3><span class="header-section-number">8.4.1</span> Before QC</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotDiffusionMap</span>(umi[endog_genes, ],
-                         <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
-                         <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
-                         <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
-                         <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:expr-overview-diff-before-qc"></span>
-<img src="07-exprs-overview_files/figure-html/expr-overview-diff-before-qc-1.png" alt="Diffusion map of the blischak data" width="90%" />
-<p class="caption">
-Figure 8.5: Diffusion map of the blischak data
-</p>
-</div>
-</div>
-<div id="after-qc-2" class="section level3">
-<h3><span class="header-section-number">8.4.2</span> After QC</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotDiffusionMap</span>(umi.qc[endog_genes, ],
-                         <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
-                         <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
-                         <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
-                         <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:expr-overview-diff-after-qc"></span>
-<img src="07-exprs-overview_files/figure-html/expr-overview-diff-after-qc-1.png" alt="Diffusion map of the blischak data" width="90%" />
-<p class="caption">
-Figure 8.6: Diffusion map of the blischak data
+Figure 8.2: PCA plot of the blischak data
 </p>
 </div>
 </div>
 </div>
 <div id="tsne-map" class="section level2">
-<h2><span class="header-section-number">8.5</span> tSNE map</h2>
-<p>Another way of representing the data is a tSNE map.</p>
-<div id="before-qc-3" class="section level3">
-<h3><span class="header-section-number">8.5.1</span> Before QC</h3>
+<h2><span class="header-section-number">8.3</span> tSNE map</h2>
+<p>Another way of representing the data is a tSNE map. <em>We need to explain how tSNE works[dimensionality reduction + nearest neightbour network] &amp; show the effect of changing the parameters (Also these plots look to me like the perplexity parameter is too low.)</em></p>
+<div id="before-qc-1" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> Before QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(umi[endog_genes, ],
                  <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                  <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -374,12 +302,12 @@ Figure 8.6: Diffusion map of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-before-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.7: tSNE map of the blischak data
+Figure 8.3: tSNE map of the blischak data
 </p>
 </div>
 </div>
-<div id="after-qc-3" class="section level3">
-<h3><span class="header-section-number">8.5.2</span> After QC</h3>
+<div id="after-qc-1" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> After QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(umi.qc[endog_genes, ],
                  <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                  <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -388,13 +316,13 @@ Figure 8.7: tSNE map of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.8: tSNE map of the blischak data
+Figure 8.4: tSNE map of the blischak data
 </p>
 </div>
 </div>
 </div>
 <div id="exercise-1" class="section level2">
-<h2><span class="header-section-number">8.6</span> Exercise</h2>
+<h2><span class="header-section-number">8.4</span> Exercise</h2>
 <p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).</p>
 
 </div>
