@@ -297,3 +297,5 @@ TRUE      610
 ```
 
 
+
+If you want to further check yourself you can download our [`reads`](http://genat.uk/bookdown-demo/blischak/reads.rds) object. If you followed the steps above it should be exactly the same as yours.
