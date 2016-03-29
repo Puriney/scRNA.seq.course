@@ -267,7 +267,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Datasets range <strong>from <span class="math inline">\(10^2\)</span> to <span class="math inline">\(10^4\)</span> cells</strong> and increase in size every year</li>
 <li>Currently there are several different protocols in use, e.g. <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2639.html">SMART-seq2</a>, <a href="http://www.cell.com/cell-reports/abstract/S2211-1247%2812%2900228-8">CELL-seq</a> and <a href="http://mccarrolllab.com/dropseq/">Drop-seq</a></li>
 <li>Several computational analysis methods from bulk RNA-seq <strong>can</strong> be used</li>
-<li><strong>In most cases</strong> requires adaptation of the existing methods or development of new ones</li>
+<li><strong>In most cases</strong> computational analysis requires adaptation of the existing methods or development of new ones</li>
 </ul>
 </div>
 <div id="protocol" class="section level2">
@@ -281,7 +281,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="computational-analysis" class="section level2">
 <h2><span class="header-section-number">3.4</span> Computational Analysis</h2>
-<p>This course is concerned with the computational analysis of the data obtained from scRNA-seq experiments. The first steps (yellow) are general for any highthroughput sequencing data. Later steps (orange) require a mix of existing RNASeq analysis methods and novel methods to address the technical difference of scRNASeq. Finally the biological interpretation <strong>should</strong> be analyzed with methods specific to scRNASeq.</p>
+<p>This course is concerned with the computational analysis of the data obtained from scRNA-seq experiments. The first steps (yellow) are general for any highthroughput sequencing data. Later steps (orange) require a mix of existing RNASeq analysis methods and novel methods to address the technical difference of scRNASeq. Finally the biological interpretation <strong>should</strong> be analyzed with methods specifically developed for scRNASeq.</p>
 <div class="figure">
 <img src="figures/flowchart.png" alt="" />
 
@@ -295,18 +295,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><strong>Amplification</strong> (up to 1 million fold)</li>
 <li><strong>Gene ‘dropouts’</strong> in which a gene is observed at a moderate expression level in one cell but is not detected in another cell (<a href="http://www.nature.com/nmeth/journal/v11/n7/full/nmeth.2967.html">Kharchenko et al</a>).</li>
 </ul>
-<p>In both cases the discrepancies are introduced due to low starting transcript amount (from one cell only) and have yet to be addressed by improving the experimental protocol.</p>
+<p>In both cases the discrepancies are introduced due to low starting amounts of transcripts since the RNA comes from one cell only. Improving the transcript capture efficiency and reducing the amplification bias are currently active areas of research.</p>
 </div>
 <div id="controls" class="section level2">
 <h2><span class="header-section-number">3.6</span> Controls</h2>
-<p>To address challenges in technical variation between scRNA sequencing libraries two quantitative standards were introduced. They allow to normalize gene expression levels across different cells.</p>
+<p>To provide better estimates of the technical variation between scRNA sequencing libraries two quantitative standards are frequently used. The aim of using spike-ins and UMIs is to facilitate normalization of gene expression levels across different cells.</p>
 <div id="spike-ins" class="section level3">
 <h3><span class="header-section-number">3.6.1</span> Spike-ins</h3>
 <p>Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the <a href="https://www.thermofisher.com/order/catalog/product/4456740">External RNA Control Consortium (ERCC)</a>. This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences (<a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3166838/">Jiang et al.</a>).</p>
 </div>
 <div id="umis" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> UMIs</h3>
-<p>Another method of standardisation is to use <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique Molecular Identifiers (UMIs)</a>. These are 4-20 bp barcode sequences which are added to the 3’ or 5’ end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. These barcodes enable the estimate of the number of transcripts without amplification biases.</p>
+<p>Another method of standardisation is to use <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique Molecular Identifiers (UMIs)</a>. These are 4-20 bp barcode sequences which are added to the 3’ or 5’ end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. The barcodes make it possible to quantify the number of transcripts prior to the amplification step.</p>
 
 </div>
 </div>
