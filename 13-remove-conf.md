@@ -55,7 +55,7 @@ highly.var.genes <- scRNA.seq.funcs::Brennecke_getVariableGenes(
 
 ```
 ## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(umi.qc)
-## $norm_counts, : Only 21 spike-ins to be used in fitting, may result in poor
+## $norm_counts, : Only 24 spike-ins to be used in fitting, may result in poor
 ## fit.
 ```
 
@@ -68,7 +68,7 @@ In the figure above blue points are the ERCC spike-ins. The red curve
 is the fitted technical noise model and the dashed line is the 95%
 CI. Pink dots are the genes with significant biological variability
 after multiple-testing correction. Since our dataset is relatively
-homogeneous only 148 genes are identified as significantly
+homogeneous only 326 genes are identified as significantly
 variable.
 
 ## Remove Unwanted Variation
