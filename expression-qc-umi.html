@@ -133,6 +133,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-qc"><i class="fa fa-check"></i><b>6.3</b> Cell QC</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#library-size"><i class="fa fa-check"></i><b>6.3.1</b> Library size</a></li>
 <li class="chapter" data-level="6.3.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#detected-genes-1"><i class="fa fa-check"></i><b>6.3.2</b> Detected genes (1)</a></li>
+<li class="chapter" data-level="6.3.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#erccs-and-mts"><i class="fa fa-check"></i><b>6.3.3</b> ERCCs and MTs</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-filtering"><i class="fa fa-check"></i><b>6.4</b> Cell filtering</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default"><i class="fa fa-check"></i><b>6.4.1</b> Default</a></li>
@@ -249,9 +250,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">6</span> Expression QC (UMI)</h1>
 <div id="introduction-1" class="section level2">
 <h2><span class="header-section-number">6.1</span> Introduction</h2>
-<p>Once gene expression has been quantified it is summarized as an <strong>expression matrix</strong> where each row corresponds to a gene (or transcript) and each column corresponds to a single cell. This matrix should be examined to remove poor quality cells which were not evident in either read QC or mapping QC. Failure to remove low quality cells at this stage will add a large amount of technical noise which will obscure the biological signals of interest in downstream analysis.</p>
-<p>Since there is currently no standard method for performing scRNASeq the expected values for the various QC measures that will be presented here can vary substantially from experiment to experiment. Thus, to perform QC we will be looking for cells which are outliers with respect to the rest of the dataset rather than comparing to independent quality standards.</p>
-<p>For convience we will also be using the <a href="https://github.com/davismcc/scater">scater</a> package which contains many functions to aid in quality control.</p>
+<p>Once gene expression has been quantified it is summarized as an <strong>expression matrix</strong> where each row corresponds to a gene (or transcript) and each column corresponds to a single cell. This matrix should be examined to remove poor quality cells which were not detected in either read QC or mapping QC steps. Failure to remove low quality cells at this stage may add technical noise which has the potential to obscure the biological signals of interest in the downstream analysis.</p>
+<p>Since there is currently no standard method for performing scRNASeq the expected values for the various QC measures that will be presented here can vary substantially from experiment to experiment. Thus, to perform QC we will be looking for cells which are outliers with respect to the rest of the dataset rather than comparing to independent quality standards. Consequently, care should be taken when comparing quality metrics across datasets collected using different protocols.</p>
 </div>
 <div id="blischak-dataset" class="section level2">
 <h2><span class="header-section-number">6.2</span> Blischak dataset</h2>
@@ -261,7 +261,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Load the data and annotations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">molecules &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/molecules.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
 anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/annotation.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p>How does the data look like?</p>
+<p>Inspect a small portion of the expression matrix</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
     <span class="kw">head</span>(molecules[ , <span class="dv">1</span>:<span class="dv">3</span>]), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
@@ -376,7 +376,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 </tbody>
 </table>
 <p>The data consists of 3 individuals and 3 replicates and therefore has 9 batches in total.</p>
-<p>Let’s standardise the analysis by using the scater package described above. First, make scater SCESet classes:</p>
+<p>We standardize the analysis by using the scater package. First, create the scater SCESet classes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pheno_data &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, anno)
 <span class="kw">rownames</span>(pheno_data) &lt;-<span class="st"> </span>pheno_data$sample_id
 umi &lt;-<span class="st"> </span>scater::<span class="kw">newSCESet</span>(
@@ -403,7 +403,7 @@ mt &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quo
 <h2><span class="header-section-number">6.3</span> Cell QC</h2>
 <div id="library-size" class="section level3">
 <h3><span class="header-section-number">6.3.1</span> Library size</h3>
-<p>Next we will look at the total number of RNA molecules detected per sample (if we were using read counts rather than UMI counts this would be total reads). Wells with few reads/molecules are likely to have been broken or failed to capture a cell, thus should be removed.</p>
+<p>Next we consider the total number of RNA molecules detected per sample (if we were using read counts rather than UMI counts this would be the total number of reads). Wells with few reads/molecules are likely to have been broken or failed to capture a cell, and should thus be removed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(
     umi$total_counts,
     <span class="dt">breaks =</span> <span class="dv">100</span>
@@ -447,7 +447,7 @@ Figure 6.1: Histogram of library sizes for all cells
 </div>
 <div id="detected-genes-1" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Detected genes (1)</h3>
-<p>One of the simplest measures of cell quality is the number of genes that were detected. Cells with few detected genes may have been broken or dead prior to capture.</p>
+<p>In addition to ensuring sufficient sequencing depth for each sample, we also want to make sure that the reads are distributed across the transcriptome. Thus, we count the total number of unique genes detected in each sample.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(
     umi$total_features,
     <span class="dt">breaks =</span> <span class="dv">100</span>
@@ -459,7 +459,7 @@ Figure 6.1: Histogram of library sizes for all cells
 Figure 6.2: Histogram of the number of detected genes in all cells
 </p>
 </div>
-<p>Here we see that most cells have between 7,000-10,000 detected genes, which is normal for high-depth scRNA-seq. However this varies by experimental protocol and sequencing depth with droplet-based methods or lower sequencing-depth detecting fewer genes per cell. The feature to note is the <strong>“heavy tail”</strong> of the left hand side of the distribution. If detection rates were equal across the cells then the distribution should be approximately normal. Thus we remove those cells in the tail of the distribution (&lt;7,000 detected genes).</p>
+<p>From the plot we conclude that most cells have between 7,000-10,000 detected genes, which is normal for high-depth scRNA-seq. However, this varies by experimental protocol and sequencing depth. For example, droplet-based methods or samples with lower sequencing-depth typically detect fewer genes per cell. The most notable feature in the above plot is the <strong>“heavy tail”</strong> on the left hand side of the distribution. If detection rates were equal across the cells then the distribution should be approximately normal. Thus we remove those cells in the tail of the distribution (fewer than 7,000 detected genes).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_expr_features &lt;-<span class="st"> </span>(umi$total_features &gt;<span class="st"> </span><span class="dv">7000</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
     <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_by_expr_features)),
@@ -484,13 +484,12 @@ Figure 6.2: Histogram of the number of detected genes in all cells
 <td align="left">TRUE</td>
 <td align="right">744</td>
 </tr>
-<tr class="odd">
-<td align="left">### ERCCs and MTs</td>
-<td align="right"></td>
-</tr>
 </tbody>
 </table>
-<p>Another measures of cell quality is the ration between ERCC <em>spike-in</em> RNAs and endogenous RNAs. This can be used to estimate the total amount of RNA in the captured cells. Cells with a high level of <em>spike-in</em> RNAs had low starting amounts of RNA, likely due to the cell being dead or stressed, or the RNA being degraded.</p>
+</div>
+<div id="erccs-and-mts" class="section level3">
+<h3><span class="header-section-number">6.3.3</span> ERCCs and MTs</h3>
+<p>Another measure of cell quality is the ratio between ERCC <em>spike-in</em> RNAs and endogenous RNAs. This ratio can be used to estimate the total amount of RNA in the captured cells. Cells with a high level of <em>spike-in</em> RNAs had low starting amounts of RNA, likely due to the cell being dead or stressed which may result in the RNA being degraded.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPhenoData</span>(
     umi,
     <span class="kw">aes_string</span>(<span class="dt">x =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -515,7 +514,7 @@ Figure 6.3: Percentage of counts in MT genes
 Figure 6.4: Percentage of counts in ERCCs
 </p>
 </div>
-<p>This analysis shows that majority of the cells from NA19098.r2 batch have a very high ERCC/Endo ratio. Indeed, it has been shown by the authors that this batch contains cells of smaller size.</p>
+<p>The above analysis shows that majority of the cells from NA19098.r2 batch have a very high ERCC/Endo ratio. Indeed, it has been shown by the authors that this batch contains cells of smaller size.</p>
 <p><strong>Exercise</strong></p>
 <p>Create filters for removing batch NA19098.r2 and cells with high expression of mitochondrial genes (&gt;10% of total counts in a cell).</p>
 <p><strong>Answer</strong></p>
@@ -574,7 +573,7 @@ Figure 6.4: Percentage of counts in ERCCs
 <p><strong>Exercise</strong></p>
 <p>What would you expect to see in the ERCC vs counts plot if you were examining a dataset containing cells of different sizes (eg. normal &amp; senescent cells)?</p>
 <p><strong>Answer</strong></p>
-<p>You would expect to see a group corresponding to the smaller cells (normal) above a separate group corresponding to the larger cells (senescent).</p>
+<p>You would expect to see a group corresponding to the smaller cells (normal) with a higher fraction of ERCC reads than a separate group corresponding to the larger cells (senescent).</p>
 </div>
 </div>
 <div id="cell-filtering" class="section level2">

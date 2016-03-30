@@ -6,13 +6,12 @@ knit: bookdown::preview_chapter
 
 ## Introduction
 
-Once gene expression has been quantified it is summarized as an __expression matrix__ where each row corresponds to a gene (or transcript) and each column corresponds to a single cell. This matrix should be examined to remove poor quality cells which were not evident in either read QC or mapping QC. Failure to remove low quality cells at this
-stage will add a large amount of technical noise which will obscure
-the biological signals of interest in downstream analysis. 
+Once gene expression has been quantified it is summarized as an __expression matrix__ where each row corresponds to a gene (or transcript) and each column corresponds to a single cell. This matrix should be examined to remove poor quality cells which were not detected in either read QC or mapping QC steps. Failure to remove low quality cells at this
+stage may add technical noise which has the potential to obscure
+the biological signals of interest in the downstream analysis. 
 
-Since there is currently no standard method for performing scRNASeq the expected values for the various QC measures that will be presented here can vary substantially from experiment to experiment. Thus, to perform QC we will be looking for cells which are outliers with respect to the rest of the dataset rather than comparing to independent quality standards.
+Since there is currently no standard method for performing scRNASeq the expected values for the various QC measures that will be presented here can vary substantially from experiment to experiment. Thus, to perform QC we will be looking for cells which are outliers with respect to the rest of the dataset rather than comparing to independent quality standards. Consequently, care should be taken when comparing quality metrics across datasets collected using different protocols.
 
-For convience we will also be using the [scater](https://github.com/davismcc/scater) package which contains many functions to aid in quality control.
 
 ## Blischak dataset
 
@@ -39,7 +38,7 @@ molecules <- read.table("blischak/molecules.txt", sep = "\t")
 anno <- read.table("blischak/annotation.txt", sep = "\t", header = TRUE)
 ```
 
-How does the data look like?
+Inspect a small portion of the expression matrix
 
 ```r
 knitr::kable(
@@ -83,7 +82,7 @@ NA19098      r1          A06    NA19098.r1   NA19098.r1.A06
 
 The data consists of 3 individuals and 3 replicates and therefore has 9 batches in total.
 
-Let's standardise the analysis by using the scater package described above. First, make scater SCESet classes:
+We standardize the analysis by using the scater package. First, create the scater SCESet classes:
 
 ```r
 pheno_data <- new("AnnotatedDataFrame", anno)
@@ -126,10 +125,10 @@ umi <- scater::calculateQCMetrics(
 
 ### Library size
 
-Next we will look at the total number of RNA molecules detected per
+Next we consider the total number of RNA molecules detected per
 sample (if we were using read counts rather than UMI counts this would
-be total reads). Wells with few reads/molecules are likely to have
-been broken or failed to capture a cell, thus should be removed.
+be the total number of reads). Wells with few reads/molecules are likely to have
+been broken or failed to capture a cell, and should thus be removed.
 
 
 ```r
@@ -152,6 +151,7 @@ contain too few molecules. What distribution do you expect that the
 total number of molecules for each cell should follow?
 
 __Answer__
+
 
 ```r
 filter_by_total_counts <- (umi$total_counts > 25000)
@@ -178,9 +178,7 @@ TRUE                       818
 
 ### Detected genes (1)
 
-One of the simplest measures of cell quality is the number of genes
-that were detected. Cells with few detected genes may have been broken
-or dead prior to capture.
+In addition to ensuring sufficient sequencing depth for each sample, we also want to make sure that the reads are distributed across the transcriptome. Thus, we count the total number of unique genes detected in each sample.
 
 
 ```r
@@ -196,14 +194,13 @@ abline(v = 7000, col = "red")
 <p class="caption">(\#fig:total-features-hist)Histogram of the number of detected genes in all cells</p>
 </div>
 
-Here we see that most cells have between 7,000-10,000 detected genes,
-which is normal for high-depth scRNA-seq. However this varies by
-experimental protocol and sequencing depth with droplet-based methods
-or lower sequencing-depth detecting fewer genes per cell. The feature
-to note is the __"heavy tail"__ of the left hand side of the
+From the plot we conclude that most cells have between 7,000-10,000 detected genes,
+which is normal for high-depth scRNA-seq. However, this varies by
+experimental protocol and sequencing depth. For example, droplet-based methods
+or samples with lower sequencing-depth typically detect fewer genes per cell. The most notable feature in the above plot is the __"heavy tail"__ on the left hand side of the
 distribution. If detection rates were equal across the cells then the
 distribution should be approximately normal. Thus we remove those
-cells in the tail of the distribution (<7,000 detected genes).
+cells in the tail of the distribution (fewer than 7,000 detected genes).
 
 
 ```r
@@ -228,13 +225,14 @@ filter_by_expr_features    Freq
 ------------------------  -----
 FALSE                       120
 TRUE                        744
+
 ### ERCCs and MTs
 
-Another measures of cell quality is the ration between ERCC _spike-in_
-RNAs and endogenous RNAs. This can be used to estimate the total amount
+Another measure of cell quality is the ratio between ERCC _spike-in_
+RNAs and endogenous RNAs. This ratio can be used to estimate the total amount
 of RNA in the captured cells. Cells with a high level of _spike-in_ RNAs
 had low starting amounts of RNA, likely due to the cell being
-dead or stressed, or the RNA being degraded.
+dead or stressed which may result in the RNA being degraded.
 
 
 ```r
@@ -266,7 +264,7 @@ scater::plotPhenoData(
 <p class="caption">(\#fig:ercc-vs-counts)Percentage of counts in ERCCs</p>
 </div>
 
-This analysis shows that majority of the cells from NA19098.r2 batch have a very high ERCC/Endo ratio. Indeed, it has been shown by the authors that this batch contains cells of smaller size. 
+The above analysis shows that majority of the cells from NA19098.r2 batch have a very high ERCC/Endo ratio. Indeed, it has been shown by the authors that this batch contains cells of smaller size. 
 
 __Exercise__
 
@@ -325,7 +323,7 @@ What would you expect to see in the ERCC vs counts plot if you were examining a 
 
 __Answer__
 
-You would expect to see a group corresponding to the smaller cells (normal) above a separate group corresponding to the larger cells (senescent).
+You would expect to see a group corresponding to the smaller cells (normal) with a higher fraction of ERCC reads than a separate group corresponding to the larger cells (senescent).
 
 
 ## Cell filtering
