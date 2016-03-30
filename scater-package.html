@@ -249,17 +249,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">5</span> scater package</h1>
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">5.1</span> Introduction</h2>
-<p><a href="https://github.com/davismcc/scater">scater</a> is a single-cell analysis toolkit for expression with R. This package contains useful tools for the analysis of single-cell gene expression data using the statistical software R. The package places an emphasis on tools for quality control, visualisation and pre-processing of data before further downstream analysis.</p>
-<p><a href="https://github.com/davismcc/scater">scater</a> enables the following:</p>
+<p><a href="https://github.com/davismcc/scater">scater</a> is a R package single-cell RNA-seq analysis. The package contains several useful methods for quality control, visualisation and pre-processing of data prior to further downstream analysis.</p>
+<p><a href="https://github.com/davismcc/scater">scater</a> features the following functionality:</p>
 <ul>
 <li>Automated computation of QC metrics</li>
 <li>Transcript quantification from read data with pseudo-alignment</li>
 <li>Data format standardisation</li>
-<li>Rich visualisations for exploratory analysis</li>
+<li>Rich visualizations for exploratory analysis</li>
 <li>Seamless integration into the Bioconductor universe</li>
 <li>Simple normalisation methods</li>
 </ul>
-<p>We highly recommend to use <a href="https://github.com/davismcc/scater">scater</a> for any single-cell RNA-seq analysis you will be doing in the future. <a href="https://github.com/davismcc/scater">scater</a> is the basis of the first part of the course and therefore we will spend some time explaining its details.</p>
+<p>We highly recommend to use <a href="https://github.com/davismcc/scater">scater</a> for all single-cell RNA-seq analyses and <a href="https://github.com/davismcc/scater">scater</a> is the basis of the first part of the course.</p>
 </div>
 <div id="scater-workflow" class="section level2">
 <h2><span class="header-section-number">5.2</span> scater workflow</h2>
@@ -289,7 +289,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><strong>featureData</strong>, an <em>AnnotatedDataFrame</em> object, where rows are features (e.g. genes), and columns are feature attributes, such as biotype, gc content, etc.</li>
 </ul>
 <p>For more details about other features inherited from Bioconductor’s <strong>ExpressionSet</strong> class, type <code>?ExpressionSet</code> at the R prompt.</p>
-<p>When your data is wrapped in the <strong>SCESet</strong> class, <a href="https://github.com/davismcc/scater">scater</a> will do the dirty job of calculating different properties of the data automatically. You will see how it works in the next chapters.</p>
+<p>When the data are encapsulated in the <strong>SCESet</strong> class, <a href="https://github.com/davismcc/scater">scater</a> will automatically calculate several different properties. This will be demonstrated in the subsequent chapters.</p>
 
 </div>
 </div>
