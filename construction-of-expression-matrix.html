@@ -130,7 +130,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-alignment"><i class="fa fa-check"></i><b>4.2</b> Reads alignment</a></li>
 <li class="chapter" data-level="4.3" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#alignment-example"><i class="fa fa-check"></i><b>4.3</b> Alignment example</a></li>
 <li class="chapter" data-level="4.4" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#mapping-qc"><i class="fa fa-check"></i><b>4.4</b> Mapping QC</a></li>
-<li class="chapter" data-level="4.5" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-quantification"><i class="fa fa-check"></i><b>4.5</b> Reads quantification</a></li>
+<li class="chapter" data-level="4.5" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-quantification"><i class="fa fa-check"></i><b>4.5</b> Reads quantification</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#umi-quantification"><i class="fa fa-check"></i><b>4.5.1</b> UMI quantification</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="scater-package.html"><a href="scater-package.html"><i class="fa fa-check"></i><b>5</b> scater package</a><ul>
 <li class="chapter" data-level="5.1" data-path="scater-package.html"><a href="scater-package.html#introduction"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
@@ -282,8 +284,8 @@ Figure 4.1: Example of FastQC output
 --readFilesIn reads1.fq.gz reads2.fq.gz --readFilesCommand zcat --genomeDir &lt;path&gt;
 --parametersFiles FileOfMoreParameters.txt --outFileNamePrefix &lt;outpath&gt;/output</code></pre>
 <p><strong>Note</strong>, if the <em>spike-ins</em> are used, the reference sequence should be augmented with the DNA sequence of the <em>spike-in</em> molecules prior to mapping.</p>
-<p><strong>Note</strong>, when UMIs are used, their barcodes should be removed from the read sequence. A good practice is to add the barcode to the read name.</p>
-<p>Once the reads for each cell have been mapped to the reference genome, we need to make sure that a sufficient number of reads from each cell could be mapped to the reference genome. In our experience, the fraction of mappable reads is 60-70%. However, this result may vary depending on protocol, read length and settings for the read alignment. As a general rule, we expect all cells to have a similar fraction of mapped reads, so any outliers should be inspected and possibly removed.</p>
+<p><strong>Note</strong>, when UMIs are used, their barcodes should be removed from the read sequence. A common practice is to add the barcode to the read name.</p>
+<p>Once the reads for each cell have been mapped to the reference genome, we need to make sure that a sufficient number of reads from each cell could be mapped to the reference genome. In our experience, the fraction of mappable reads for mouse or human cells is 60-70%. However, this result may vary depending on protocol, read length and settings for the read alignment. As a general rule, we expect all cells to have a similar fraction of mapped reads, so any outliers should be inspected and possibly removed. A low proportion of mappable reads usually indicates contamination.</p>
 </div>
 <div id="alignment-example" class="section level2">
 <h2><span class="header-section-number">4.3</span> Alignment example</h2>
@@ -316,8 +318,13 @@ Figure 4.3: Example of the 3’ bias in the read coverage.
 &lt;featureCounts_path&gt;/featureCounts -O -M -Q 30 -p -a genome.gtf -o outputfile input.bam
 # exclude multimapping
 &lt;featureCounts_path&gt;/featureCounts -Q 30 -p -a genome.gtf -o outputfile input.bam</code></pre>
-<p><strong>Note</strong>, when UMIs are used, the expression count is equal to the number of unique barcodes associated with all reads mapped to a given gene. <a href="https://github.com/CGATOxford/UMI-tools">UMI-tools</a> provides several methods for obtaining the expression count and they also account for possible sequencing errors.</p>
+<div id="umi-quantification" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> UMI quantification</h3>
+<p>The number of unique barcodes used as UMIs is typically much smaller than the total number of mRNAs in a cell. Thus to properly count UMIs they must be separated into groups based on their mapping position. Most scRNASeq methods perform several rounds of PCR prior to fragmenting transcripts. As a result UMIs originating from the same mRNA won’t map to exactly the same position in the genome. Thus UMIs should be grouped by transcript or gene. One way to achieve this is to map reads to the transcriptome rather than the genome.</p>
+<p>Once UMIs have been grouped the number of original mRNA molecules can be estimated by counting the number of unique UMIs in each group. However, single base-pair substitutions introduced by errors during PCR or sequencing can create “new” unique UMIs inflating the counts. This effect depends on the length of the barcode used, longer = more potential errors. For instance using a 10bp barcode will result in ~7% of reads containing at least one error.</p>
+<p>To our knowledge the only software which attempts to correct for these errors is <a href="https://github.com/CGATOxford/UMI-tools">UMI-tools</a>. They provide several different methods to quantify UMIs based on different assumptions about what type of errors occur in the barcodes (they discuss them in detail <a href="https://cgatoxford.wordpress.com/tag/umi-tools/">here</a>).</p>
 
+</div>
 </div>
 </div>
             </section>
