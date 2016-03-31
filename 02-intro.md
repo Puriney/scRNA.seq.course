@@ -4,6 +4,8 @@ knit: bookdown::preview_chapter
 
 # Introduction to single-cell RNA-seq
 
+
+
 ## Bulk RNA-seq
 
 * A major breakthrough (replaced microarrays) in the late 00's and has been widely used since
@@ -25,9 +27,10 @@ knit: bookdown::preview_chapter
 
 ## Protocol
 
-![](figures/RNA-Seq_workflow-5.pdf.jpg)
-
-image from [Wikipedia - Single cell sequencing](https://en.wikipedia.org/wiki/Single_cell_sequencing)
+<div class="figure" style="text-align: center">
+<img src="figures/RNA-Seq_workflow-5.pdf.jpg" alt="(\#fig:intro-rna-seq-workflow)Single cell sequencing (taken from [here](https://en.wikipedia.org/wiki/Single_cell_sequencing))" width="90%" />
+<p class="caption">(\#fig:intro-rna-seq-workflow)Single cell sequencing (taken from [here](https://en.wikipedia.org/wiki/Single_cell_sequencing))</p>
+</div>
 
 Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by [Saliba et al](http://nar.oxfordjournals.org/content/42/14/8845), [Handley et al](http://www.sciencedirect.com/science/article/pii/S1097276515003068)  or [Kolodziejczyk et al](http://www.sciencedirect.com/science/article/pii/S1097276515002610).
 
@@ -36,7 +39,10 @@ Overall, experimental scRNA-seq protocols are similar to the methods used for bu
 This course is concerned with the computational analysis of the data
 obtained from scRNA-seq experiments. The first steps (yellow) are general for any highthroughput sequencing data. Later steps (orange) require a mix of existing RNASeq analysis methods and novel methods to address the technical difference of scRNASeq. Finally the biological interpretation __should__ be analyzed with methods specifically developed for scRNASeq.
 
-![](figures/flowchart.png)
+<div class="figure" style="text-align: center">
+<img src="figures/flowchart.png" alt="(\#fig:intro-flowchart)Flowchart of the scRNA-seq analysis" width="65%" />
+<p class="caption">(\#fig:intro-flowchart)Flowchart of the scRNA-seq analysis</p>
+</div>
 
 Flowchart for analyzing scRNA-seq data.
 

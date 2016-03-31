@@ -265,9 +265,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Assuming that our reads are in experiment.bam, we run FastQC as</p>
 <pre><code>$&lt;path_to_fastQC&gt;/fastQC experiment.bam</code></pre>
 <p>Below is an example of the output from FastQC for a dataset of 125 bp reads. The plot reveals a technical error which resulted in a couple bases failing to be read correctly in the centre of the read. However, since the rest of the read was of high quality this error will most likely have a negligible effect on mapping efficiency.</p>
-<div class="figure">
-<img src="figures/per_base_quality.png" alt="" />
-
+<div class="figure" style="text-align: center"><span id="fig:exprs-constr-fastqc"></span>
+<img src="figures/per_base_quality.png" alt="Example of FastQC output" width="90%" />
+<p class="caption">
+Figure 4.1: Example of FastQC output
+</p>
 </div>
 <p>Additionally, it is often helpful to visualize the data using the <a href="https://www.broadinstitute.org/igv/">Integrative Genomics Browser (IGV)</a> or <a href="http://www.bioinformatics.babraham.ac.uk/projects/seqmonk/">SeqMonk</a>.</p>
 </div>
@@ -285,9 +287,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="alignment-example" class="section level2">
 <h2><span class="header-section-number">4.3</span> Alignment example</h2>
 <p>The histogram below shows the total number of reads mapped to each cell for an scRNA-seq experiment. Each bar represents one cell, and they have been sorted in ascending order by the total number of reads per cell. The three red arrows indicate cells that are outliers in terms of their coverage and they should be removed from further analysis. The two yellow arrows point to cells with a surprisingly large number of unmapped reads. In this example we kept the cells during the alignment QC step, but they were later removed during cell QC due to a high proportion of ribosomal RNA reads.</p>
-<div class="figure">
-<img src="figures/Bergiers_exp1_mapping_by_cell.png" alt="" />
-
+<div class="figure" style="text-align: center"><span id="fig:exprs-constr-total-num-cells"></span>
+<img src="figures/Bergiers_exp1_mapping_by_cell.png" alt="Example of the total number of reads mapped to each cell." width="90%" />
+<p class="caption">
+Figure 4.2: Example of the total number of reads mapped to each cell.
+</p>
 </div>
 </div>
 <div id="mapping-qc" class="section level2">
@@ -297,9 +301,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 python &lt;RSeQCpath&gt;/bam_stat.py -i input.bam -r genome.bed -o output.txt
 python &lt;RSeQCpath&gt;/split_bam.py -i input.bam -r rRNAmask.bed -o output.txt</code></pre>
 <p>However the expected results will depend on the experimental protocol, e.g. many scRNA-seq methods use poly-A selection to avoid sequencing rRNAs which results in a 3’ bias in the read coverage across the genes (aka gene body coverage). The figure below shows this 3’ bias as well as three cells which were outliers and removed from the dataset:</p>
-<div class="figure">
-<img src="figures/Exp1_RSEQC_geneBodyCoverage_plot_Combined.png" alt="" />
-
+<div class="figure" style="text-align: center"><span id="fig:exprs-constr-3-bias"></span>
+<img src="figures/Exp1_RSEQC_geneBodyCoverage_plot_Combined.png" alt="Example of the 3' bias in the read coverage." width="90%" />
+<p class="caption">
+Figure 4.3: Example of the 3’ bias in the read coverage.
+</p>
 </div>
 </div>
 <div id="reads-quantification" class="section level2">

@@ -4,6 +4,8 @@ knit: bookdown::preview_chapter
 
 # Construction of expression matrix
 
+
+
 ## Reads QC
 
 The output from a scRNA-seq experiment is a large collection of cDNA reads. The first step is to ensure that the reads are of high quality. The quality control can be performed by using standard tools, such as [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) or [Kraken](http://www.ebi.ac.uk/research/enright/software/kraken). 
@@ -15,7 +17,10 @@ $<path_to_fastQC>/fastQC experiment.bam
 
 Below is an example of the output from FastQC for a dataset of 125 bp reads. The plot reveals a technical error which resulted in a couple bases failing to be read correctly in the centre of the read. However, since the rest of the read was of high quality this error will most likely have a negligible effect on mapping efficiency.
 
-![](figures/per_base_quality.png)
+<div class="figure" style="text-align: center">
+<img src="figures/per_base_quality.png" alt="(\#fig:exprs-constr-fastqc)Example of FastQC output" width="90%" />
+<p class="caption">(\#fig:exprs-constr-fastqc)Example of FastQC output</p>
+</div>
 
 Additionally, it is often helpful to visualize the data using the [Integrative Genomics Browser (IGV)](https://www.broadinstitute.org/igv/) or [SeqMonk](http://www.bioinformatics.babraham.ac.uk/projects/seqmonk/).
 
@@ -58,7 +63,10 @@ analysis. The two yellow arrows point to cells with a surprisingly
 large number of unmapped reads. In this example we kept the cells during the alignment QC step, but they were later removed during 
 cell QC due to a high proportion of ribosomal RNA reads. 
 
-![](figures/Bergiers_exp1_mapping_by_cell.png)
+<div class="figure" style="text-align: center">
+<img src="figures/Bergiers_exp1_mapping_by_cell.png" alt="(\#fig:exprs-constr-total-num-cells)Example of the total number of reads mapped to each cell." width="90%" />
+<p class="caption">(\#fig:exprs-constr-total-num-cells)Example of the total number of reads mapped to each cell.</p>
+</div>
 
 ## Mapping QC
 
@@ -72,7 +80,10 @@ python <RSeQCpath>/split_bam.py -i input.bam -r rRNAmask.bed -o output.txt
 
 However the expected results will depend on the experimental protocol, e.g. many scRNA-seq methods use poly-A selection to avoid sequencing rRNAs which results in a 3' bias in the read coverage across the genes (aka gene body coverage). The figure below shows this 3' bias as well as three cells which were outliers and removed from the dataset:
 
-![](figures/Exp1_RSEQC_geneBodyCoverage_plot_Combined.png)
+<div class="figure" style="text-align: center">
+<img src="figures/Exp1_RSEQC_geneBodyCoverage_plot_Combined.png" alt="(\#fig:exprs-constr-3-bias)Example of the 3' bias in the read coverage." width="90%" />
+<p class="caption">(\#fig:exprs-constr-3-bias)Example of the 3' bias in the read coverage.</p>
+</div>
 
 ## Reads quantification
 
