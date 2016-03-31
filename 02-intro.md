@@ -32,7 +32,7 @@ knit: bookdown::preview_chapter
 <p class="caption">(\#fig:intro-rna-seq-workflow)Single cell sequencing (taken from [here](https://en.wikipedia.org/wiki/Single_cell_sequencing))</p>
 </div>
 
-Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by [Saliba et al](http://nar.oxfordjournals.org/content/42/14/8845), [Handley et al](http://www.sciencedirect.com/science/article/pii/S1097276515003068)  or [Kolodziejczyk et al](http://www.sciencedirect.com/science/article/pii/S1097276515002610).
+Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by [@Saliba2014-dy], [@Handley2015-yi] or [@Kolodziejczyk2015-xy].
 
 ## Computational Analysis
 
@@ -44,14 +44,14 @@ obtained from scRNA-seq experiments. The first steps (yellow) are general for an
 <p class="caption">(\#fig:intro-flowchart)Flowchart of the scRNA-seq analysis</p>
 </div>
 
-Flowchart for analyzing scRNA-seq data.
+There are several reviews of the scRNA-seq analysis available including [@Stegle2015-uv].
 
 ## Challenges
 
 The main difference between bulk and single cell RNA-seq is that each sequencing library represents a single cell, instead of a population of cells. Therefore, significant attention has to be paid to comparison of the results from different cells (sequencing libraries). The main sources of discrepancy between the libraries are:
 
 * __Amplification__ (up to 1 million fold)
-* __Gene 'dropouts'__ in which a gene is observed at a moderate expression level in one cell but is not detected in another cell ([Kharchenko et al](http://www.nature.com/nmeth/journal/v11/n7/full/nmeth.2967.html)).
+* __Gene 'dropouts'__ in which a gene is observed at a moderate expression level in one cell but is not detected in another cell [@Kharchenko2014-ts].
 
 In both cases the discrepancies are introduced due to low starting amounts of transcripts since the RNA comes from one cell only. Improving the transcript capture efficiency and reducing the amplification bias are currently active areas of research.
 
@@ -61,8 +61,8 @@ To provide better estimates of the technical variation between scRNA sequencing 
 
 ### Spike-ins
 
-Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the [External RNA Control Consortium (ERCC)](https://www.thermofisher.com/order/catalog/product/4456740). This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences ([Jiang et al.](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3166838/)).
+Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the [External RNA Control Consortium (ERCC)](https://www.thermofisher.com/order/catalog/product/4456740). This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences [@Jiang2011-mu].
 
 ### UMIs
 
-Another method of standardisation is to use [Unique Molecular Identifiers (UMIs)](http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html). These are 4-20 bp barcode sequences which are added to the 3' or 5' end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. The barcodes make it possible to quantify the number of transcripts prior to the amplification step.
+Another method of standardisation is to use Unique Molecular Identifiers (UMIs) [@Kivioja2012-yt]. These are 4-20 bp barcode sequences which are added to the 3' or 5' end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. The barcodes make it possible to quantify the number of transcripts prior to the amplification step.

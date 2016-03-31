@@ -237,6 +237,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="17" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>17</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -273,11 +274,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="scrna-seq" class="section level2">
 <h2><span class="header-section-number">3.2</span> scRNA-seq</h2>
 <ul>
-<li>A <strong>new</strong> technology, first publication by <a href="http://www.nature.com/nmeth/journal/v6/n5/abs/nmeth.1315.html">Tang et al</a> in 2009</li>
+<li>A <strong>new</strong> technology, first publication by <span class="citation">(Tang et al. <a href="references.html#ref-Tang2009-bu">2009</a>)</span></li>
 <li>Measures the <strong>distribution of expression levels</strong> for each gene across a population of cells</li>
 <li>Allows to study new biological questions in which <strong>cell-specific changes in transcriptome are important</strong>, e.g. cell type identification, heterogeneity of cell responses, stochasticity of gene expression, inference of gene regulatory networks across the cells.</li>
 <li>Datasets range <strong>from <span class="math inline">\(10^2\)</span> to <span class="math inline">\(10^4\)</span> cells</strong> and increase in size every year</li>
-<li>Currently there are several different protocols in use, e.g. <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2639.html">SMART-seq2</a>, <a href="http://www.cell.com/cell-reports/abstract/S2211-1247%2812%2900228-8">CELL-seq</a> and <a href="http://mccarrolllab.com/dropseq/">Drop-seq</a></li>
+<li>Currently there are several different protocols in use, e.g. SMART-seq2 <span class="citation">(Picelli et al. <a href="references.html#ref-Picelli2013-sb">2013</a>)</span>, CELL-seq <span class="citation">(Hashimshony et al. <a href="references.html#ref-Hashimshony2012-kd">2012</a>)</span> and Drop-seq <span class="citation">(Macosko et al. <a href="references.html#ref-Macosko2015-ix">2015</a>)</span></li>
 <li>Several computational analysis methods from bulk RNA-seq <strong>can</strong> be used</li>
 <li><strong>In most cases</strong> computational analysis requires adaptation of the existing methods or development of new ones</li>
 </ul>
@@ -290,7 +291,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 Figure 3.1: Single cell sequencing (taken from <a href="https://en.wikipedia.org/wiki/Single_cell_sequencing">here</a>)
 </p>
 </div>
-<p>Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by <a href="http://nar.oxfordjournals.org/content/42/14/8845">Saliba et al</a>, <a href="http://www.sciencedirect.com/science/article/pii/S1097276515003068">Handley et al</a> or <a href="http://www.sciencedirect.com/science/article/pii/S1097276515002610">Kolodziejczyk et al</a>.</p>
+<p>Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by <span class="citation">(Saliba et al. <a href="references.html#ref-Saliba2014-dy">2014</a>)</span>, <span class="citation">(Handley et al. <a href="references.html#ref-Handley2015-yi">2015</a>)</span> or <span class="citation">(Kolodziejczyk et al. <a href="references.html#ref-Kolodziejczyk2015-xy">2015</a>)</span>.</p>
 </div>
 <div id="computational-analysis" class="section level2">
 <h2><span class="header-section-number">3.4</span> Computational Analysis</h2>
@@ -301,14 +302,14 @@ Figure 3.1: Single cell sequencing (taken from <a href="https://en.wikipedia.org
 Figure 3.2: Flowchart of the scRNA-seq analysis
 </p>
 </div>
-<p>Flowchart for analyzing scRNA-seq data.</p>
+<p>There are several reviews of the scRNA-seq analysis available including <span class="citation">(Stegle, Teichmann, and Marioni <a href="references.html#ref-Stegle2015-uv">2015</a>)</span>.</p>
 </div>
 <div id="challenges" class="section level2">
 <h2><span class="header-section-number">3.5</span> Challenges</h2>
 <p>The main difference between bulk and single cell RNA-seq is that each sequencing library represents a single cell, instead of a population of cells. Therefore, significant attention has to be paid to comparison of the results from different cells (sequencing libraries). The main sources of discrepancy between the libraries are:</p>
 <ul>
 <li><strong>Amplification</strong> (up to 1 million fold)</li>
-<li><strong>Gene ‘dropouts’</strong> in which a gene is observed at a moderate expression level in one cell but is not detected in another cell (<a href="http://www.nature.com/nmeth/journal/v11/n7/full/nmeth.2967.html">Kharchenko et al</a>).</li>
+<li><strong>Gene ‘dropouts’</strong> in which a gene is observed at a moderate expression level in one cell but is not detected in another cell <span class="citation">(Kharchenko, Silberstein, and Scadden <a href="references.html#ref-Kharchenko2014-ts">2014</a>)</span>.</li>
 </ul>
 <p>In both cases the discrepancies are introduced due to low starting amounts of transcripts since the RNA comes from one cell only. Improving the transcript capture efficiency and reducing the amplification bias are currently active areas of research.</p>
 </div>
@@ -317,11 +318,11 @@ Figure 3.2: Flowchart of the scRNA-seq analysis
 <p>To provide better estimates of the technical variation between scRNA sequencing libraries two quantitative standards are frequently used. The aim of using spike-ins and UMIs is to facilitate normalization of gene expression levels across different cells.</p>
 <div id="spike-ins" class="section level3">
 <h3><span class="header-section-number">3.6.1</span> Spike-ins</h3>
-<p>Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the <a href="https://www.thermofisher.com/order/catalog/product/4456740">External RNA Control Consortium (ERCC)</a>. This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences (<a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3166838/">Jiang et al.</a>).</p>
+<p>Spike-ins are extrinsic RNA molecules of known concentration which are added to the lysate of each cell prior to the reverse transcription reaction. The most popular and widely used spike-ins are synthetic spikes from the <a href="https://www.thermofisher.com/order/catalog/product/4456740">External RNA Control Consortium (ERCC)</a>. This set of 96 synthetic mRNAs of differing length and GC content based on bacterial sequences <span class="citation">(Jiang et al. <a href="references.html#ref-Jiang2011-mu">2011</a>)</span>.</p>
 </div>
 <div id="umis" class="section level3">
 <h3><span class="header-section-number">3.6.2</span> UMIs</h3>
-<p>Another method of standardisation is to use <a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique Molecular Identifiers (UMIs)</a>. These are 4-20 bp barcode sequences which are added to the 3’ or 5’ end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. The barcodes make it possible to quantify the number of transcripts prior to the amplification step.</p>
+<p>Another method of standardisation is to use Unique Molecular Identifiers (UMIs) <span class="citation">(Kivioja et al. <a href="references.html#ref-Kivioja2012-yt">2012</a>)</span>. These are 4-20 bp barcode sequences which are added to the 3’ or 5’ end of each transcript prior to amplification (typically during reverse transcription). This is usually followed by targetted sequencing of the respective end of the transcripts. The barcodes make it possible to quantify the number of transcripts prior to the amplification step.</p>
 
 </div>
 </div>

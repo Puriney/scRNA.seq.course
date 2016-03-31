@@ -26,8 +26,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="construction-of-expression-matrix.html">
-<link rel="next" href="expression-qc-umi.html">
+<link rel="prev" href="clustering-analysis.html">
+
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -258,52 +258,43 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="scater-package" class="section level1">
-<h1><span class="header-section-number">5</span> scater package</h1>
-<div id="introduction" class="section level2">
-<h2><span class="header-section-number">5.1</span> Introduction</h2>
-<p><a href="https://github.com/davismcc/scater">scater</a> is a R package single-cell RNA-seq analysis. The package contains several useful methods for quality control, visualisation and pre-processing of data prior to further downstream analysis.</p>
-<p><a href="https://github.com/davismcc/scater">scater</a> features the following functionality:</p>
-<ul>
-<li>Automated computation of QC metrics</li>
-<li>Transcript quantification from read data with pseudo-alignment</li>
-<li>Data format standardisation</li>
-<li>Rich visualizations for exploratory analysis</li>
-<li>Seamless integration into the Bioconductor universe</li>
-<li>Simple normalisation methods</li>
-</ul>
-<p>We highly recommend to use <a href="https://github.com/davismcc/scater">scater</a> for all single-cell RNA-seq analyses and <a href="https://github.com/davismcc/scater">scater</a> is the basis of the first part of the course.</p>
-</div>
-<div id="scater-workflow" class="section level2">
-<h2><span class="header-section-number">5.2</span> scater workflow</h2>
-<div class="figure">
-<img src="figures/scater_qc_workflow.png" alt="" />
+<div id="references" class="section level1">
+<h1><span class="header-section-number">17</span> References</h1>
 
+<div id="refs" class="references">
+<div id="ref-Handley2015-yi">
+<p>Handley, Ava, Tamás Schauer, Andreas G Ladurner, and Carla E Margulies. 2015. “Designing Cell-Type-Specific Genome-Wide Experiments.” <em>Mol. Cell</em> 58 (4): 621–31.</p>
 </div>
+<div id="ref-Hashimshony2012-kd">
+<p>Hashimshony, Tamar, Florian Wagner, Noa Sher, and Itai Yanai. 2012. “CEL-Seq: Single-Cell RNA-Seq by Multiplexed Linear Amplification.” <em>Cell Rep.</em> 2 (3): 666–73.</p>
 </div>
-<div id="terminology" class="section level2">
-<h2><span class="header-section-number">5.3</span> Terminology</h2>
-<p>(this chapter is taken from the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/scater/inst/doc/vignette.html">scater vignette</a>)</p>
-<ul>
-<li>The capabilities of scater are built on top of Bioconductor’s Biobase.</li>
-<li>In Bioconductor terminology we assay numerous <strong>“features”</strong> for a number of <strong>“samples”</strong>.</li>
-<li>Features, in the context of <a href="https://github.com/davismcc/scater">scater</a>, correspond most commonly to genes or transcripts, but could be any general genomic or transcriptomic regions (e.g. exon) of interest for which we take measurements.</li>
-<li>In the following chapters it may be more intuitive to mentally replace <strong>“feature”</strong> with <strong>“gene”</strong> or <strong>“transcript”</strong> (depending on the context of the study) wherever <strong>“feature”</strong> appears.</li>
-<li>In the scater context, <strong>“samples”</strong> refer to individual cells that we have assayed.</li>
-</ul>
+<div id="ref-Jiang2011-mu">
+<p>Jiang, Lichun, Felix Schlesinger, Carrie A Davis, Yu Zhang, Renhua Li, Marc Salit, Thomas R Gingeras, and Brian Oliver. 2011. “Synthetic Spike-in Standards for RNA-seq Experiments.” <em>Genome Res.</em> 21 (9): 1543–51.</p>
 </div>
-<div id="sceset-class" class="section level2">
-<h2><span class="header-section-number">5.4</span> SCESet class</h2>
-<p>(this chapter is taken from the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/scater/inst/doc/vignette.html">scater vignette</a>)</p>
-<p>In scater we organise single-cell expression data in objects of the <strong>SCESet</strong> class. The class inherits the Bioconductor ExpressionSet class, which provides a common interface familiar to those who have analyzed microarray experiments with Bioconductor. The class requires three input files:</p>
-<ul>
-<li><strong>exprs</strong>, a numeric matrix of expression values, where rows are features, and columns are cells</li>
-<li><strong>phenoData</strong>, an <em>AnnotatedDataFrame</em> object, where rows are cells, and columns are cell attributes (such as cell type, culture condition, day captured, etc.)</li>
-<li><strong>featureData</strong>, an <em>AnnotatedDataFrame</em> object, where rows are features (e.g. genes), and columns are feature attributes, such as biotype, gc content, etc.</li>
-</ul>
-<p>For more details about other features inherited from Bioconductor’s <strong>ExpressionSet</strong> class, type <code>?ExpressionSet</code> at the R prompt.</p>
-<p>When the data are encapsulated in the <strong>SCESet</strong> class, <a href="https://github.com/davismcc/scater">scater</a> will automatically calculate several different properties. This will be demonstrated in the subsequent chapters.</p>
-
+<div id="ref-Kharchenko2014-ts">
+<p>Kharchenko, Peter V, Lev Silberstein, and David T Scadden. 2014. “Bayesian Approach to Single-Cell Differential Expression Analysis.” <em>Nat. Methods</em> 11 (7): 740–42.</p>
+</div>
+<div id="ref-Kivioja2012-yt">
+<p>Kivioja, Teemu, Anna Vähärautio, Kasper Karlsson, Martin Bonke, Martin Enge, Sten Linnarsson, and Jussi Taipale. 2012. “Counting Absolute Numbers of Molecules Using Unique Molecular Identifiers.” <em>Nat. Methods</em> 9 (1): 72–74.</p>
+</div>
+<div id="ref-Kolodziejczyk2015-xy">
+<p>Kolodziejczyk, Aleksandra A, Jong Kyoung Kim, Valentine Svensson, John C Marioni, and Sarah A Teichmann. 2015. “The Technology and Biology of Single-Cell RNA Sequencing.” <em>Mol. Cell</em> 58 (4): 610–20.</p>
+</div>
+<div id="ref-Macosko2015-ix">
+<p>Macosko, Evan Z, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, et al. 2015. “Highly Parallel Genome-Wide Expression Profiling of Individual Cells Using Nanoliter Droplets.” <em>Cell</em> 161 (5): 1202–14.</p>
+</div>
+<div id="ref-Picelli2013-sb">
+<p>Picelli, Simone, Åsa K Björklund, Omid R Faridani, Sven Sagasser, Gösta Winberg, and Rickard Sandberg. 2013. “Smart-Seq2 for Sensitive Full-Length Transcriptome Profiling in Single Cells.” <em>Nat. Methods</em> 10 (11): 1096–8.</p>
+</div>
+<div id="ref-Saliba2014-dy">
+<p>Saliba, Antoine-Emmanuel, Alexander J Westermann, Stanislaw A Gorski, and Jörg Vogel. 2014. “Single-Cell RNA-seq: Advances and Future Challenges.” <em>Nucleic Acids Res.</em> 42 (14): 8845–60.</p>
+</div>
+<div id="ref-Stegle2015-uv">
+<p>Stegle, Oliver, Sarah A Teichmann, and John C Marioni. 2015. “Computational and Analytical Challenges in Single-Cell Transcriptomics.” <em>Nat. Rev. Genet.</em> 16 (3): 133–45.</p>
+</div>
+<div id="ref-Tang2009-bu">
+<p>Tang, Fuchou, Catalin Barbacioru, Yangzhou Wang, Ellen Nordman, Clarence Lee, Nanlan Xu, Xiaohui Wang, et al. 2009. “mRNA-Seq Whole-Transcriptome Analysis of a Single Cell.” <em>Nat. Methods</em> 6 (5): 377–82.</p>
+</div>
 </div>
 </div>
             </section>
@@ -311,8 +302,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="construction-of-expression-matrix.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="expression-qc-umi.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="clustering-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -339,7 +330,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/04-scater.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/16-references.Rmd",
 "text": "Edit"
 },
 "download": null,
