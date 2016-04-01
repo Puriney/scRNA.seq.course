@@ -42,26 +42,6 @@ NA19098      r1          A06    NA19098.r1   NA19098.r1.A06
 
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="(\#fig:dropout-overview-reads)Dropout rate vs mean expression" width="90%" />
-<p class="caption">(\#fig:dropout-overview-reads)Dropout rate vs mean expression</p>
-</div>
-
-<div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
-<p class="caption">(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes</p>
-</div>
-
-
-
-
-Table: (\#tab:unnamed-chunk-9)The number of genes removed by gene filter (FALSE)
-
-filter_genes     Freq
--------------  ------
-FALSE            2445
-TRUE            16281
-
-<div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells" width="90%" />
 <p class="caption">(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells</p>
 </div>
@@ -69,7 +49,7 @@ TRUE            16281
 
 
 
-Table: (\#tab:unnamed-chunk-11)The number of cells removed by total counts filter (FALSE)
+Table: (\#tab:unnamed-chunk-9)The number of cells removed by total counts filter (FALSE)
 
 filter_by_total_counts    Freq
 -----------------------  -----
@@ -84,12 +64,12 @@ TRUE                       684
 
 
 
-Table: (\#tab:unnamed-chunk-13)The number of cells removed by total features filter (FALSE)
+Table: (\#tab:unnamed-chunk-11)The number of cells removed by total features filter (FALSE)
 
 filter_by_expr_features    Freq
 ------------------------  -----
-FALSE                        16
-TRUE                        848
+FALSE                       120
+TRUE                        744
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes" width="90%" />
@@ -109,7 +89,7 @@ TRUE                        848
 
 
 
-Table: (\#tab:unnamed-chunk-15)The number of cells removed by ERCC filter (FALSE)
+Table: (\#tab:unnamed-chunk-13)The number of cells removed by ERCC filter (FALSE)
 
 filter_by_ERCC    Freq
 ---------------  -----
@@ -119,7 +99,7 @@ TRUE               761
 
 
 
-Table: (\#tab:unnamed-chunk-17)The number of cells removed by MT filter (FALSE)
+Table: (\#tab:unnamed-chunk-15)The number of cells removed by MT filter (FALSE)
 
 filter_by_MT    Freq
 -------------  -----
@@ -129,7 +109,7 @@ TRUE             846
 
 
 
-Table: (\#tab:unnamed-chunk-19)The number of cells removed by default filter (FALSE)
+Table: (\#tab:unnamed-chunk-17)The number of cells removed by default filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -268,7 +248,7 @@ TRUE      827
 </div>
 
 
-Table: (\#tab:unnamed-chunk-20)The number of cells removed by automatic filter (FALSE)
+Table: (\#tab:unnamed-chunk-18)The number of cells removed by automatic filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -278,22 +258,42 @@ TRUE      111
 
 
 
-Table: (\#tab:unnamed-chunk-22)The number of cells removed by manual filter (FALSE)
+Table: (\#tab:unnamed-chunk-20)The number of cells removed by manual filter (FALSE)
 
 Var1     Freq
 ------  -----
-FALSE     254
-TRUE      610
+FALSE     259
+TRUE      605
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters</p>
 </div>
 
+<div class="figure" style="text-align: center">
+<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="(\#fig:dropout-overview-reads)Dropout rate vs mean expression" width="90%" />
+<p class="caption">(\#fig:dropout-overview-reads)Dropout rate vs mean expression</p>
+</div>
+
+<div class="figure" style="text-align: center">
+<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
+<p class="caption">(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes</p>
+</div>
+
+
+
+
+Table: (\#tab:unnamed-chunk-22)The number of genes removed by gene filter (FALSE)
+
+filter_genes     Freq
+-------------  ------
+FALSE            2445
+TRUE            16281
+
 
 ```
 ## Features  Samples 
-##    16281      610
+##    16281      605
 ```
 
 
