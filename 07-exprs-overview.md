@@ -59,9 +59,22 @@ scater::plotPCA(umi.qc[endog_genes, ],
 
 By default only the top 500 most variable genes are used to calculate the PCA. This can be adjusted by changing the `ntop` argument. 
 
-__Exercise__
-How do the PCA plots change if when all 14,214 genes are used? or when only to top 50 genes are used?
+__Exercise 1__
+How do the PCA plots change if when all 14,214 genes are used? Or when only top 50 genes are used?
 
+__Our answer__
+
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)</p>
+</div>
+
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-2)PCA plot of the blischak data (50 genes)" width="90%" />
+<p class="caption">(\#fig:expr-overview-pca-after-qc-exercise1-2)PCA plot of the blischak data (50 genes)</p>
+</div>
+
+If your answers are different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd) (you need to search for this exercise in the opened file).
 
 ## tSNE map
 
@@ -74,8 +87,8 @@ An alternative to PCA for visualizing scRNASeq data is a tSNE plot. [tSNE](https
 
 ```r
 scater::plotTSNE(umi[endog_genes, ],
-                 ntop=500,
-                 perplexity=130,
+                 ntop = 500,
+                 perplexity = 130,
                  colour_by = "batch",
                  size_by = "total_features",
                  shape_by = "individual",
@@ -93,8 +106,8 @@ scater::plotTSNE(umi[endog_genes, ],
 
 ```r
 scater::plotTSNE(umi.qc[endog_genes, ],
-                 ntop=500,
-                 perplexity=130,
+                 ntop = 500,
+                 perplexity = 130,
                  colour_by = "batch",
                  size_by = "total_features",
                  shape_by = "individual",
@@ -109,9 +122,23 @@ scater::plotTSNE(umi.qc[endog_genes, ],
 
 Furthermore tSNE requires you to provide a value of "perplexity" which reflects the number of neighbours used to build the nearest-neighbour network; a high value creates a dense network which clumps cells together while a low value makes the network more sparse allowing groups of cells to separate from each other. __scater__ uses a default perplexity of the total number of cells divided by five (rounded down).
 
-__Exercise__
+__Exercise 2__
 How do the tSNE plots change when a perplexity of 10 or 500 is used?
 
-## Exercise
+__Our answer__
+
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)</p>
+</div>
+
+<div class="figure" style="text-align: center">
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 500)" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 500)</p>
+</div>
+
+If your answers are different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd) (you need to search for this exercise in the opened file).
+
+## Big Exercise
 
 Perform the same analysis with read counts of the Blischak data. Use `blischak/reads.rds` file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).
