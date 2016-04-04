@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-01">
+<meta name="date" content="2016-04-04">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -149,7 +149,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#erccs-and-mts"><i class="fa fa-check"></i><b>6.3.3</b> ERCCs and MTs</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-filtering"><i class="fa fa-check"></i><b>6.4</b> Cell filtering</a><ul>
-<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default"><i class="fa fa-check"></i><b>6.4.1</b> Default</a></li>
+<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.1</b> Default Thresholds</a></li>
 <li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.2</b> Automatic</a></li>
 <li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.3</b> Manual</a></li>
 </ul></li>
@@ -573,17 +573,17 @@ Figure 6.4: Percentage of counts in ERCCs
 </div>
 <div id="cell-filtering" class="section level2">
 <h2><span class="header-section-number">6.4</span> Cell filtering</h2>
-<div id="default" class="section level3">
-<h3><span class="header-section-number">6.4.1</span> Default</h3>
-<p>By default scater will use 5-times the median absolute deviations <em>(How is “deviation” defined?)</em> from the median value as a threshold to filter cells according to the number of detected genes, total counts and percent of counts assigned to control genes <em>(is this true? It seems odd that they would use a different method for this measure than the other)</em> . In addition to any cells that have been marked as controls.</p>
+<div id="default-thresholds" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Default Thresholds</h3>
+<p>By default scater will use 5-times the median absolute difference from the median value as a threshold to filter cells according to the number of detected genes, total counts. In addition to filtering out cells with &gt;80% of counts assigned to control genes and any cells that have been marked as controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use_default &lt;-<span class="st"> </span>(
     <span class="co"># remove cells with unusual numbers of genes</span>
     !umi$filter_on_total_features &amp;
-<span class="st">    </span><span class="co"># sufficient molecules counted</span>
+<span class="st">    </span><span class="co"># remove cells with unusual numbers molecules counted</span>
 <span class="st">    </span>!umi$filter_on_total_counts &amp;
-<span class="st">    </span><span class="co"># sufficient endogenous RNA</span>
+<span class="st">    </span><span class="co"># &lt; 80% ERCC spike-in</span>
 <span class="st">    </span>!umi$filter_on_pct_counts_feature_controls_ERCC &amp;
-<span class="st">    </span><span class="co"># remove cells with unusual number of reads in MT genes</span>
+<span class="st">    </span><span class="co"># &lt; 80% mitochondrial</span>
 <span class="st">    </span>!umi$filter_on_pct_counts_feature_controls_MT &amp;
 <span class="st">    </span><span class="co"># controls shouldn&#39;t be used in downstream analysis</span>
 <span class="st">    </span>!umi$is_cell_control
@@ -815,7 +815,7 @@ Figure 6.6: Comparison of the default, automatic and manual cell filters
 Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 </p>
 </div>
-<p>The distribution relatively flat indicating good coverage of the full transcriptome of these cell.</p>
+<p>The distribution relatively flat indicating good coverage of the full transcriptome of these cells. However, there are several spike-ins in the top 15 genes which suggests a greater dilution of the spike-ins may be preferrable if the experiment is to be repeated.</p>
 </div>
 </div>
 <div id="gene-filtering-1" class="section level2">
