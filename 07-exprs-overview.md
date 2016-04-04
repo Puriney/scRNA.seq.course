@@ -133,8 +133,8 @@ __Our answer__
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 500)" width="90%" />
-<p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 500)</p>
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 200)" width="90%" />
+<p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 200)</p>
 </div>
 
 If your answers are different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd) (you need to search for this exercise in the opened file).
