@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-04">
+<meta name="date" content="2016-04-05">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -154,12 +154,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.3</b> Manual</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#compare-filterings"><i class="fa fa-check"></i><b>6.5</b> Compare filterings</a></li>
-<li class="chapter" data-level="6.6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-filtering"><i class="fa fa-check"></i><b>6.6</b> Gene filtering</a><ul>
+<li class="chapter" data-level="6.6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-analysis"><i class="fa fa-check"></i><b>6.6</b> Gene analysis</a><ul>
 <li class="chapter" data-level="6.6.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-expression"><i class="fa fa-check"></i><b>6.6.1</b> Gene expression</a></li>
+<li class="chapter" data-level="6.6.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-filtering"><i class="fa fa-check"></i><b>6.6.2</b> Gene filtering</a></li>
 </ul></li>
-<li class="chapter" data-level="6.7" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-filtering-1"><i class="fa fa-check"></i><b>6.7</b> Gene filtering</a></li>
-<li class="chapter" data-level="6.8" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#save-the-data"><i class="fa fa-check"></i><b>6.8</b> Save the data</a></li>
-<li class="chapter" data-level="6.9" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#big-exercise"><i class="fa fa-check"></i><b>6.9</b> Big Exercise</a></li>
+<li class="chapter" data-level="6.7" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#save-the-data"><i class="fa fa-check"></i><b>6.7</b> Save the data</a></li>
+<li class="chapter" data-level="6.8" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#big-exercise"><i class="fa fa-check"></i><b>6.8</b> Big Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
 <li class="chapter" data-level="8" data-path="expression-overview.html"><a href="expression-overview.html"><i class="fa fa-check"></i><b>8</b> Expression overview</a><ul>
@@ -575,7 +575,7 @@ Figure 6.4: Percentage of counts in ERCCs
 <h2><span class="header-section-number">6.4</span> Cell filtering</h2>
 <div id="default-thresholds" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Default Thresholds</h3>
-<p>By default scater will use 5-times the median absolute difference from the median value as a threshold to filter cells according to the number of detected genes, total counts. In addition to filtering out cells with &gt;80% of counts assigned to control genes and any cells that have been marked as controls.</p>
+<p>Results from the biological analysis of single-cell RNA-seq data are often strongly influenced by outliers. Thus, it is important to include multiple filters. A robust way of detecting outliers is through the median absolute difference which is defined as <span class="math inline">\(d_i = |r_i - m|\)</span>, where <span class="math inline">\(r_i\)</span> is the number of reads in cell <span class="math inline">\(i\)</span> and <span class="math inline">\(m\)</span> is the median number of reads across the all cells in the sample. By default, scater removes all cells where <span class="math inline">\(d_i&gt;\)</span>median(<span class="math inline">\(d_i\)</span>). A similar filter is used for the number of detected genes. Furthermore, scater removes all cells where $&gt;$80% of counts were assigned to control genes and any cells that have been marked as controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use_default &lt;-<span class="st"> </span>(
     <span class="co"># remove cells with unusual numbers of genes</span>
     !umi$filter_on_total_features &amp;
@@ -626,6 +626,7 @@ Figure 6.4: Percentage of counts in ERCCs
 <li><strong>log10_counts_endogenous_features</strong></li>
 <li><strong>log10_counts_feature_controls</strong></li>
 </ul>
+<p>scater first creates a matrix where the rows represent cells and the columns represent the different QC metrics. Here, the PCA plot provides a 2D representation of cells ordered by their quality metrics. The outliers are then detected using methods from the mvoutlier package.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi &lt;-
 scater::<span class="kw">plotPCA</span>(umi,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>, 
@@ -751,7 +752,7 @@ Figure 6.5: PCA plot used for automatic detection of cell outliers
 </div>
 <div id="manual" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Manual</h3>
-<p>However, since we performed a more detailed analysis, visualized different features and defined our own filters we can use them instead of the default ones:</p>
+<p>Another option in scater is to use your own filters. We define filters based on our previous analysis:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use &lt;-<span class="st"> </span>(
     <span class="co"># sufficient features (genes)</span>
     filter_by_expr_features &amp;
@@ -803,11 +804,12 @@ Figure 6.6: Comparison of the default, automatic and manual cell filters
 </div>
 <p>If your answer is different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
-<div id="gene-filtering" class="section level2">
-<h2><span class="header-section-number">6.6</span> Gene filtering</h2>
+<div id="gene-analysis" class="section level2">
+<h2><span class="header-section-number">6.6</span> Gene analysis</h2>
 <div id="gene-expression" class="section level3">
 <h3><span class="header-section-number">6.6.1</span> Gene expression</h3>
-<p>One can also look at the number of reads consumed by the top 50 expressed genes.</p>
+<p>In addition to removing cells with poor quality, it is usually a good idea to exclude genes where we suspect that technical artefacts may have skewed the results. Moreover, inspection of the gene expression profiles may provide insights about how the experimental procedures could be imporved.</p>
+<p>It is often instructive to consider the number of reads consumed by the top 50 expressed genes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotQC</span>(umi, <span class="dt">type =</span> <span class="st">&quot;highest-expression&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:top50-gene-expr"></span>
 <img src="05-exprs-qc_files/figure-html/top50-gene-expr-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
@@ -815,12 +817,11 @@ Figure 6.6: Comparison of the default, automatic and manual cell filters
 Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 </p>
 </div>
-<p>The distribution relatively flat indicating good coverage of the full transcriptome of these cells. However, there are several spike-ins in the top 15 genes which suggests a greater dilution of the spike-ins may be preferrable if the experiment is to be repeated.</p>
+<p>The distribution relatively flat indicating (but not guaraneeing!) good coverage of the full transcriptome of these cells. However, there are several spike-ins in the top 15 genes which suggests a greater dilution of the spike-ins may be preferrable if the experiment is to be repeated.</p>
 </div>
-</div>
-<div id="gene-filtering-1" class="section level2">
-<h2><span class="header-section-number">6.7</span> Gene filtering</h2>
-<p>We can remove genes whose expression level is considered <strong>“undetectable”</strong>. We define a detectable gene expression level, in which at least two cells contain more than 1 read mapping to the gene. If we were considering read counts rather than UMI counts typically at least five reads in at least two cells is considered the threshold for detectability. Note that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells.</p>
+<div id="gene-filtering" class="section level3">
+<h3><span class="header-section-number">6.6.2</span> Gene filtering</h3>
+<p>It is typically a good idea to remove genes whose expression level is considered <strong>“undetectable”</strong>. We define a gene as detectable if at least two cells contain more than 1 transcript from the gene. If we were considering read counts rather than UMI counts a reasonable threshold is to require at least five reads in at least two cells. However, in both cases the threshold strongly depends on the sequencing depth. It also important to keep in mind that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(umi), <span class="dv">1</span>, function(x) <span class="kw">length</span>(x[x &gt;<span class="st"> </span><span class="dv">1</span>]) &gt;=<span class="st"> </span><span class="dv">2</span>)
 <span class="kw">fData</span>(umi)$use &lt;-<span class="st"> </span>filter_genes</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
@@ -850,8 +851,9 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 </table>
 <p>Depending on the cell-type, protocol and sequencing depth, other cut-offs may be appropriate.</p>
 </div>
+</div>
 <div id="save-the-data" class="section level2">
-<h2><span class="header-section-number">6.8</span> Save the data</h2>
+<h2><span class="header-section-number">6.7</span> Save the data</h2>
 <p>Dimensions of the QCed dataset (do not forget about the gene filter we defined above):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use])</code></pre></div>
 <pre><code>## Features  Samples 
@@ -861,7 +863,7 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 <p>If you want to further check yourself you can download our <a href="http://genat.uk/bookdown-demo/blischak/umi.rds"><code>umi</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
 </div>
 <div id="big-exercise" class="section level2">
-<h2><span class="header-section-number">6.9</span> Big Exercise</h2>
+<h2><span class="header-section-number">6.8</span> Big Exercise</h2>
 <p>Perform exactly the same QC analysis with read counts of the same Blischak data. Use <code>blischak/reads.txt</code> file to load the reads. Once you have finished please compare your results to ours (next chapter).</p>
 
 </div>
