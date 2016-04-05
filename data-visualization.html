@@ -26,8 +26,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="expression-qc-umi.html">
-<link rel="next" href="data-visualization.html">
+<link rel="prev" href="expression-qc-reads.html">
+<link rel="next" href="expression-overview-reads.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -260,453 +260,137 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="expression-qc-reads" class="section level1">
-<h1><span class="header-section-number">7</span> Expression QC (Reads)</h1>
-<table>
-<caption><span id="tab:unnamed-chunk-3">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
-<thead>
-<tr class="header">
-<th align="left"></th>
-<th align="right">NA19098.r1.A01</th>
-<th align="right">NA19098.r1.A02</th>
-<th align="right">NA19098.r1.A03</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">ENSG00000237683</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">ENSG00000187634</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">ENSG00000188976</td>
-<td align="right">57</td>
-<td align="right">140</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">ENSG00000187961</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">ENSG00000187583</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">ENSG00000187642</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><span id="tab:unnamed-chunk-3">Table 7.2: </span>A table of the first 6 rows of the anno table.</caption>
-<thead>
-<tr class="header">
-<th align="left">individual</th>
-<th align="left">replicate</th>
-<th align="left">well</th>
-<th align="left">batch</th>
-<th align="left">sample_id</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A01</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A01</td>
-</tr>
-<tr class="even">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A02</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A02</td>
-</tr>
-<tr class="odd">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A03</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A03</td>
-</tr>
-<tr class="even">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A04</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A04</td>
-</tr>
-<tr class="odd">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A05</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A05</td>
-</tr>
-<tr class="even">
-<td align="left">NA19098</td>
-<td align="left">r1</td>
-<td align="left">A06</td>
-<td align="left">NA19098.r1</td>
-<td align="left">NA19098.r1.A06</td>
-</tr>
-</tbody>
-</table>
-<div class="figure" style="text-align: center"><span id="fig:total-counts-hist-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="Histogram of library sizes for all cells" width="90%" />
+<div id="data-visualization" class="section level1">
+<h1><span class="header-section-number">8</span> Data visualization</h1>
+<div id="introduction-2" class="section level2">
+<h2><span class="header-section-number">8.1</span> Introduction</h2>
+<p>In this chapter we will continue to work with the filtered <strong>blischak</strong> dataset produced in the previous chapter. We will explore different ways of visualizing the data to allow you to asses what happened to the expression matrix after the quality control step.</p>
+<p>One important aspect of single-cell RNA-seq is to control for batch effects. Batch effects are technical artefacts that are added to the samples during handling. For example, if two sets of samples were prepared in different labs or even on different days in the same lab, then we may observe greater similarities between the samples that were handled together. In the worst case scenario, batch effects may be <a href="http://f1000research.com/articles/4-121/v1">mistaken</a> for true biological variation. The Blischak data allows us to explore these issues in a controlled manner since some of the salient aspects of how the samples were handled have been recorded. Ideally, we expect to see batches from the same individual grouping together and distinct groups corresponding to each individual.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
+umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
+</div>
+<div id="pca-plot" class="section level2">
+<h2><span class="header-section-number">8.2</span> PCA plot</h2>
+<p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components. Again the <a href="https://github.com/davismcc/scater">scater</a> package provides several very useful functions to make this analysis straightforward.</p>
+<div id="before-qc" class="section level3">
+<h3><span class="header-section-number">8.2.1</span> Before QC</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-before-qc"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 7.1: Histogram of library sizes for all cells
+Figure 8.1: PCA plot of the blischak data
 </p>
 </div>
-<table>
-<caption><span id="tab:unnamed-chunk-9">Table 7.3: </span>The number of cells removed by total counts filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">filter_by_total_counts</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">180</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">684</td>
-</tr>
-</tbody>
-</table>
-<div class="figure" style="text-align: center"><span id="fig:total-features-hist-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
+</div>
+<div id="after-qc" class="section level3">
+<h3><span class="header-section-number">8.2.2</span> After QC</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 7.2: Histogram of the number of detected genes in all cells
+Figure 8.2: PCA plot of the blischak data
 </p>
 </div>
-<table>
-<caption><span id="tab:unnamed-chunk-11">Table 7.4: </span>The number of cells removed by total features filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">filter_by_expr_features</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">120</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">744</td>
-</tr>
-</tbody>
-</table>
-<div class="figure" style="text-align: center"><span id="fig:total-features-vs-counts-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
+<p>Comparing Figure 8.1 and Figure 8.2, it is clear that after normalization the NA19098.r2 cells no longer form a group of outliers.</p>
+<p>By default only the top 500 most variable genes are used by scater to calculate the PCA. This can be adjusted by changing the <code>ntop</code> argument.</p>
+<p><strong>Exercise 1</strong> How do the PCA plots change if when all 14,214 genes are used? Or when only top 50 genes are used?</p>
+<p><strong>Our answer</strong></p>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-exercise1-1"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="PCA plot of the blischak data (14214 genes)" width="90%" />
 <p class="caption">
-Figure 7.3: Library size vs number of detected genes
+Figure 8.3: PCA plot of the blischak data (14214 genes)
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:mt-vs-counts-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="Percentage of counts in MT genes" width="90%" />
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-exercise1-2"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="PCA plot of the blischak data (50 genes)" width="90%" />
 <p class="caption">
-Figure 7.4: Percentage of counts in MT genes
+Figure 8.4: PCA plot of the blischak data (50 genes)
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:ercc-vs-counts-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="Percentage of counts in ERCCs" width="90%" />
+<p>If your answers are different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
+</div>
+</div>
+<div id="tsne-map" class="section level2">
+<h2><span class="header-section-number">8.3</span> tSNE map</h2>
+<p>An alternative to PCA for visualizing scRNASeq data is a tSNE plot. <a href="https://lvdmaaten.github.io/tsne/">tSNE</a> (t-Distributed Stochastic Neighbor Embedding) combines dimensionality reduction (e.g. PCA) with random walks on the nearest-neighbour network to map high dimensional data (i.e. our 14,214 dimensional expression matrix) to a 2-dimensional space while preserving local distances between cells. In contrast with PCA, tSNE is a stochastic algorithm which means running the method multiple times on the same dataset will result in different plots. In the code below we fix the “seed” of the random-number generator so that we always get the same plot.</p>
+<div id="before-qc-1" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> Before QC</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(umi[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-before-qc"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 7.5: Percentage of counts in ERCCs
+Figure 8.5: tSNE map of the blischak data
 </p>
 </div>
-<table>
-<caption><span id="tab:unnamed-chunk-13">Table 7.5: </span>The number of cells removed by ERCC filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">filter_by_ERCC</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">103</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">761</td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><span id="tab:unnamed-chunk-15">Table 7.6: </span>The number of cells removed by MT filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">filter_by_MT</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">18</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">846</td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><span id="tab:unnamed-chunk-17">Table 7.7: </span>The number of cells removed by default filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">Var1</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">37</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">827</td>
-</tr>
-</tbody>
-</table>
-<pre><code>## The following cells/samples are detected as outliers:
-## NA19098.r1.B10
-## NA19098.r1.D07
-## NA19098.r1.E04
-## NA19098.r1.F06
-## NA19098.r1.H08
-## NA19098.r1.H09
-## NA19098.r2.A01
-## NA19098.r2.A06
-## NA19098.r2.A09
-## NA19098.r2.A12
-## NA19098.r2.B01
-## NA19098.r2.B11
-## NA19098.r2.B12
-## NA19098.r2.C04
-## NA19098.r2.C09
-## NA19098.r2.D02
-## NA19098.r2.D03
-## NA19098.r2.D09
-## NA19098.r2.E04
-## NA19098.r2.E07
-## NA19098.r2.F01
-## NA19098.r2.F11
-## NA19098.r2.G01
-## NA19098.r2.G05
-## NA19098.r2.G10
-## NA19098.r2.H01
-## NA19098.r2.H07
-## NA19098.r2.H08
-## NA19098.r2.H12
-## NA19098.r3.A05
-## NA19098.r3.A07
-## NA19098.r3.B02
-## NA19098.r3.C07
-## NA19098.r3.E05
-## NA19098.r3.E08
-## NA19098.r3.E09
-## NA19098.r3.F11
-## NA19098.r3.F12
-## NA19098.r3.G02
-## NA19098.r3.G03
-## NA19098.r3.G04
-## NA19098.r3.G11
-## NA19098.r3.G12
-## NA19098.r3.H08
-## NA19101.r1.A01
-## NA19101.r1.A12
-## NA19101.r1.B01
-## NA19101.r1.B06
-## NA19101.r1.E09
-## NA19101.r1.E11
-## NA19101.r1.F05
-## NA19101.r1.F10
-## NA19101.r1.G01
-## NA19101.r1.G06
-## NA19101.r1.H04
-## NA19101.r1.H09
-## NA19101.r2.A03
-## NA19101.r2.C10
-## NA19101.r2.E05
-## NA19101.r2.F02
-## NA19101.r2.H04
-## NA19101.r2.H10
-## NA19101.r3.A02
-## NA19101.r3.A03
-## NA19101.r3.A05
-## NA19101.r3.A09
-## NA19101.r3.B05
-## NA19101.r3.C01
-## NA19101.r3.C09
-## NA19101.r3.C12
-## NA19101.r3.D01
-## NA19101.r3.D04
-## NA19101.r3.D07
-## NA19101.r3.D09
-## NA19101.r3.E08
-## NA19101.r3.F09
-## NA19101.r3.G09
-## NA19101.r3.H01
-## NA19101.r3.H03
-## NA19101.r3.H07
-## NA19101.r3.H09
-## NA19239.r1.F05
-## NA19239.r1.G05
-## NA19239.r2.B01
-## NA19239.r2.B03
-## NA19239.r2.B10
-## NA19239.r2.B11
-## NA19239.r2.C03
-## NA19239.r2.C06
-## NA19239.r2.C08
-## NA19239.r2.D07
-## NA19239.r2.D09
-## NA19239.r2.E09
-## NA19239.r2.F04
-## NA19239.r2.F06
-## NA19239.r2.F07
-## NA19239.r2.F12
-## NA19239.r2.G03
-## NA19239.r2.G08
-## NA19239.r2.H02
-## NA19239.r2.H03
-## NA19239.r2.H07
-## NA19239.r3.A01
-## NA19239.r3.B09
-## NA19239.r3.C04
-## NA19239.r3.C07
-## NA19239.r3.E01
-## NA19239.r3.E03
-## NA19239.r3.E12
-## NA19239.r3.H02
-## NA19239.r3.H10
-## Variables with highest loadings for PC1 and PC2:
-## 
-##                                            PC1         PC2
-## ---------------------------------  -----------  ----------
-## pct_counts_feature_controls          0.5057646   0.2473134
-## pct_counts_top_100_features          0.4888852   0.2277068
-## n_detected_feature_controls          0.0231277   0.6235516
-## log10_counts_feature_controls       -0.1226860   0.6576822
-## total_features                      -0.4655518   0.2219694
-## log10_counts_endogenous_features    -0.5223679   0.1278782</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:auto-cell-filt-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
+</div>
+<div id="after-qc-1" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> After QC</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(umi.qc[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 7.6: PCA plot used for automatic detection of cell outliers
+Figure 8.6: tSNE map of the blischak data
 </p>
 </div>
-<table>
-<caption><span id="tab:unnamed-chunk-18">Table 7.8: </span>The number of cells removed by automatic filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">Var1</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">753</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">111</td>
-</tr>
-</tbody>
-</table>
-<table>
-<caption><span id="tab:unnamed-chunk-20">Table 7.9: </span>The number of cells removed by manual filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">Var1</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">259</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">605</td>
-</tr>
-</tbody>
-</table>
-<div class="figure" style="text-align: center"><span id="fig:cell-filt-comp-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
+<p>Interpreting PCA and tSNE plots is often challenging. However, in this case it is clear that they provide a similar picture of the data. Comparing Figure 8.5 and 8.6, it is again clear that the samples from NA19098.r2 are no longer outliers after the QC filtering.</p>
+<p>Furthermore tSNE requires you to provide a value of “perplexity” which reflects the number of neighbours used to build the nearest-neighbour network; a high value creates a dense network which clumps cells together while a low value makes the network more sparse allowing groups of cells to separate from each other. <strong>scater</strong> uses a default perplexity of the total number of cells divided by five (rounded down).</p>
+<p><strong>Exercise 2</strong> How do the tSNE plots change when a perplexity of 10 or 200 is used?</p>
+<p><strong>Our answer</strong></p>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-1"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="tSNE map of the blischak data (perplexity = 10)" width="90%" />
 <p class="caption">
-Figure 7.7: Comparison of the default, automatic and manual cell filters
+Figure 8.7: tSNE map of the blischak data (perplexity = 10)
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:dropout-overview-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="Dropout rate vs mean expression" width="90%" />
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-2"></span>
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="tSNE map of the blischak data (perplexity = 200)" width="90%" />
 <p class="caption">
-Figure 7.8: Dropout rate vs mean expression
+Figure 8.8: tSNE map of the blischak data (perplexity = 200)
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:top50-gene-expr-reads"></span>
-<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
-<p class="caption">
-Figure 7.9: Number of total counts consumed by the top 50 expressed genes
-</p>
+<p>If your answers are different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
-<table>
-<caption><span id="tab:unnamed-chunk-22">Table 7.10: </span>The number of genes removed by gene filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">filter_genes</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">2445</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">16281</td>
-</tr>
-</tbody>
-</table>
-<pre><code>## Features  Samples 
-##    16281      605</code></pre>
-<p>If you want to further check yourself you can download our <a href="http://genat.uk/bookdown-demo/blischak/reads.rds"><code>reads</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
+</div>
+<div id="big-exercise-1" class="section level2">
+<h2><span class="header-section-number">8.4</span> Big Exercise</h2>
+<p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="expression-qc-umi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualization.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="expression-qc-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="expression-overview-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -733,7 +417,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/06-exprs-qc-reads.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/07-exprs-overview.Rmd",
 "text": "Edit"
 },
 "download": null,
