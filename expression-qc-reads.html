@@ -27,7 +27,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="expression-qc-umi.html">
-<link rel="next" href="data-visualization.html">
+<link rel="next" href="expression-overview.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -162,17 +162,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.8" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#big-exercise"><i class="fa fa-check"></i><b>6.8</b> Big Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
-<li class="chapter" data-level="8" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>8</b> Data visualization</a><ul>
-<li class="chapter" data-level="8.1" data-path="data-visualization.html"><a href="data-visualization.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
-<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#pca-plot"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
-<li class="chapter" data-level="8.2.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
+<li class="chapter" data-level="8" data-path="expression-overview.html"><a href="expression-overview.html"><i class="fa fa-check"></i><b>8</b> Expression overview</a><ul>
+<li class="chapter" data-level="8.1" data-path="expression-overview.html"><a href="expression-overview.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="expression-overview.html"><a href="expression-overview.html#pca-plot"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
+<li class="chapter" data-level="8.2.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#tsne-map"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
-<li class="chapter" data-level="8.3.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
-<li class="chapter" data-level="8.3.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
+<li class="chapter" data-level="8.3" data-path="expression-overview.html"><a href="expression-overview.html#tsne-map"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="expression-overview.html"><a href="expression-overview.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
+<li class="chapter" data-level="8.3.2" data-path="expression-overview.html"><a href="expression-overview.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.4" data-path="data-visualization.html"><a href="data-visualization.html#big-exercise-1"><i class="fa fa-check"></i><b>8.4</b> Big Exercise</a></li>
+<li class="chapter" data-level="8.4" data-path="expression-overview.html"><a href="expression-overview.html#big-exercise-1"><i class="fa fa-check"></i><b>8.4</b> Big Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="expression-overview-reads.html"><a href="expression-overview-reads.html"><i class="fa fa-check"></i><b>9</b> Expression overview (Reads)</a></li>
 <li class="chapter" data-level="10" data-path="confounding-factors.html"><a href="confounding-factors.html"><i class="fa fa-check"></i><b>10</b> Confounding factors</a><ul>
@@ -262,6 +262,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="expression-qc-reads" class="section level1">
 <h1><span class="header-section-number">7</span> Expression QC (Reads)</h1>
+<p>This chapter contains the summary plots and tables for the QC exercise based on the reads for the Bischak data discussed in the previous chapter.</p>
 <table>
 <caption><span id="tab:unnamed-chunk-3">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
@@ -698,6 +699,7 @@ Figure 7.9: Number of total counts consumed by the top 50 expressed genes
 <pre><code>## Features  Samples 
 ##    16281      605</code></pre>
 <p>If you want to further check yourself you can download our <a href="http://genat.uk/bookdown-demo/blischak/reads.rds"><code>reads</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
+<p>By comparing Figure 7.7 and Figure 6.6, it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.</p>
 
 </div>
             </section>
@@ -706,7 +708,7 @@ Figure 7.9: Number of total counts consumed by the top 50 expressed genes
         </div>
       </div>
 <a href="expression-qc-umi.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualization.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="expression-overview.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

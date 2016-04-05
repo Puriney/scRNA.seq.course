@@ -4,6 +4,8 @@ knit: bookdown::preview_chapter
 
 # Expression QC (Reads)
 
+This chapter contains the summary plots and tables for the QC exercise based on the reads for the Bischak data discussed in the previous chapter.
+
 
 
 
@@ -299,3 +301,5 @@ TRUE            16281
 
 
 If you want to further check yourself you can download our [`reads`](http://genat.uk/bookdown-demo/blischak/reads.rds) object. If you followed the steps above it should be exactly the same as yours.
+
+By comparing Figure 7.7 and Figure 6.6, it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.
