@@ -58,6 +58,10 @@ library(scater, quietly = TRUE)
 options(stringsAsFactors = FALSE)
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
+# after QC we could get some genes with only 0 values
+# we need to remove those
+keep_feature <- rowSums(is_exprs(umi.qc)) > 0
+umi.qc <- umi.qc[keep_feature, ]
 endog_genes <- !fData(umi.qc)$is_feature_control
 ```
 
@@ -265,7 +269,21 @@ scater::plotPCA(umi.qc.ann,
 <p class="caption">(\#fig:norm-pca-fpkm)PCA plot of the blischak data after FPKM normalisation</p>
 </div>
 
-__Note:__ The PCA primarily looks for difference between cells. Since gene lenth is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.
+
+```r
+scater::plotPCA(umi.qc.ann,
+                colour_by = "batch",
+                size_by = "total_features",
+                shape_by = "individual",
+                exprs_values = "tpm")
+```
+
+<div class="figure" style="text-align: center">
+<img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="(\#fig:norm-pca-tpm)PCA plot of the blischak data after TPM normalisation" width="90%" />
+<p class="caption">(\#fig:norm-pca-tpm)PCA plot of the blischak data after TPM normalisation</p>
+</div>
+
+__Note:__ The PCA primarily looks for difference between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.
 
 ```r
 plot(eff_length, rowMeans(counts(umi.qc.ann)))
@@ -275,8 +293,6 @@ plot(eff_length, rowMeans(counts(umi.qc.ann)))
 <img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data" width="90%" />
 <p class="caption">(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data</p>
 </div>
-
-TPM normalisation produce a zero-matrix, we are not sure why, it maybe a bug in scater.
 
 ## Visualize genes
 

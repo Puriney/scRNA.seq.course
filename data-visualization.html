@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-05">
+<meta name="date" content="2016-04-06">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -270,6 +270,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
 umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+<span class="co"># after QC we could get some genes with only 0 values</span>
+<span class="co"># we need to remove those</span>
+keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">is_exprs</span>(umi.qc)) &gt;<span class="st"> </span><span class="dv">0</span>
+umi.qc &lt;-<span class="st"> </span>umi.qc[keep_feature, ]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
 <div id="pca-plot" class="section level2">

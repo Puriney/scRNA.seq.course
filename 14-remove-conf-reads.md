@@ -17,11 +17,6 @@ knit: bookdown::preview_chapter
 ## fit.
 ```
 
-```
-## Warning in xy.coords(x, y, xlabel, ylabel, log): 7 x values <= 0 omitted
-## from logarithmic plot
-```
-
 <div class="figure" style="text-align: center">
 <img src="14-remove-conf-reads_files/figure-html/rm-conf-brennecke-reads-1.png" alt="(\#fig:rm-conf-brennecke-reads)Results of using the Brennecke method on the Blischak dataset" width="90%" />
 <p class="caption">(\#fig:rm-conf-brennecke-reads)Results of using the Brennecke method on the Blischak dataset</p>
