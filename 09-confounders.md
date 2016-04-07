@@ -6,11 +6,7 @@ knit: bookdown::preview_chapter
 
 ## Introduction
 
-There are a very large number of potential confounders, artifacts and biases in sc-RNA-seq data One of the main challenges in analyzing scRNA-seq data stems from the fact that it is difficult to carry out a true technical replicate (why?) to distinguish biological and technical variability. Exploring the effects of such variabilities (both those recorded during the experiment and computed QC metrics) is crucial for appropriate modeling of the data.
-
-The [scater](https://github.com/davismcc/scater) package provides a set of methods specifically for quality control of experimental and explanatory variables.
-
-Here we will continue to work with the Blischak data that was used in the previous chapter.
+There is a large number of potential confounders, artifacts and biases in sc-RNA-seq data. One of the main challenges in analyzing scRNA-seq data stems from the fact that it is difficult to carry out a true technical replicate (why?) to distinguish biological and technical variability. In the previous chapters we considered batch effects and in this chapter we will continue to explore how experimental artifacts can be identified and removed. We will continue using the [scater](https://github.com/davismcc/scater) package since it provides a set of methods specifically for quality control of experimental and explanatory variables. Moreover, we will continue to work with the Blischak data that was used in the previous chapter.
 
 
 
@@ -98,6 +94,10 @@ adjustments require extrinsic information. One popular method is
 [scLVM](https://github.com/PMBio/scLVM) which allows you to identify
 and subtract the effect from processes such as cell-cycle or
 apoptosis.
+
+In addition, protocols may differ in terms of their coverage of each transcript, 
+their bias based on the average content of __A/T__ nucleotides, or their ability to capture short transcripts.
+Ideally, we would like to compensate for all of these differences and biases.
 
 ## Exercise
 

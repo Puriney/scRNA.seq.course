@@ -54,10 +54,6 @@ highly.var.genes <- scRNA.seq.funcs::Brennecke_getVariableGenes(
 ```
 
 ```
-## Loading required package: statmod
-```
-
-```
 ## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(umi.qc)
 ## $norm_counts, : Only 24 spike-ins to be used in fitting, may result in poor
 ## fit.

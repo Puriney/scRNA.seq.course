@@ -6,6 +6,8 @@ knit: bookdown::preview_chapter
 
 ## Introduction
 
+
+
 In the previous chapter we identified important confounding factors and explanatory variables. scater allows one to account for these variables in subsequent statistical models or to condition them out using `normaliseExprs()`, if so desired. This can be done by providing a design matrix to `normaliseExprs()`. We are not covering this topic here, but you can try to do it yourself as an exercise.
 
 Instead we will explore how simple size-factor normalisations correcting for library size can remove the effects of some of the confounders and explanatory variables.
@@ -26,6 +28,16 @@ million (__CPM__) by dividing each column by its total then multiplying by
 calculation of total expression in order to correct for total cell RNA
 content, therefore we will only use endogenous genes. 
 
+
+```r
+calc_cpm <-
+function (expr_mat, spikes = NULL) 
+{
+    norm_factor <- colSums(expr_mat[-spikes, ])
+    return(t(t(expr_mat)/norm_factor)) * 10^6
+}
+```
+
 One potential drawback of __CPM__ is if your sample contains genes that are both very highly expressed and differentially expressed across the cells. In this case, the total molecules in the cell may depend of whether such genes are on/off in the cell and normalizing by total molecules may hide the differential expression of those genes and/or falsely create differential expression for the remaining genes. 
 
 __Note__: RPKM, FPKM and TPM are variants on CPM which further adjust counts by the length of the respective gene/transcript.
@@ -34,11 +46,64 @@ To deal with this potentiality several other measures were devised:
 
 The __size factor (SF)__ was proposed and popularized by DESeq ([Anders and Huber (2010)](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)). First the geometric mean of each gene across all cells is calculated. The size factor for each cell is the median across genes of the ratio of the expression to the gene's geometric mean. A draw back to this method is that since it uses the geometric mean only genes with non-zero expression values across all cells can be used in its calculation, making it unadvisable for large low-depth scRNASeq experiments. edgeR & scater call this method __RLE__ for "relative log expression".
 
+
+```r
+calc_sf <-
+function (expr_mat, spikes = NULL) 
+{
+    geomeans <- exp(rowMeans(log(expr_mat[-spikes, ])))
+    SF <- function(cnts) {
+        median((cnts/geomeans)[(is.finite(geomeans) & geomeans > 
+            0)])
+    }
+    norm_factor <- apply(expr_mat[-spikes, ], 2, SF)
+    return(t(t(expr_mat)/norm_factor))
+}
+```
+
 The __upperquartile (UQ)__ was proposed by [Bullard et al (2010)](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-11-94). Here each column is divided by the 75% quantile of the counts for each library. Often the calculated quantile is scaled by the median across cells to keep the absolute level of expression relatively consistent. A draw back to this method is that for low-depth scRNASeq experiments the large number of undetected genes may result in the 75% quantile being zero (or close to it). This limitation can be overcome by generalizing the idea and using a higher quantile (eg. the 99% quantile is the default in scater) or by excluding zeros prior to calculating the 75% quantile.
 
-Another method is called __TMM__ is the weighted trimmed mean of M-values (to the reference) proposed by [Robinson and Oshlack (2010)](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25). The M-values in question are the gene-wise log2 fold changes between individual cells. One cell is used as the reference then the M-values for each other cell is calculated compared  to this reference. These values are then trimmed by removing the top and bottom ~30%, and the average of the remaining values is calculated by weighting them to account for the effect of the log scale on variance. Each non-reference cell is multiplied by the calculated factor while the reference cell is divided by it's factor. 
 
-We will use visual inspection of PCA plots and calculation of cell-wise relative log expression (`calc_cell_RLE()`) to compare the efficiency of different normalization methods.
+```r
+calc_uq <-
+function (expr_mat, spikes = NULL) 
+{
+    UQ <- function(x) {
+        quantile(x[x > 0], 0.75)
+    }
+    uq <- unlist(apply(expr_mat[-spikes, ], 2, UQ))
+    norm_factor <- uq/median(uq)
+    return(t(t(expr_mat)/norm_factor))
+}
+```
+
+Another method is called __TMM__ is the weighted trimmed mean of M-values (to the reference) proposed by [Robinson and Oshlack (2010)](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25). The M-values in question are the gene-wise log2 fold changes between individual cells. One cell is used as the reference then the M-values for each other cell is calculated compared  to this reference. These values are then trimmed by removing the top and bottom ~30%, and the average of the remaining values is calculated by weighting them to account for the effect of the log scale on variance. Each non-reference cell is multiplied by the calculated factor. Two potential issues with this method are insufficient non-zero genes left after trimming, and the assumption that most genes are not differentially expressed.
+
+We will use visual inspection of PCA plots and calculation of cell-wise relative log expression (`calc_cell_RLE()`) to compare the efficiency of different normalization methods. Cells with many[few] reads have higher[lower] than median expression for most genes resulting in a positive[negative] RLE across the cell, whereas normalized cells have an RLE close to zero.
+
+
+```r
+calc_cell_RLE <-
+function (expr_mat, spikes = NULL) 
+{
+    RLE_gene <- function(x) {
+        if (median(unlist(x)) > 0) {
+            log((x + 1)/(median(unlist(x)) + 1))/log(2)
+        }
+        else {
+            rep(NA, times = length(x))
+        }
+    }
+    if (!is.null(spikes)) {
+        RLE_matrix <- t(apply(expr_mat[-spikes, ], 1, RLE_gene))
+    }
+    else {
+        RLE_matrix <- t(apply(expr_mat, 1, RLE_gene))
+    }
+    cell_RLE <- apply(RLE_matrix, 2, median, na.rm = T)
+    return(cell_RLE)
+}
+```
 
 _Tallulah: I need to revamp this to (1) include RLE, (2) change what is/isn't an exercise, and (3) possibly add comparison of scater/edgeR with actual functions for DESeq_
 
@@ -51,17 +116,11 @@ __Note:__ edgeR makes extra adjustments to some of the normalization methods whi
 We will continue to work with the Blischak data that was used in the previous chapter.
 
 
-
-
 ```r
 library(scater, quietly = TRUE)
 options(stringsAsFactors = FALSE)
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
-# after QC we could get some genes with only 0 values
-# we need to remove those
-keep_feature <- rowSums(is_exprs(umi.qc)) > 0
-umi.qc <- umi.qc[keep_feature, ]
 endog_genes <- !fData(umi.qc)$is_feature_control
 ```
 
@@ -80,6 +139,19 @@ scater::plotPCA(umi.qc[endog_genes, ],
 <p class="caption">(\#fig:norm-pca-raw)PCA plot of the blischak data</p>
 </div>
 
+
+```r
+boxplot(calc_cell_RLE(counts(umi.qc)),
+        col = "grey50",
+        ylab = "RLE",
+        main = "")
+```
+
+<div class="figure" style="text-align: center">
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-raw-1.png" alt="(\#fig:norm-ours-rle-raw)Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">(\#fig:norm-ours-rle-raw)Cell-wise RLE of the blischak data</p>
+</div>
+
 ### CPM
 scater performs this normalisation by default, you can control it by changing `exprs_values` parameter to `"exprs"`.
 
@@ -96,20 +168,18 @@ scater::plotPCA(umi.qc[endog_genes, ],
 <p class="caption">(\#fig:norm-pca-cpm)PCA plot of the blischak data after CPM normalisation</p>
 </div>
 
-### log2(CPM)
-
 ```r
-scater::plotPCA(umi.qc[endog_genes, ],
-                colour_by = "batch",
-                size_by = "total_features",
-                shape_by = "individual",
-                exprs_values = "exprs")
+boxplot(calc_cell_RLE(cpm(umi.qc)),
+        col = "grey50",
+        ylab = "RLE",
+        main = "")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-log2-cpm-1.png" alt="(\#fig:norm-pca-log2-cpm)PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-log2-cpm)PCA plot of the blischak data after log2(CPM) normalisation</p>
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-cpm-1.png" alt="(\#fig:norm-ours-rle-cpm)Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">(\#fig:norm-ours-rle-cpm)Cell-wise RLE of the blischak data</p>
 </div>
+
 
 ### TMM
 
@@ -131,7 +201,23 @@ scater::plotPCA(umi.qc[endog_genes, ],
 <p class="caption">(\#fig:norm-pca-tmm)PCA plot of the blischak data after TMM normalisation</p>
 </div>
 
-### RLE
+```r
+boxplot(calc_cell_RLE(norm_counts(umi.qc)),
+        col = "grey50",
+        ylab = "RLE",
+        main = "")
+```
+
+<div class="figure" style="text-align: center">
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-tmm-1.png" alt="(\#fig:norm-ours-rle-tmm)Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">(\#fig:norm-ours-rle-tmm)Cell-wise RLE of the blischak data</p>
+</div>
+
+__Exercise:__ 
+
+Use `method = "RLE"` and `method = "upperquartile"` to perform size-factor and UQ normalizations and compare to the results above.
+
+### RLE 
 
 ```r
 umi.qc <- 
@@ -172,9 +258,6 @@ scater::plotPCA(umi.qc[endog_genes, ],
 <p class="caption">(\#fig:norm-pca-uq)PCA plot of the blischak data after UQ normalisation</p>
 </div>
 
-## Interpretation
-
-Clearly, only the CPM normalisation has reduced the effect of the number of detected genes and separated cells by individuals (though very weakly).
 
 ## Other methods
 
@@ -391,9 +474,3 @@ scater::plotExpression(umi.qc.ann,
 ## Exercise
 
 Perform the same analysis with read counts of the Blischak data. Use `blischak/reads.rds` file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).
-
-
-
-* Protocols may differ in terms of their coverage of each transcript, their bias based on the average content of __A/T__ nucleotides, or their ability to capture short transcripts.
-
-Ideally, we would like to compensate for all of these differences and biases when comparing data from two different experiments
