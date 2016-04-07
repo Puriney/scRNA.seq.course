@@ -264,11 +264,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">10</span> Confounding factors</h1>
 <div id="introduction-3" class="section level2">
 <h2><span class="header-section-number">10.1</span> Introduction</h2>
-<p>There is a large number of potential confounders, artifacts and biases in sc-RNA-seq data. One of the main challenges in analyzing scRNA-seq data stems from the fact that it is difficult to carry out a true technical replicate (why?) to distinguish biological and technical variability. In the previous chapters we considered batch effects and in this chapter we will continue to explore how experimental artifacts can be identified and removed. We will continue using the <a href="https://github.com/davismcc/scater">scater</a> package since it provides a set of methods specifically for quality control of experimental and explanatory variables. Moreover, we will continue to work with the Blischak data that was used in the previous chapter.</p>
+<p>There are a very large number of potential confounders, artifacts and biases in sc-RNA-seq data One of the main challenges in analyzing scRNA-seq data stems from the fact that it is difficult to carry out a true technical replicate (why?) to distinguish biological and technical variability. Exploring the effects of such variabilities (both those recorded during the experiment and computed QC metrics) is crucial for appropriate modeling of the data.</p>
+<p>The <a href="https://github.com/davismcc/scater">scater</a> package provides a set of methods specifically for quality control of experimental and explanatory variables.</p>
+<p>Here we will continue to work with the Blischak data that was used in the previous chapter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
 umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+<span class="co"># after QC we could get some genes with only 0 values</span>
+<span class="co"># we need to remove those</span>
+keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">is_exprs</span>(umi.qc)) &gt;<span class="st"> </span><span class="dv">0</span>
+umi.qc &lt;-<span class="st"> </span>umi.qc[keep_feature, ]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 <p>The <code>umi.qc</code> dataset contains filtered cells and genes. Our next step is to explore technical drivers of variability in the data to inform data normalisation before downstream analysis.</p>
 </div>
@@ -291,7 +297,8 @@ Figure 10.1: PCA plot of the blischak data
 <h3><span class="header-section-number">10.2.1</span> Detected genes</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotQC</span>(umi.qc[endog_genes, ],
                <span class="dt">type =</span> <span class="st">&quot;find-pcs&quot;</span>,
-               <span class="dt">variable =</span> <span class="st">&quot;total_features&quot;</span>)</code></pre></div>
+               <span class="dt">variable =</span> <span class="st">&quot;total_features&quot;</span>,
+               <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:confound-find-pcs-total-features"></span>
 <img src="09-confounders_files/figure-html/confound-find-pcs-total-features-1.png" alt="PC correlation with the number of detected genes" width="90%" />
 <p class="caption">
