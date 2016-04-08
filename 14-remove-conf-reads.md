@@ -9,7 +9,7 @@ knit: bookdown::preview_chapter
 
 ```
 ## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(reads.qc)
-## $norm_counts, : Only 17 spike-ins to be used in fitting, may result in poor
+## $norm_counts, : Only 15 spike-ins to be used in fitting, may result in poor
 ## fit.
 ```
 

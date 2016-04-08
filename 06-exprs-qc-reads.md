@@ -289,13 +289,13 @@ Table: (\#tab:unnamed-chunk-22)The number of genes removed by gene filter (FALSE
 
 filter_genes     Freq
 -------------  ------
-FALSE            2445
-TRUE            16281
+FALSE            2665
+TRUE            16061
 
 
 ```
 ## Features  Samples 
-##    16281      605
+##    16061      605
 ```
 
 

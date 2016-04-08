@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-07">
+<meta name="date" content="2016-04-08">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -819,8 +819,9 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 </div>
 <div id="gene-filtering" class="section level3">
 <h3><span class="header-section-number">6.6.2</span> Gene filtering</h3>
-<p>It is typically a good idea to remove genes whose expression level is considered <strong>“undetectable”</strong>. We define a gene as detectable if at least two cells contain more than 1 transcript from the gene. If we were considering read counts rather than UMI counts a reasonable threshold is to require at least five reads in at least two cells. However, in both cases the threshold strongly depends on the sequencing depth. It also important to keep in mind that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(umi), <span class="dv">1</span>, function(x) <span class="kw">length</span>(x[x &gt;<span class="st"> </span><span class="dv">1</span>]) &gt;=<span class="st"> </span><span class="dv">2</span>)
+<p>It is typically a good idea to remove genes whose expression level is considered <strong>“undetectable”</strong>. We define a gene as detectable if at least two cells contain more than 1 transcript from the gene. If we were considering read counts rather than UMI counts a reasonable threshold is to require at least five reads in at least two cells. However, in both cases the threshold strongly depends on the sequencing depth. It also important to keep in mind that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells (<strong>note</strong> <code>pData(umi)$use</code> filter applied to the <code>umi</code> dataset).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(umi[ , <span class="kw">pData</span>(umi)$use]), <span class="dv">1</span>, 
+                      function(x) <span class="kw">length</span>(x[x &gt;<span class="st"> </span><span class="dv">1</span>]) &gt;=<span class="st"> </span><span class="dv">2</span>)
 <span class="kw">fData</span>(umi)$use &lt;-<span class="st"> </span>filter_genes</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
     <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_genes)),
@@ -839,11 +840,11 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 <tbody>
 <tr class="odd">
 <td align="left">FALSE</td>
-<td align="right">4512</td>
+<td align="right">4663</td>
 </tr>
 <tr class="even">
 <td align="left">TRUE</td>
-<td align="right">14214</td>
+<td align="right">14063</td>
 </tr>
 </tbody>
 </table>
@@ -855,7 +856,7 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 <p>Dimensions of the QCed dataset (do not forget about the gene filter we defined above):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use])</code></pre></div>
 <pre><code>## Features  Samples 
-##    14214      654</code></pre>
+##    14063      654</code></pre>
 <p>Save the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(umi, <span class="dt">file =</span> <span class="st">&quot;blischak/umi.rds&quot;</span>)</code></pre></div>
 <p>If you want to further check yourself you can download our <a href="http://genat.uk/bookdown-demo/blischak/umi.rds"><code>umi</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>

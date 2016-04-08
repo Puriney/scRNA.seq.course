@@ -533,11 +533,12 @@ The distribution relatively flat indicating (but not guaraneeing!) good coverage
 
 ### Gene filtering
 
-It is typically a good idea to remove genes whose expression level is considered __"undetectable"__. We define a gene as  detectable if at least two cells contain more than 1 transcript from the gene. If we were considering read counts rather than UMI counts a reasonable threshold is to require at least five reads in at least two cells. However, in both cases the threshold strongly depends on the sequencing depth. It also important to keep in mind that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells.
+It is typically a good idea to remove genes whose expression level is considered __"undetectable"__. We define a gene as  detectable if at least two cells contain more than 1 transcript from the gene. If we were considering read counts rather than UMI counts a reasonable threshold is to require at least five reads in at least two cells. However, in both cases the threshold strongly depends on the sequencing depth. It also important to keep in mind that genes must be filtered after cell filtering since some genes may be only detected in poor quality cells (__note__ `pData(umi)$use` filter applied to the `umi` dataset).
 
 
 ```r
-filter_genes <- apply(counts(umi), 1, function(x) length(x[x > 1]) >= 2)
+filter_genes <- apply(counts(umi[ , pData(umi)$use]), 1, 
+                      function(x) length(x[x > 1]) >= 2)
 fData(umi)$use <- filter_genes
 ```
 
@@ -557,8 +558,8 @@ Table: (\#tab:unnamed-chunk-18)The number of genes removed by gene filter (FALSE
 
 filter_genes     Freq
 -------------  ------
-FALSE            4512
-TRUE            14214
+FALSE            4663
+TRUE            14063
 
 Depending on the cell-type, protocol and sequencing depth, other cut-offs may be appropriate.
 
@@ -573,7 +574,7 @@ dim(umi[fData(umi)$use, pData(umi)$use])
 
 ```
 ## Features  Samples 
-##    14214      654
+##    14063      654
 ```
 
 Save the data:
