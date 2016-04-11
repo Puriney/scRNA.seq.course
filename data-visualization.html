@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-08">
+<meta name="date" content="2016-04-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -164,11 +164,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
 <li class="chapter" data-level="8" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>8</b> Data visualization</a><ul>
 <li class="chapter" data-level="8.1" data-path="data-visualization.html"><a href="data-visualization.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
-<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#pca-plot"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
+<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#visual-pca"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
 <li class="chapter" data-level="8.2.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.2.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#tsne-map"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
+<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#visual-tsne"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
 <li class="chapter" data-level="8.3.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.3.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
 </ul></li>
@@ -219,7 +219,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
 <li class="chapter" data-level="16.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#introduction-6"><i class="fa fa-check"></i><b>16.1</b> Introduction</a></li>
 <li class="chapter" data-level="16.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#dimensionality-reductions"><i class="fa fa-check"></i><b>16.2</b> Dimensionality reductions</a><ul>
-<li class="chapter" data-level="16.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#clust-pca"><i class="fa fa-check"></i><b>16.2.1</b> PCA</a></li>
+<li class="chapter" data-level="16.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pca"><i class="fa fa-check"></i><b>16.2.1</b> PCA</a></li>
 <li class="chapter" data-level="16.2.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#spectral"><i class="fa fa-check"></i><b>16.2.2</b> Spectral</a></li>
 <li class="chapter" data-level="16.2.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne"><i class="fa fa-check"></i><b>16.2.3</b> tSNE</a></li>
 </ul></li>
@@ -233,11 +233,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>16.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
 <li class="chapter" data-level="16.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>16.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
 <li class="chapter" data-level="16.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>16.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
-<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsnek-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE+<em>k</em>-means</a></li>
+<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + <em>k</em>-means</a></li>
 <li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>17</b> References</a></li>
+<li class="chapter" data-level="17" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="17.1" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#patient-dataset"><i class="fa fa-check"></i><b>17.1</b> Patient dataset</a></li>
+<li class="chapter" data-level="17.2" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#sc3-1"><i class="fa fa-check"></i><b>17.2</b> SC3</a></li>
+<li class="chapter" data-level="17.3" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#pcareduce-1"><i class="fa fa-check"></i><b>17.3</b> pcaReduce</a></li>
+<li class="chapter" data-level="17.4" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#tsne-kmeans"><i class="fa fa-check"></i><b>17.4</b> tSNE + kmeans</a></li>
+<li class="chapter" data-level="17.5" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
+<li class="chapter" data-level="17.6" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>18</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -262,7 +270,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">8</span> Data visualization</h1>
 <div id="introduction-2" class="section level2">
 <h2><span class="header-section-number">8.1</span> Introduction</h2>
-<p>In this chapter we will continue to work with the filtered <strong>blischak</strong> dataset produced in the previous chapter. We will explore different ways of visualizing the data to allow you to asses what happened to the expression matrix after the quality control step.</p>
+<p>In this chapter we will continue to work with the filtered <strong>blischak</strong> dataset produced in the previous chapter. We will explore different ways of visualizing the data to allow you to asses what happened to the expression matrix after the quality control step. <a href="https://github.com/davismcc/scater">scater</a> package provides several very useful functions to simplify visualisation.</p>
 <p>One important aspect of single-cell RNA-seq is to control for batch effects. Batch effects are technical artefacts that are added to the samples during handling. For example, if two sets of samples were prepared in different labs or even on different days in the same lab, then we may observe greater similarities between the samples that were handled together. In the worst case scenario, batch effects may be <a href="http://f1000research.com/articles/4-121/v1">mistaken</a> for true biological variation. The Blischak data allows us to explore these issues in a controlled manner since some of the salient aspects of how the samples were handled have been recorded. Ideally, we expect to see batches from the same individual grouping together and distinct groups corresponding to each individual.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
@@ -270,9 +278,18 @@ umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="s
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
-<div id="pca-plot" class="section level2">
+<div id="visual-pca" class="section level2">
 <h2><span class="header-section-number">8.2</span> PCA plot</h2>
-<p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components. Again the <a href="https://github.com/davismcc/scater">scater</a> package provides several very useful functions to make this analysis straightforward.</p>
+<p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components.</p>
+<p><a href="https://en.wikipedia.org/wiki/Principal_component_analysis">Principal component analysis (PCA)</a> is a statistical procedure that uses a transformation to convert a set of observations into a set of values of linearly uncorrelated variables called principal components (PCs). The number of principal components is less than or equal to the number of original variables.</p>
+<p>PCA is defined in such a way that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">include_graphics</span>(<span class="st">&quot;figures/pca.png&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:clust-pca"></span>
+<img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
+<p class="caption">
+Figure 8.1: Schematic representation of PCA dimensionality reduction (taken from <a href="http://www.nlpca.org/pca_principal_component_analysis.html">here</a>)
+</p>
+</div>
 <div id="before-qc" class="section level3">
 <h3><span class="header-section-number">8.2.1</span> Before QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi[endog_genes, ],
@@ -284,7 +301,7 @@ endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-before-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.1: PCA plot of the blischak data
+Figure 8.2: PCA plot of the blischak data
 </p>
 </div>
 </div>
@@ -299,7 +316,7 @@ Figure 8.1: PCA plot of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.2: PCA plot of the blischak data
+Figure 8.3: PCA plot of the blischak data
 </p>
 </div>
 <p>Comparing Figure 8.1 and Figure 8.2, it is clear that after normalization the NA19098.r2 cells no longer form a group of outliers.</p>
@@ -309,19 +326,19 @@ Figure 8.2: PCA plot of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-exercise1-1"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="PCA plot of the blischak data (14214 genes)" width="90%" />
 <p class="caption">
-Figure 8.3: PCA plot of the blischak data (14214 genes)
+Figure 8.4: PCA plot of the blischak data (14214 genes)
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-exercise1-2"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="PCA plot of the blischak data (50 genes)" width="90%" />
 <p class="caption">
-Figure 8.4: PCA plot of the blischak data (50 genes)
+Figure 8.5: PCA plot of the blischak data (50 genes)
 </p>
 </div>
 <p>If your answers are different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
 </div>
-<div id="tsne-map" class="section level2">
+<div id="visual-tsne" class="section level2">
 <h2><span class="header-section-number">8.3</span> tSNE map</h2>
 <p>An alternative to PCA for visualizing scRNASeq data is a tSNE plot. <a href="https://lvdmaaten.github.io/tsne/">tSNE</a> (t-Distributed Stochastic Neighbor Embedding) combines dimensionality reduction (e.g. PCA) with random walks on the nearest-neighbour network to map high dimensional data (i.e. our 14,214 dimensional expression matrix) to a 2-dimensional space while preserving local distances between cells. In contrast with PCA, tSNE is a stochastic algorithm which means running the method multiple times on the same dataset will result in different plots. In the code below we fix the “seed” of the random-number generator so that we always get the same plot.</p>
 <div id="before-qc-1" class="section level3">
@@ -337,7 +354,7 @@ Figure 8.4: PCA plot of the blischak data (50 genes)
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-before-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.5: tSNE map of the blischak data
+Figure 8.6: tSNE map of the blischak data
 </p>
 </div>
 </div>
@@ -354,7 +371,7 @@ Figure 8.5: tSNE map of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 8.6: tSNE map of the blischak data
+Figure 8.7: tSNE map of the blischak data
 </p>
 </div>
 <p>Interpreting PCA and tSNE plots is often challenging. However, in this case it is clear that they provide a similar picture of the data. Comparing Figure 8.5 and 8.6, it is again clear that the samples from NA19098.r2 are no longer outliers after the QC filtering.</p>
@@ -364,13 +381,13 @@ Figure 8.6: tSNE map of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-1"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="tSNE map of the blischak data (perplexity = 10)" width="90%" />
 <p class="caption">
-Figure 8.7: tSNE map of the blischak data (perplexity = 10)
+Figure 8.8: tSNE map of the blischak data (perplexity = 10)
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-2"></span>
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="tSNE map of the blischak data (perplexity = 200)" width="90%" />
 <p class="caption">
-Figure 8.8: tSNE map of the blischak data (perplexity = 200)
+Figure 8.9: tSNE map of the blischak data (perplexity = 200)
 </p>
 </div>
 <p>If your answers are different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/07-exprs-overview.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>

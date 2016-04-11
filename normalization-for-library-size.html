@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-08">
+<meta name="date" content="2016-04-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -164,11 +164,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
 <li class="chapter" data-level="8" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>8</b> Data visualization</a><ul>
 <li class="chapter" data-level="8.1" data-path="data-visualization.html"><a href="data-visualization.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
-<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#pca-plot"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
+<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#visual-pca"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
 <li class="chapter" data-level="8.2.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.2.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#tsne-map"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
+<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#visual-tsne"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
 <li class="chapter" data-level="8.3.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
 <li class="chapter" data-level="8.3.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
 </ul></li>
@@ -219,7 +219,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
 <li class="chapter" data-level="16.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#introduction-6"><i class="fa fa-check"></i><b>16.1</b> Introduction</a></li>
 <li class="chapter" data-level="16.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#dimensionality-reductions"><i class="fa fa-check"></i><b>16.2</b> Dimensionality reductions</a><ul>
-<li class="chapter" data-level="16.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#clust-pca"><i class="fa fa-check"></i><b>16.2.1</b> PCA</a></li>
+<li class="chapter" data-level="16.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pca"><i class="fa fa-check"></i><b>16.2.1</b> PCA</a></li>
 <li class="chapter" data-level="16.2.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#spectral"><i class="fa fa-check"></i><b>16.2.2</b> Spectral</a></li>
 <li class="chapter" data-level="16.2.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne"><i class="fa fa-check"></i><b>16.2.3</b> tSNE</a></li>
 </ul></li>
@@ -233,11 +233,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>16.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
 <li class="chapter" data-level="16.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>16.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
 <li class="chapter" data-level="16.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>16.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
-<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsnek-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE+<em>k</em>-means</a></li>
+<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + <em>k</em>-means</a></li>
 <li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>17</b> References</a></li>
+<li class="chapter" data-level="17" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="17.1" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#patient-dataset"><i class="fa fa-check"></i><b>17.1</b> Patient dataset</a></li>
+<li class="chapter" data-level="17.2" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#sc3-1"><i class="fa fa-check"></i><b>17.2</b> SC3</a></li>
+<li class="chapter" data-level="17.3" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#pcareduce-1"><i class="fa fa-check"></i><b>17.3</b> pcaReduce</a></li>
+<li class="chapter" data-level="17.4" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#tsne-kmeans"><i class="fa fa-check"></i><b>17.4</b> tSNE + kmeans</a></li>
+<li class="chapter" data-level="17.5" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
+<li class="chapter" data-level="17.6" data-path="clustering-analysis-1.html"><a href="clustering-analysis-1.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>18</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
