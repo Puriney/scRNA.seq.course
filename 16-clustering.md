@@ -2,7 +2,7 @@
 knit: bookdown::preview_chapter
 ---
 
-# Clustering analysis
+# Clustering analysis {#clust-methods}
 
 
 
@@ -91,8 +91,8 @@ pheatmap::pheatmap(res)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$."  />
-<p class="caption">(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$.</p>
+<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$"  />
+<p class="caption">(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$</p>
 </div>
 
 __Exercise 6__: Run pcaReduce for $k=2$, $k=4$ and $k=5$. Is it easy to choose the optimal $k$?

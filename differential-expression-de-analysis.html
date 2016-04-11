@@ -26,8 +26,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="remove-confounders-using-controls.html">
-<link rel="next" href="clustering-analysis.html">
+<link rel="prev" href="clust-methods.html">
+<link rel="next" href="references.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -274,44 +274,102 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="remove-confounders-using-controls-reads" class="section level1">
-<h1><span class="header-section-number">15</span> Remove confounders using controls (Reads)</h1>
-<pre><code>## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(reads.qc)
-## $norm_counts, : Only 15 spike-ins to be used in fitting, may result in poor
-## fit.</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-brennecke-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-brennecke-reads-1.png" alt="Results of using the Brennecke method on the Blischak dataset" width="90%" />
+<div id="differential-expression-de-analysis" class="section level1">
+<h1><span class="header-section-number">18</span> Differential expression (DE) analysis</h1>
+<div id="background-bulk-rna-seq" class="section level2">
+<h2><span class="header-section-number">18.1</span> Background (bulk RNA-seq)</h2>
+<p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
+<p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
+</div>
+<div id="de-analysis-for-scrna-seq" class="section level2">
+<h2><span class="header-section-number">18.2</span> DE analysis for scRNA-seq</h2>
+<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (@ref(clust-methods)) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In this chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
+</div>
+<div id="synthetic-data-for-scrna-seq" class="section level2">
+<h2><span class="header-section-number">18.3</span> Synthetic data for scRNA-seq</h2>
+<p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
+<p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
+</div>
+<div id="modelled-expression-of-a-single-gene" class="section level2">
+<h2><span class="header-section-number">18.4</span> Modelled expression of a single gene</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
+<p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
+<p>We then plot the results as a histogram:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(s,
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
+<img src="17-de_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model"  />
 <p class="caption">
-Figure 15.1: Results of using the Brennecke method on the Blischak dataset
+Figure 18.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
+<p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
+<p><span class="math inline">\(\mu = k\cdot a/(a+b)\)</span></p>
+<p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
+</div>
+<div id="possible-shapes-of-the-poisson-beta-distribution" class="section level2">
+<h2><span class="header-section-number">18.5</span> Possible shapes of the Poisson-Beta distribution</h2>
+<p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
+<p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
+<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, .<span class="dv">3</span>),
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
+<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, <span class="dv">3</span>),
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
+<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, .<span class="dv">3</span>),
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
+<img src="17-de_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
 <p class="caption">
-Figure 15.2: PCA plot of the blischak data after RLE normalisation
+Figure 18.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle-ruv-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-ruv-reads-1.png" alt="PCA plot of the blischak data after RLE and RUV normalisations" width="90%" />
+<p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
+</div>
+<div id="effect-of-sampling-size-on-parameter-estimates" class="section level2">
+<h2><span class="header-section-number">18.6</span> Effect of sampling size on parameter estimates</h2>
+<p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>))
+<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">50</span>),
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
+     <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
+<img src="17-de_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model"  />
 <p class="caption">
-Figure 15.3: PCA plot of the blischak data after RLE and RUV normalisations
+Figure 18.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-rle-comp-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-rle-comp-reads-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />
-<p class="caption">
-Figure 15.4: Comparison of the relative log expression of the blischak data before and after the RUV normalisation
-</p>
-</div>
+<p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="remove-confounders-using-controls.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="clustering-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="clust-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -338,7 +396,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/14-remove-conf-reads.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/17-de.Rmd",
 "text": "Edit"
 },
 "download": null,
