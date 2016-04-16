@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-11">
+<meta name="date" content="2016-04-16">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -296,7 +296,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="blischak-dataset" class="section level2">
 <h2><span class="header-section-number">6.2</span> Blischak dataset</h2>
-<p>To illustrate cell QC, we consider a <a href="http://jdblischak.github.io/singleCellSeq/analysis/">dataset</a> of induced pluripotent stem cells generated from three different individuals by John Blischak in <a href="http://giladlab.uchicago.edu/">Yoav Gilad</a>’s lab at the University of Chicago. The experiments were carried out on the Fluidigm C1 platform and to facilitate the quantification both unique molecular identifiers (UMIs) and ERCC <em>spike-ins</em> were used. For our purposes you need to download the files <a href="http://genat.uk/bookdown-demo/blischak/annotation.txt"><code>annotation.txt</code></a>, <a href="http://genat.uk/bookdown-demo/blischak/molecules.txt"><code>molecules.txt</code></a>, and <a href="http://genat.uk/bookdown-demo/blischak/reads.txt"><code>reads.txt</code></a> into the <code>blischak</code> folder in your working directory. These files are the copies of the original files made on the 15/03/16. We will use these copies for reproducibility purposes.</p>
+<p>To illustrate cell QC, we consider a <a href="http://jdblischak.github.io/singleCellSeq/analysis/">dataset</a> of induced pluripotent stem cells generated from three different individuals by John Blischak in <a href="http://giladlab.uchicago.edu/">Yoav Gilad</a>’s lab at the University of Chicago. The experiments were carried out on the Fluidigm C1 platform and to facilitate the quantification both unique molecular identifiers (UMIs) and ERCC <em>spike-ins</em> were used. For our purposes you need to download the files <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/annotation.txt"><code>annotation.txt</code></a>, <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/molecules.txt"><code>molecules.txt</code></a>, and <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/reads.txt"><code>reads.txt</code></a> into the <code>blischak</code> folder in your working directory. These files are the copies of the original files made on the 15/03/16. We will use these copies for reproducibility purposes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Load the data and annotations:</p>
@@ -888,7 +888,7 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 ##    14063      654</code></pre>
 <p>Save the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(umi, <span class="dt">file =</span> <span class="st">&quot;blischak/umi.rds&quot;</span>)</code></pre></div>
-<p>If you want to further check yourself you can download our <a href="http://genat.uk/bookdown-demo/blischak/umi.rds"><code>umi</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
+<p>If you want to further check yourself you can download our <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/umi.rds"><code>umi</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
 </div>
 <div id="big-exercise" class="section level2">
 <h2><span class="header-section-number">6.8</span> Big Exercise</h2>
