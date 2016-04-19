@@ -40,15 +40,6 @@ anno <- read.table("blischak/annotation.txt", sep = "\t", header = TRUE)
 
 Inspect a small portion of the expression matrix
 
-```r
-knitr::kable(
-    head(molecules[ , 1:3]), booktabs = TRUE,
-    caption = 'A table of the first 6 rows and 3 columns of the molecules table.'
-)
-```
-
-
-
 Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.
 
                    NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
@@ -59,13 +50,6 @@ ENSG00000188976                 3                6                1
 ENSG00000187961                 0                0                0
 ENSG00000187583                 0                0                0
 ENSG00000187642                 0                0                0
-
-```r
-knitr::kable(
-    head(anno), booktabs = TRUE,
-    caption = 'A table of the first 6 rows of the anno table.'
-)
-```
 
 
 
@@ -301,17 +285,6 @@ umi$use_default <- (
 ```
 
 
-```r
-knitr::kable(
-  as.data.frame(table(umi$use_default)),
-  booktabs = TRUE,
-  row.names = FALSE,
-  caption = 'The number of cells removed by default filter (FALSE)'
-)
-```
-
-
-
 Table: (\#tab:unnamed-chunk-13)The number of cells removed by default filter (FALSE)
 
 Var1     Freq
@@ -438,17 +411,6 @@ scater::plotPCA(umi,
 </div>
 
 
-```r
-knitr::kable(
-  as.data.frame(table(umi$outlier)),
-  booktabs = TRUE,
-  row.names = FALSE,
-  caption = 'The number of cells removed by automatic filter (FALSE)'
-)
-```
-
-
-
 Table: (\#tab:unnamed-chunk-14)The number of cells removed by automatic filter (FALSE)
 
 Var1     Freq
@@ -473,17 +435,6 @@ umi$use <- (
     filter_by_MT
 )
 ```
-
-
-```r
-knitr::kable(
-  as.data.frame(table(umi$use)),
-  booktabs = TRUE,
-  row.names = FALSE,
-  caption = 'The number of cells removed by manual filter (FALSE)'
-)
-```
-
 
 
 Table: (\#tab:unnamed-chunk-16)The number of cells removed by manual filter (FALSE)
@@ -541,17 +492,6 @@ filter_genes <- apply(counts(umi[ , pData(umi)$use]), 1,
                       function(x) length(x[x > 1]) >= 2)
 fData(umi)$use <- filter_genes
 ```
-
-
-```r
-knitr::kable(
-    as.data.frame(table(filter_genes)),
-    booktabs = TRUE,
-    row.names = FALSE,
-    caption = 'The number of genes removed by gene filter (FALSE)'
-)
-```
-
 
 
 Table: (\#tab:unnamed-chunk-18)The number of genes removed by gene filter (FALSE)

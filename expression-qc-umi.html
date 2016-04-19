@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-16">
+<meta name="date" content="2016-04-19">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -303,10 +303,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">molecules &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/molecules.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
 anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/annotation.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>Inspect a small portion of the expression matrix</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-    <span class="kw">head</span>(molecules[ , <span class="dv">1</span>:<span class="dv">3</span>]), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-    <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
-)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
@@ -356,10 +352,6 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-    <span class="kw">head</span>(anno), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-    <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
-)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
@@ -615,12 +607,6 @@ Figure 6.4: Percentage of counts in ERCCs
 <span class="st">    </span><span class="co"># controls shouldn&#39;t be used in downstream analysis</span>
 <span class="st">    </span>!umi$is_cell_control
 )</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$use_default)),
-  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
-  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
-)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-13">Table 6.7: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
@@ -751,12 +737,6 @@ scater::<span class="kw">plotPCA</span>(umi,
 Figure 6.5: PCA plot used for automatic detection of cell outliers
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$outlier)),
-  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
-  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
-)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-14">Table 6.8: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
@@ -789,12 +769,6 @@ Figure 6.5: PCA plot used for automatic detection of cell outliers
 <span class="st">    </span>filter_by_ERCC &amp;
 <span class="st">    </span><span class="co"># remove cells with unusual number of reads in MT genes</span>
 <span class="st">    </span>filter_by_MT
-)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$use)),
-  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
-  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-16">Table 6.9: </span>The number of cells removed by manual filter (FALSE)</caption>
@@ -852,12 +826,6 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(umi[ , <span class="kw">pData</span>(umi)$use]), <span class="dv">1</span>, 
                       function(x) <span class="kw">length</span>(x[x &gt;<span class="st"> </span><span class="dv">1</span>]) &gt;=<span class="st"> </span><span class="dv">2</span>)
 <span class="kw">fData</span>(umi)$use &lt;-<span class="st"> </span>filter_genes</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
-    <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_genes)),
-    <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
-    <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
-    <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
-)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-18">Table 6.10: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
