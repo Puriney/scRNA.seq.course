@@ -26,8 +26,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="de-expression-in-a-real-dataset.html">
-
+<link rel="prev" href="de-expression-in-a-synthetic-dataset.html">
+<link rel="next" href="references.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -295,43 +295,164 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1">
-<h1><span class="header-section-number">21</span> References</h1>
+<div id="de-expression-in-a-real-dataset" class="section level1">
+<h1><span class="header-section-number">20</span> DE expression in a real dataset</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">library</span>(DESeq2)
+<span class="kw">library</span>(scde)
+<span class="kw">library</span>(ROCR)
+<span class="kw">library</span>(limma)
+<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
+<div id="introduction-7" class="section level2">
+<h2><span class="header-section-number">20.1</span> Introduction</h2>
+<p>The main advantage of using synthetic data is that we have full control over all aspects of the data, and this facilitates the interpretation of the results. However, the transcriptional bursting model is unable to capture the full complexity of a real scRNA-seq dataset. Next, we are going to analyze the difference between the transcriptomes of the 2-cell and the 4-cell state of a mouse embryo as described by <a href="http://genome.cshlp.org/content/24/11/1787.short">Biase et al</a>. For our purposes you need to download the <a href="http://hemberg-lab.github.io/scRNA.seq.course/biase/biase.txt"><code>biase</code></a> into the <code>biase</code> folder in your working directory. We can then look at the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(
+    <span class="kw">read.table</span>(
+        <span class="st">&quot;biase/biase_et_al_2cell_4cell_fpkm.tsv&quot;</span>
+    )
+)
+<span class="co"># keep those genes that are expressed in at least 6 cells</span>
+biase &lt;-<span class="st"> </span>biase[<span class="kw">rowSums</span>(biase &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">5</span>, ]
+pheatmap::<span class="kw">pheatmap</span>(
+    <span class="kw">log2</span>(biase +<span class="st"> </span><span class="dv">1</span>),
+    <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>,
+    <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
+    <span class="dt">kmeans_k =</span> <span class="dv">100</span>,
+    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>
+)</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-biase-fpkm-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
+<p>As you can see, the cells cluster well by their developmental stage.</p>
+<p>We can now use the same methods as before to obtain a list of differentially expressed genes.</p>
+<p>Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span>biase[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(biase), <span class="dv">500</span>), ]</code></pre></div>
+</div>
+<div id="ks-test" class="section level2">
+<h2><span class="header-section-number">20.2</span> KS-test</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(biase))
+for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(biase)) {
+    res &lt;-<span class="st"> </span><span class="kw">ks.test</span>(
+        biase[i, <span class="dv">1</span>:<span class="dv">20</span>],
+        biase[i , <span class="dv">21</span>:<span class="dv">40</span>]
+    )
+    <span class="co"># Bonferroni correction</span>
+    pVals[i] &lt;-<span class="st"> </span>res$p.value *<span class="st"> </span><span class="kw">nrow</span>(biase)
+}</code></pre></div>
+</div>
+<div id="deseq2" class="section level2">
+<h2><span class="header-section-number">20.3</span> DESeq2</h2>
+<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take some time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
+    <span class="kw">c</span>(
+        <span class="kw">rep</span>(<span class="st">&quot;cell2&quot;</span>, <span class="dv">20</span>),
+        <span class="kw">rep</span>(<span class="st">&quot;cell4&quot;</span>, <span class="dv">20</span>)
+    )
+)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeqDataSetFromMatrix</span>(
+    <span class="kw">round</span>(biase) +<span class="st"> </span><span class="dv">1</span>,
+    <span class="dt">colData =</span> <span class="kw">DataFrame</span>(cond),
+    <span class="dt">design =</span> ~<span class="st"> </span>cond
+)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeq</span>(dds)
+resDESeq &lt;-<span class="st"> </span>DESeq2::<span class="kw">results</span>(dds)
+pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj</code></pre></div>
+</div>
+<div id="scde" class="section level2">
+<h2><span class="header-section-number">20.4</span> SCDE</h2>
+<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take quite a lot of time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
+    biase,
+    <span class="dv">2</span>,
+    function(x) {
+        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
+        <span class="kw">return</span>(x)
+    }
+)
+<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ])
+<span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ]) 
+o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
+    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>,
+    <span class="dt">min.size.entries =</span> <span class="dv">2</span>
+)
+priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
+    <span class="dt">models =</span> o.ifm,
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">length.out =</span> <span class="dv">400</span>,
+    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
+)
+resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+    o.ifm,
+    cnts,
+    priors,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>
+)
+pValsSCDE1 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE1$cZ, <span class="dt">lower.tail =</span> F)
 
-<div id="refs" class="references">
-<div id="ref-Handley2015-yi">
-<p>Handley, Ava, Tamás Schauer, Andreas G Ladurner, and Carla E Margulies. 2015. “Designing Cell-Type-Specific Genome-Wide Experiments.” <em>Mol. Cell</em> 58 (4): 621–31.</p>
+cnts2 &lt;-<span class="st"> </span><span class="kw">apply</span>(
+    biase[ , <span class="kw">c</span>(<span class="dv">21</span>:<span class="dv">40</span>, <span class="dv">1</span>:<span class="dv">20</span>)],
+    <span class="dv">2</span>,
+    function(x) {
+        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
+        <span class="kw">return</span>(x)
+    }
+)
+<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ])
+<span class="kw">colnames</span>(cnts2) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ]) 
+o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
+    <span class="dt">counts =</span> cnts2,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
+    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>,
+    <span class="dt">min.size.entries =</span> <span class="dv">2</span>
+)
+priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
+    <span class="dt">models =</span> o.ifm,
+    <span class="dt">counts =</span> cnts2,
+    <span class="dt">length.out =</span> <span class="dv">400</span>,
+    <span class="dt">show.plot =</span> F
+)
+resSCDE2 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+    o.ifm,
+    cnts2,
+    priors,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>
+)
+pValsSCDE2 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE2$cZ, <span class="dt">lower.tail =</span> F) 
+
+pValsSCDECombined &lt;-<span class="st"> </span><span class="kw">rbind</span>(pValsSCDE1, pValsSCDE2)
+minSCDEInds &lt;-<span class="st"> </span><span class="kw">apply</span>(pValsSCDECombined, <span class="dv">2</span>, which.min)
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">apply</span>(pValsSCDECombined*<span class="dv">2</span>, <span class="dv">2</span>, min) <span class="co">#Bonferroni correction</span></code></pre></div>
 </div>
-<div id="ref-Hashimshony2012-kd">
-<p>Hashimshony, Tamar, Florian Wagner, Noa Sher, and Itai Yanai. 2012. “CEL-Seq: Single-Cell RNA-Seq by Multiplexed Linear Amplification.” <em>Cell Rep.</em> 2 (3): 666–73.</p>
-</div>
-<div id="ref-Jiang2011-mu">
-<p>Jiang, Lichun, Felix Schlesinger, Carrie A Davis, Yu Zhang, Renhua Li, Marc Salit, Thomas R Gingeras, and Brian Oliver. 2011. “Synthetic Spike-in Standards for RNA-seq Experiments.” <em>Genome Res.</em> 21 (9): 1543–51.</p>
-</div>
-<div id="ref-Kharchenko2014-ts">
-<p>Kharchenko, Peter V, Lev Silberstein, and David T Scadden. 2014. “Bayesian Approach to Single-Cell Differential Expression Analysis.” <em>Nat. Methods</em> 11 (7): 740–42.</p>
-</div>
-<div id="ref-Kivioja2012-yt">
-<p>Kivioja, Teemu, Anna Vähärautio, Kasper Karlsson, Martin Bonke, Martin Enge, Sten Linnarsson, and Jussi Taipale. 2012. “Counting Absolute Numbers of Molecules Using Unique Molecular Identifiers.” <em>Nat. Methods</em> 9 (1): 72–74.</p>
-</div>
-<div id="ref-Kolodziejczyk2015-xy">
-<p>Kolodziejczyk, Aleksandra A, Jong Kyoung Kim, Valentine Svensson, John C Marioni, and Sarah A Teichmann. 2015. “The Technology and Biology of Single-Cell RNA Sequencing.” <em>Mol. Cell</em> 58 (4): 610–20.</p>
-</div>
-<div id="ref-Macosko2015-ix">
-<p>Macosko, Evan Z, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, et al. 2015. “Highly Parallel Genome-Wide Expression Profiling of Individual Cells Using Nanoliter Droplets.” <em>Cell</em> 161 (5): 1202–14.</p>
-</div>
-<div id="ref-Picelli2013-sb">
-<p>Picelli, Simone, Åsa K Björklund, Omid R Faridani, Sven Sagasser, Gösta Winberg, and Rickard Sandberg. 2013. “Smart-Seq2 for Sensitive Full-Length Transcriptome Profiling in Single Cells.” <em>Nat. Methods</em> 10 (11): 1096–8.</p>
-</div>
-<div id="ref-Saliba2014-dy">
-<p>Saliba, Antoine-Emmanuel, Alexander J Westermann, Stanislaw A Gorski, and Jörg Vogel. 2014. “Single-Cell RNA-seq: Advances and Future Challenges.” <em>Nucleic Acids Res.</em> 42 (14): 8845–60.</p>
-</div>
-<div id="ref-Stegle2015-uv">
-<p>Stegle, Oliver, Sarah A Teichmann, and John C Marioni. 2015. “Computational and Analytical Challenges in Single-Cell Transcriptomics.” <em>Nat. Rev. Genet.</em> 16 (3): 133–45.</p>
-</div>
-<div id="ref-Tang2009-bu">
-<p>Tang, Fuchou, Catalin Barbacioru, Yangzhou Wang, Ellen Nordman, Clarence Lee, Nanlan Xu, Xiaohui Wang, et al. 2009. “mRNA-Seq Whole-Transcriptome Analysis of a Single Cell.” <em>Nat. Methods</em> 6 (5): 377–82.</p>
-</div>
+<div id="comparison-of-the-methods-1" class="section level2">
+<h2><span class="header-section-number">20.5</span> Comparison of the methods</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vennDiagram</span>(
+    <span class="kw">vennCounts</span>(
+        <span class="kw">cbind</span>(
+            pVals &lt;<span class="st"> </span><span class="fl">0.05</span>,
+            pValsDESeq &lt;<span class="st"> </span><span class="fl">0.05</span>,
+            pValsSCDE &lt;<span class="st"> </span><span class="fl">0.05</span>
+        )
+    ),
+    <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;KS-test&quot;</span>, <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;SCDE&quot;</span>),
+    <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
+)</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-comparison-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
+
 </div>
 </div>
             </section>
@@ -339,8 +460,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="de-expression-in-a-real-dataset.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="de-expression-in-a-synthetic-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -367,7 +488,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/20-references.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-de-real.Rmd",
 "text": "Edit"
 },
 "download": null,

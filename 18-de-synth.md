@@ -23,7 +23,7 @@ set.seed(1)
 ## Generation of a synthetic dataset
 
 We start by generating samples using the Poisson-Beta distribution,
-using 1000 genes from 100 cells. To simulate the second experimental
+using 100 genes from 50 cells. To simulate the second experimental
 condition we select one of the three parameters for each gene and
 modify it by multiplying by a normally distributed random factor.
 
@@ -96,8 +96,8 @@ that were called as significantly different.
 
 
 ```r
-ksChangedGenes <- which(pVals < .05)
-ksNotChangedGenes <- which(pVals >= .05)
+ksChangedGenes <- which(pVals < 0.05)
+ksNotChangedGenes <- which(pVals >= 0.05)
 cat(changedGenesInds)
 ```
 
@@ -168,8 +168,8 @@ ROCR::plot(perf)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
-<p class="caption">(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<p class="caption">(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
 Often we are interested in comparing several ROC curves. To carry out
@@ -202,11 +202,18 @@ One could still apply bulk DE methods to scRNA-seq data. One of the most popular
 
 ```r
 cnts <- cbind(g, g2)
-cond <- factor(c(rep("A", ncol(g)),
-                 rep("B", ncol(g2))))
+cond <- factor(
+    c(
+        rep("A", ncol(g)),
+        rep("B", ncol(g2))
+    )
+)
 # object construction, add a pseudo-count of 1 to make DESeq work
-dds <- DESeqDataSetFromMatrix(cnts + 1, DataFrame(cond), ~ cond)
-dds <- DESeq(dds)
+dds <- DESeq2::DESeqDataSetFromMatrix(
+    cnts + 1, 
+    DataFrame(cond), 
+    ~ cond)
+dds <- DESeq2::DESeq(dds)
 resDESeq <- results(dds)
 ```
 
@@ -221,8 +228,8 @@ ROCR::plot(perfDESeq)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
-<p class="caption">(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<p class="caption">(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
 ```r
@@ -246,55 +253,83 @@ use it on the synthetic data:
 
 ```r
 cnts <- cbind(g, g2)
-cnts <- apply(cnts, 2, function(x) {storage.mode(x) <- 'integer'; x})
-cond <- factor(c(rep("A", ncol(g)),
-                 rep("B", ncol(g2))))
+cnts <- apply(
+    cnts,
+    2, 
+    function(x) {
+        storage.mode(x) <- 'integer'
+        return(x)
+    }
+)
+cond <- factor(
+    c(
+        rep("A", ncol(g)),
+        rep("B", ncol(g2))
+    )
+)
 names(cond) <- 1:length(cnts[1, ])
 colnames(cnts) <- 1:length(cnts[1, ]) 
-o.ifm <- scde::scde.error.models(counts = cnts,
-                                 groups = cond,
-                                 n.cores = 1,
-                                 threshold.segmentation = TRUE,
-                                 save.crossfit.plots = FALSE,
-                                 save.model.plots = FALSE,
-                                 verbose = 0,
-                                 min.size.entries = 20)
-priors <- scde::scde.expression.prior(models = o.ifm,
-                                      counts = cnts,
-                                      length.out = 400,
-                                      show.plot = F)
-resSCDE1 <- scde::scde.expression.difference(o.ifm,
-                                             cnts,
-                                             priors,
-                                             groups = cond,
-                                             n.randomizations = 100,
-                                             n.cores = 1,
-                                             verbose = 0)
+o.ifm <- scde::scde.error.models(
+    counts = cnts,
+    groups = cond,
+    n.cores = 1,
+    threshold.segmentation = TRUE,
+    save.crossfit.plots = FALSE,
+    save.model.plots = FALSE,
+    verbose = 0,
+    min.size.entries = 20
+)
+priors <- scde::scde.expression.prior(
+    models = o.ifm,
+    counts = cnts,
+    length.out = 400,
+    show.plot = FALSE)
+resSCDE1 <- scde::scde.expression.difference(
+    o.ifm,
+    cnts,
+    priors,
+    groups = cond,
+    n.randomizations = 100,
+    n.cores = 1,
+    verbose = 0)
 pValsSCDE1 <- pnorm(resSCDE1$cZ, lower.tail = FALSE) 
 # Need to run the other way as well 
 cnts2 <- cbind(g2, g)
-cnts2 <- apply(cnts2, 2, function(x) {storage.mode(x) <- 'integer'; x})
+cnts2 <- apply(
+    cnts2, 
+    2, 
+    function(x) {
+        storage.mode(x) <- 'integer'
+        return(x)
+    }
+)
 names(cond) <- 1:length(cnts2[1, ])
 colnames(cnts2) <- 1:length(cnts2[1, ]) 
-o.ifm <- scde::scde.error.models(counts = cnts2,
-                                 groups = cond,
-                                 n.cores = 1,
-                                 threshold.segmentation = TRUE,
-                                 save.crossfit.plots = FALSE,
-                                 save.model.plots = FALSE,
-                                 verbose = 0,
-                                 min.size.entries=20)
-priors <- scde::scde.expression.prior(models = o.ifm,
-                                      counts = cnts2,
-                                      length.out = 400,
-                                      show.plot = FALSE)
-resSCDE2 <- scde::scde.expression.difference(o.ifm,
-                                             cnts2,
-                                             priors,
-                                             groups=cond,
-                                             n.randomizations=100,
-                                             n.cores=1,
-                                             verbose=0)
+o.ifm <- scde::scde.error.models(
+    counts = cnts2,
+    groups = cond,
+    n.cores = 1,
+    threshold.segmentation = TRUE,
+    save.crossfit.plots = FALSE,
+    save.model.plots = FALSE,
+    verbose = 0,
+    min.size.entries = 20
+)
+priors <- scde::scde.expression.prior(
+    models = o.ifm,
+    counts = cnts2,
+    length.out = 400,
+    show.plot = FALSE
+)
+resSCDE2 <- scde::scde.expression.difference(
+    o.ifm,
+    cnts2,
+    priors,
+    groups = cond,
+    n.randomizations = 100,
+    n.cores = 1,
+    verbose = 0
+)
 pValsSCDE2 <- pnorm(resSCDE2$cZ, lower.tail = FALSE) 
 ```
 
@@ -344,9 +379,12 @@ limma::vennDiagram(
 <img src="18-de-synth_files/figure-html/synthetic-differentially-expressed-combination-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 ```r
-allChangedInds <- intersect(which(pValsDESeq < .05),
-                            intersect(which(pValsSCDE < .05),
-                                      which(pVals < .05)))
+allChangedInds <- intersect(
+    which(pValsDESeq < .05),
+    intersect(which(pValsSCDE < .05),
+              which(pVals < .05)
+    )
+)
 tpAll <- length(intersect(changedGenesInds, allChangedInds))
 fnAll <- length(intersect(changedGenesInds, setdiff(1:1e3, allChangedInds)))
 fpAll <- length(intersect(notChangedGenesInds, allChangedInds))

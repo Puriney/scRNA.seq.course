@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-19">
+<meta name="date" content="2016-04-25">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -27,7 +27,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="introduction-to-differential-expression-de-analysis.html">
-<link rel="next" href="references.html">
+<link rel="next" href="de-expression-in-a-real-dataset.html">
 
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -267,7 +267,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="19.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>19.8</b> Beyond changes in the mean</a></li>
 <li class="chapter" data-level="19.9" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#further-comparisons"><i class="fa fa-check"></i><b>19.9</b> Further comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="20" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>20</b> References</a></li>
+<li class="chapter" data-level="20" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>20</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="20.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#introduction-7"><i class="fa fa-check"></i><b>20.1</b> Introduction</a></li>
+<li class="chapter" data-level="20.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ks-test"><i class="fa fa-check"></i><b>20.2</b> KS-test</a></li>
+<li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
+<li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
+<li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>21</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -298,7 +305,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <div id="generation-of-a-synthetic-dataset" class="section level2">
 <h2><span class="header-section-number">19.1</span> Generation of a synthetic dataset</h2>
-<p>We start by generating samples using the Poisson-Beta distribution, using 1000 genes from 100 cells. To simulate the second experimental condition we select one of the three parameters for each gene and modify it by multiplying by a normally distributed random factor.</p>
+<p>We start by generating samples using the Poisson-Beta distribution, using 100 genes from 50 cells. To simulate the second experimental condition we select one of the three parameters for each gene and modify it by multiplying by a normally distributed random factor.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGenes &lt;-<span class="st"> </span><span class="fl">1e2</span>
 nCells &lt;-<span class="st"> </span><span class="dv">50</span>
 mult &lt;-<span class="st"> </span><span class="dv">2</span>^(<span class="kw">rnorm</span>(nGenes, <span class="dv">0</span>, <span class="dv">2</span>))
@@ -333,8 +340,8 @@ for (i in <span class="dv">1</span>:nGenes) {
     pVals[i] &lt;-<span class="st"> </span>res$p.value*nGenes
 }</code></pre></div>
 <p>Using the standard p-value cut-off .05, we can find out how many genes that were called as significantly different.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ksChangedGenes &lt;-<span class="st"> </span><span class="kw">which</span>(pVals &lt;<span class="st"> </span>.<span class="dv">05</span>)
-ksNotChangedGenes &lt;-<span class="st"> </span><span class="kw">which</span>(pVals &gt;=<span class="st"> </span>.<span class="dv">05</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ksChangedGenes &lt;-<span class="st"> </span><span class="kw">which</span>(pVals &lt;<span class="st"> </span><span class="fl">0.05</span>)
+ksNotChangedGenes &lt;-<span class="st"> </span><span class="kw">which</span>(pVals &gt;=<span class="st"> </span><span class="fl">0.05</span>)
 <span class="kw">cat</span>(changedGenesInds)</code></pre></div>
 <pre><code>## 4 11 14 15 24 28 31 35 39 54 55 56 58 61 67 68 70 75 83 84 87 92 93 95 97 99</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(ksChangedGenes)</code></pre></div>
@@ -360,9 +367,9 @@ fpr &lt;-<span class="st"> </span>fp/(fp +<span class="st"> </span>tn)
 perf &lt;-<span class="st"> </span>ROCR::<span class="kw">performance</span>(pred, <span class="st">&quot;tpr&quot;</span>, <span class="st">&quot;fpr&quot;</span>)
 ROCR::<span class="kw">plot</span>(perf)  </code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:synthetic-roc-curve-ks"></span>
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
 <p class="caption">
-Figure 19.1: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
+Figure 19.1: Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets
 </p>
 </div>
 <p>Often we are interested in comparing several ROC curves. To carry out such a comparison, we need to summarize the entire curve using only one scalar value. This can be achieved by calculating the area under the ROC curve (AUROC). Since an ROC curve has to stay above the diagonal (why?) the AUROC will be between .5 and 1.</p>
@@ -375,11 +382,18 @@ aucObj@y.values[[<span class="dv">1</span>]]</code></pre></div>
 <h2><span class="header-section-number">19.5</span> Finding DE genes using DESeq2</h2>
 <p>One could still apply bulk DE methods to scRNA-seq data. One of the most popular methods for differential expression analysis for bulk RNA-Seq data is <a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a>. Let’s try it out on our synthetic dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">cbind</span>(g, g2)
-cond &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="kw">ncol</span>(g)),
-                 <span class="kw">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="kw">ncol</span>(g2))))
+cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
+    <span class="kw">c</span>(
+        <span class="kw">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="kw">ncol</span>(g)),
+        <span class="kw">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="kw">ncol</span>(g2))
+    )
+)
 <span class="co"># object construction, add a pseudo-count of 1 to make DESeq work</span>
-dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(cnts +<span class="st"> </span><span class="dv">1</span>, <span class="kw">DataFrame</span>(cond), ~<span class="st"> </span>cond)
-dds &lt;-<span class="st"> </span><span class="kw">DESeq</span>(dds)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeqDataSetFromMatrix</span>(
+    cnts +<span class="st"> </span><span class="dv">1</span>, 
+    <span class="kw">DataFrame</span>(cond), 
+    ~<span class="st"> </span>cond)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeq</span>(dds)
 resDESeq &lt;-<span class="st"> </span><span class="kw">results</span>(dds)</code></pre></div>
 <p>Check the performance of DESeq2:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj
@@ -387,9 +401,9 @@ predDESeq &lt;-<span class="st"> </span><span class="kw">prediction</span>(pVals
 perfDESeq &lt;-<span class="st"> </span><span class="kw">performance</span>(predDESeq, <span class="st">&quot;tpr&quot;</span>, <span class="st">&quot;fpr&quot;</span>)
 ROCR::<span class="kw">plot</span>(perfDESeq)  </code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:synthetic-roc-curve-deseq"></span>
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
 <p class="caption">
-Figure 19.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
+Figure 19.2: Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aucObjDESeq &lt;-<span class="st"> </span><span class="kw">performance</span>(predDESeq, <span class="st">&quot;auc&quot;</span>)
@@ -401,55 +415,83 @@ aucObjDESeq@y.values[[<span class="dv">1</span>]]</code></pre></div>
 <h2><span class="header-section-number">19.6</span> Finding DE genes using SCDE</h2>
 <p>There are yet much fewer methods available for scRNA-seq data than for bulk data, but one popular method is <a href="http://hms-dbmi.github.io/scde/index.html">SCDE</a>. We can use it on the synthetic data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">cbind</span>(g, g2)
-cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(cnts, <span class="dv">2</span>, function(x) {<span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>; x})
-cond &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="kw">ncol</span>(g)),
-                 <span class="kw">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="kw">ncol</span>(g2))))
+cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
+    cnts,
+    <span class="dv">2</span>, 
+    function(x) {
+        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
+        <span class="kw">return</span>(x)
+    }
+)
+cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
+    <span class="kw">c</span>(
+        <span class="kw">rep</span>(<span class="st">&quot;A&quot;</span>, <span class="kw">ncol</span>(g)),
+        <span class="kw">rep</span>(<span class="st">&quot;B&quot;</span>, <span class="kw">ncol</span>(g2))
+    )
+)
 <span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ])
 <span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ]) 
-o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(<span class="dt">counts =</span> cnts,
-                                 <span class="dt">groups =</span> cond,
-                                 <span class="dt">n.cores =</span> <span class="dv">1</span>,
-                                 <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
-                                 <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
-                                 <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
-                                 <span class="dt">verbose =</span> <span class="dv">0</span>,
-                                 <span class="dt">min.size.entries =</span> <span class="dv">20</span>)
-priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(<span class="dt">models =</span> o.ifm,
-                                      <span class="dt">counts =</span> cnts,
-                                      <span class="dt">length.out =</span> <span class="dv">400</span>,
-                                      <span class="dt">show.plot =</span> F)
-resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(o.ifm,
-                                             cnts,
-                                             priors,
-                                             <span class="dt">groups =</span> cond,
-                                             <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
-                                             <span class="dt">n.cores =</span> <span class="dv">1</span>,
-                                             <span class="dt">verbose =</span> <span class="dv">0</span>)
+o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
+    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>,
+    <span class="dt">min.size.entries =</span> <span class="dv">20</span>
+)
+priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
+    <span class="dt">models =</span> o.ifm,
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">length.out =</span> <span class="dv">400</span>,
+    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>)
+resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+    o.ifm,
+    cnts,
+    priors,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>)
 pValsSCDE1 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE1$cZ, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) 
 <span class="co"># Need to run the other way as well </span>
 cnts2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(g2, g)
-cnts2 &lt;-<span class="st"> </span><span class="kw">apply</span>(cnts2, <span class="dv">2</span>, function(x) {<span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>; x})
+cnts2 &lt;-<span class="st"> </span><span class="kw">apply</span>(
+    cnts2, 
+    <span class="dv">2</span>, 
+    function(x) {
+        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
+        <span class="kw">return</span>(x)
+    }
+)
 <span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ])
 <span class="kw">colnames</span>(cnts2) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ]) 
-o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(<span class="dt">counts =</span> cnts2,
-                                 <span class="dt">groups =</span> cond,
-                                 <span class="dt">n.cores =</span> <span class="dv">1</span>,
-                                 <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
-                                 <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
-                                 <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
-                                 <span class="dt">verbose =</span> <span class="dv">0</span>,
-                                 <span class="dt">min.size.entries=</span><span class="dv">20</span>)
-priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(<span class="dt">models =</span> o.ifm,
-                                      <span class="dt">counts =</span> cnts2,
-                                      <span class="dt">length.out =</span> <span class="dv">400</span>,
-                                      <span class="dt">show.plot =</span> <span class="ot">FALSE</span>)
-resSCDE2 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(o.ifm,
-                                             cnts2,
-                                             priors,
-                                             <span class="dt">groups=</span>cond,
-                                             <span class="dt">n.randomizations=</span><span class="dv">100</span>,
-                                             <span class="dt">n.cores=</span><span class="dv">1</span>,
-                                             <span class="dt">verbose=</span><span class="dv">0</span>)
+o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
+    <span class="dt">counts =</span> cnts2,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
+    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>,
+    <span class="dt">min.size.entries =</span> <span class="dv">20</span>
+)
+priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
+    <span class="dt">models =</span> o.ifm,
+    <span class="dt">counts =</span> cnts2,
+    <span class="dt">length.out =</span> <span class="dv">400</span>,
+    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
+)
+resSCDE2 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+    o.ifm,
+    cnts2,
+    priors,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>
+)
 pValsSCDE2 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE2$cZ, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) </code></pre></div>
 <p>As you can see, SCDE is different from the KS-test and DESeq2 since it only searches for changes in one direction. Thus, if we want to find both upregulated and downregulated genes, we must run the software twice and then combine the results as we have done above.</p>
 <p><strong>Exercise:</strong> Merge the results from the two runs and produce a single list of p-values and (absolute) fold-changes for all genes. Based on these results, calculate an AUROC value and compare to the other methods.</p>
@@ -473,9 +515,12 @@ limma::<span class="kw">vennDiagram</span>(
     <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;Ground truth&quot;</span>, <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;SCDE&quot;</span>, <span class="st">&quot;KS-test&quot;</span>),
     <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>))</code></pre></div>
 <p><img src="18-de-synth_files/figure-html/synthetic-differentially-expressed-combination-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">which</span>(pValsDESeq &lt;<span class="st"> </span>.<span class="dv">05</span>),
-                            <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE &lt;<span class="st"> </span>.<span class="dv">05</span>),
-                                      <span class="kw">which</span>(pVals &lt;<span class="st"> </span>.<span class="dv">05</span>)))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(
+    <span class="kw">which</span>(pValsDESeq &lt;<span class="st"> </span>.<span class="dv">05</span>),
+    <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE &lt;<span class="st"> </span>.<span class="dv">05</span>),
+              <span class="kw">which</span>(pVals &lt;<span class="st"> </span>.<span class="dv">05</span>)
+    )
+)
 tpAll &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">intersect</span>(changedGenesInds, allChangedInds))
 fnAll &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">intersect</span>(changedGenesInds, <span class="kw">setdiff</span>(<span class="dv">1</span>:<span class="fl">1e3</span>, allChangedInds)))
 fpAll &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">intersect</span>(notChangedGenesInds, allChangedInds))
@@ -525,7 +570,7 @@ g2 &lt;-<span class="st"> </span>synData$sample2</code></pre></div>
         </div>
       </div>
 <a href="introduction-to-differential-expression-de-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="de-expression-in-a-real-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
