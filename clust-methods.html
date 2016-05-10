@@ -301,17 +301,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">17.1</span> Patient dataset</h2>
 <p>Traditionally, clonal heterogeneity has been assessed by genotyping sub-clones. Genotyping through Sanger sequencing of two key loci has been carried out for this patient and it has revealed the presence of 3 different sub-clones (WT, WT/Tet2 and Jak2/Tet2). Our goal is to identify clusters corresponding to the three genotypes from the scRNA-seq data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">patient.data &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;clustering/patient.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</code></pre></div>
-<p>For convinience we have performed all quality control and normalization steps (SF + RUV) in advance. The dataset contains 51 cells and 8710 genes.</p>
+<p>For convenience we have performed all quality control and normalization steps (SF + RUV) in advance. The dataset contains 51 cells and 8710 genes.</p>
 <p>Here we present several methods available for clustering of scRNA-seq data.</p>
 </div>
 <div id="sc3-1" class="section level2">
 <h2><span class="header-section-number">17.2</span> SC3</h2>
-<p>We first cluster this dataset using <strong>SC3</strong>:</p>
+<p>SC3 is based on k-means clustering. The data is transformed using different dimensionality reduction strategies and distance metrics. Each transformed version of the data is clustered using k-means. We take the consensus of all these different clusterings by calculating the frequency that each pair of cells is found in the same cluster. This consensus matrix is then clustered using hierarchical clustering.</p>
+<p>To use <strong>SC3</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SC3::<span class="kw">sc3</span>(patient.data, <span class="dt">ks =</span> <span class="dv">2</span>:<span class="dv">5</span>)</code></pre></div>
 <p>This command will open SC3 in a web browser. Once it is opened please perform the following exercises:</p>
 <ul>
 <li><p><strong>Exercise 1</strong>: Explore different clustering solutions for <span class="math inline">\(k\)</span> from 2 to 5. Also try to change the consensus averaging by checking and unchecking distance and transformation check boxes in the left panel of <strong>SC3</strong>.</p></li>
-<li><p><strong>Exercise 2</strong>: Based on the genotyping, we strongly believe that <span class="math inline">\(k =3\)</span> provides the best clustering. What evidence do you find for this in the clustering? How can you use the <a href="https://en.wikipedia.org/wiki/Silhouette_%28clustering%29">silhouette plots</a> to motivate choosing the value of <span class="math inline">\(k\)</span> that you think looks best?</p></li>
+<li><p><strong>Exercise 2</strong>: Based on the genotyping, we strongly believe that <span class="math inline">\(k =3\)</span> provides the best clustering. What evidence do you find for this in the clustering? How can you use the <a href="https://en.wikipedia.org/wiki/Silhouette_%28clustering%29">silhouette plots</a> to motivate choosing the value of <span class="math inline">\(k\)</span> that you think looks best? <em>Comment: You need to explain what the Silhouette plots represent!</em></p></li>
 <li><p><strong>Exercise 3</strong>: The solution may change depending on the combination of check-boxes that was used. How similar are the different solutions, and which are the most stable clusterings? You can find out how different cells migrate between clusters using the “Cell Labels” tab panel.</p></li>
 <li><p><strong>Exercise 4</strong>: Calculate differentially expressed genes and marker genes for the obtained clusterings. Please use <span class="math inline">\(k=3\)</span> and the most stable solution, corresponding to the case when all check boxes are checked.</p></li>
 <li><p><strong>Exercise 5</strong>: Change the marker genes threshold (the default is 0.85) in the right side panel of <strong>SC3</strong>. Does <strong>SC3</strong> find more marker genes?</p></li>
@@ -319,6 +320,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="pcareduce-1" class="section level2">
 <h2><span class="header-section-number">17.3</span> pcaReduce</h2>
+<p><a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a> combines k-means clustering with hierarchical clustering. At each stage PCA is used for dimensionality reduction followed by k-means. Starting from a large number of clusters pcaReduce iteratively merges similar clusters; after each merging event it removes the principle component explaning the least variance in the data.</p>
 <p>To run <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a> on the same dataset, use the following commands</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use the same gene filter as in SC3</span>
 input &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">gene_filter</span>(patient.data, <span class="fl">0.06</span>)
@@ -422,6 +424,7 @@ Figure 17.9: Clustering solutions of tSNE+kmeans method after running it for 10 
 </div>
 <div id="snn-cliq-1" class="section level2">
 <h2><span class="header-section-number">17.5</span> SNN-Cliq</h2>
+<p><a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a> is a graph-based method. First the method identifies the <em>k</em>-nearest-neighbours of each cell according to the <em>distance</em> measure. This is used to calculate the number of Shared Nearest Neighbours (SNN) between each pair of cells. A graph is built by placing an edge between two cells If they have at least one SNN. Clusters are defined as groups of cells with many edges between them using a “clique” method that requires two parameters: <em>r</em> and <em>m</em>.</p>
 <p>To run the <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a> method:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">distan &lt;-<span class="st"> &quot;euclidean&quot;</span>
 par.k &lt;-<span class="st"> </span><span class="dv">3</span>
@@ -458,7 +461,7 @@ snn.res &lt;-<span class="st"> </span>
 </div>
 <div id="sincera-1" class="section level2">
 <h2><span class="header-section-number">17.6</span> SINCERA</h2>
-<p>As mentioend in the previous chapter <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a> is based on hierarchical clustering. One important thing to keep in mind is that it performs a gene-level z-score transformation before doing clustering:</p>
+<p>As mentioned in the previous chapter <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a> is based on hierarchical clustering. One important thing to keep in mind is that it performs a gene-level z-score transformation before doing clustering:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># perform gene-by-gene per-sample z-score transformation</span>
 dat &lt;-<span class="st"> </span><span class="kw">apply</span>(input, <span class="dv">1</span>, function(y) scRNA.seq.funcs::<span class="kw">z.transform.helper</span>(y))
 <span class="co"># hierarchical clustering</span>
