@@ -290,9 +290,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">14</span> Remove confounders using controls</h1>
 <div id="introduction-5" class="section level2">
 <h2><span class="header-section-number">14.1</span> Introduction</h2>
-<p>In the previous chapter we saw that the library size normalisation is able to remove major confounders. Let us see whether further use of the controls (ERCC and MT) can provide us with more insights into the data.</p>
-<p>Several methods (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>) have been developed for normalisation using ERCCs using different noise models and different fitting procedures.</p>
-<p>We will demonstrate some of the methods starting from the simplest one proposed by <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Brennecke et al.</a>, which identifies genes with significant variation above technical noise (ERCCs).</p>
+<p>In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data using the ERCC spike-in controls. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed.</p>
+<p>Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and “substracting” this from the endogenous genes. There are several methods available based on this premise (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>); each using different noise models and different fitting procedures.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
 <span class="kw">library</span>(RUVSeq)
 <span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
@@ -303,7 +302,8 @@ endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)
 </div>
 <div id="brennecke-method" class="section level2">
 <h2><span class="header-section-number">14.2</span> Brennecke method</h2>
-<p>To use the method, we first normalize for library size then calculate the mean and the square coefficient of variation (variation divided by the squared mean expression). A curve is fit for the relationship between these two variables for the ERCC spike-in (subject to just technical variation) then a chi-square test is used to find genes significantly above the curve. This has been provided for you as the Brenneck_getVariableGenes(counts, spikes) function.</p>
+<p>We will demonstrate some of the methods starting from the simplest one proposed by <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Brennecke et al.</a>, which identifies genes with significant variation above technical noise (ERCCs).</p>
+<p>To use the method, we first normalize for library size then calculate the mean and the square coefficient of variation (variation divided by the squared mean expression). A quadratic curve is fit to the relationship between these two variables for the ERCC spike-in (subject to just technical variation) then a chi-square test is used to find genes significantly above the curve. This has been provided for you as the Brenneck_getVariableGenes(counts, spikes) function.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
 <span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
                            <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>,
