@@ -12,7 +12,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-04-25">
+<meta name="date" content="2016-05-10">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -193,19 +193,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.3.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw"><i class="fa fa-check"></i><b>12.3.1</b> Raw</a></li>
 <li class="chapter" data-level="12.3.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm"><i class="fa fa-check"></i><b>12.3.2</b> CPM</a></li>
 <li class="chapter" data-level="12.3.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tmm"><i class="fa fa-check"></i><b>12.3.3</b> TMM</a></li>
-<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#rle"><i class="fa fa-check"></i><b>12.3.4</b> RLE</a></li>
+<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.4</b> Size-factor (RLE)</a></li>
 <li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.5</b> Upperquantile</a></li>
 </ul></li>
 <li class="chapter" data-level="12.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#other-methods"><i class="fa fa-check"></i><b>12.4</b> Other methods</a></li>
-<li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#visualize-genes"><i class="fa fa-check"></i><b>12.5</b> Visualize genes</a><ul>
-<li class="chapter" data-level="12.5.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw-1"><i class="fa fa-check"></i><b>12.5.1</b> Raw</a></li>
-<li class="chapter" data-level="12.5.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm-1"><i class="fa fa-check"></i><b>12.5.2</b> CPM</a></li>
-<li class="chapter" data-level="12.5.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#log2cpm"><i class="fa fa-check"></i><b>12.5.3</b> log2(CPM)</a></li>
-<li class="chapter" data-level="12.5.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile-1"><i class="fa fa-check"></i><b>12.5.4</b> Upperquantile</a></li>
-<li class="chapter" data-level="12.5.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#fpkm"><i class="fa fa-check"></i><b>12.5.5</b> FPKM</a></li>
-<li class="chapter" data-level="12.5.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tpm"><i class="fa fa-check"></i><b>12.5.6</b> TPM</a></li>
-</ul></li>
-<li class="chapter" data-level="12.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.6</b> Exercise</a></li>
+<li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
@@ -364,10 +356,8 @@ function (expr_mat, <span class="dt">spikes =</span> <span class="ot">NULL</span
     cell_RLE &lt;-<span class="st"> </span><span class="kw">apply</span>(RLE_matrix, <span class="dv">2</span>, median, <span class="dt">na.rm =</span> T)
     <span class="kw">return</span>(cell_RLE)
 }</code></pre></div>
-<p><em>Tallulah: I need to revamp this to (1) include RLE, (2) change what is/isn’t an exercise, and (3) possibly add comparison of scater/edgeR with actual functions for DESeq</em></p>
-<p><em>Tallulah: Vague plan: show RLE &amp; compare to DESeq ‘truth’ then have UQ, TMM, and CPM as exercises. Show everything for FPKMs</em></p>
 <p><strong>scater</strong> acts as a wrapper for the <code>calcNormFactors</code> function from <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a> which implements several library size normalization methods making it easy to apply any of these methods to our data.</p>
-<p><strong>Note:</strong> edgeR makes extra adjustments to some of the normalization methods which will result in somewhat different results than if the original methods are followed exactly, e.g. edgeR’s and scater’s “RLE” method which is based on the “size factor” used by <a href="http://bioconductor.org/packages/release/bioc/html/DESeq.html">DESeq</a> may give different results to the <code>estimateSizeFactorsForMatrix</code> method in the DESeq/DESeq2 packages. In addition, some versions of edgeR will not calculate the normalization factors correctly unless <code>lib.size</code> is set at 1 for all cells.</p>
+<p><strong>Note:</strong> edgeR makes extra adjustments to some of the normalization methods which may result in somewhat different results than if the original methods are followed exactly, e.g. edgeR’s and scater’s “RLE” method which is based on the “size factor” used by <a href="http://bioconductor.org/packages/release/bioc/html/DESeq.html">DESeq</a> may give different results to the <code>estimateSizeFactorsForMatrix</code> method in the DESeq/DESeq2 packages. In addition, some versions of edgeR will not calculate the normalization factors correctly unless <code>lib.size</code> is set at 1 for all cells.</p>
 <p>We will continue to work with the Blischak data that was used in the previous chapter.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
@@ -390,7 +380,7 @@ Figure 12.1: PCA plot of the blischak data
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(umi.qc)),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
-        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-raw"></span>
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-raw-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
@@ -415,7 +405,7 @@ Figure 12.3: PCA plot of the blischak data after CPM normalisation
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">cpm</span>(umi.qc)),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
-        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-cpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-cpm-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
@@ -444,7 +434,7 @@ Figure 12.5: PCA plot of the blischak data after TMM normalisation
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
-        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-tmm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-tmm-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
@@ -454,11 +444,11 @@ Figure 12.6: Cell-wise RLE of the blischak data
 <p><strong>Exercise:</strong></p>
 <p>Use <code>method = &quot;RLE&quot;</code> and <code>method = &quot;upperquartile&quot;</code> to perform size-factor and UQ normalizations and compare to the results above.</p>
 </div>
-<div id="rle" class="section level3">
-<h3><span class="header-section-number">12.3.4</span> RLE</h3>
+<div id="size-factor-rle" class="section level3">
+<h3><span class="header-section-number">12.3.4</span> Size-factor (RLE)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
 <span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
-                           <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>,
+                           <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>, 
                            <span class="dt">feature_set =</span> endog_genes,
                            <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
 scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
@@ -470,6 +460,16 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 <img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
 Figure 12.7: PCA plot of the blischak data after RLE normalisation
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+        <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
+        <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-rle"></span>
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-rle-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 12.8: Cell-wise RLE of the blischak data
 </p>
 </div>
 </div>
@@ -489,7 +489,17 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-uq"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">
-Figure 12.8: PCA plot of the blischak data after UQ normalisation
+Figure 12.9: PCA plot of the blischak data after UQ normalisation
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+        <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
+        <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-uq"></span>
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-uq-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 12.10: Cell-wise RLE of the blischak data
 </p>
 </div>
 </div>
@@ -559,7 +569,7 @@ Figure 12.8: PCA plot of the blischak data after UQ normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
-Figure 12.9: PCA plot of the blischak data after FPKM normalisation
+Figure 12.11: PCA plot of the blischak data after FPKM normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc.ann,
@@ -570,7 +580,7 @@ Figure 12.9: PCA plot of the blischak data after FPKM normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
 <p class="caption">
-Figure 12.10: PCA plot of the blischak data after TPM normalisation
+Figure 12.12: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
 <p><strong>Note:</strong> The PCA primarily looks for difference between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.</p>
@@ -578,100 +588,12 @@ Figure 12.10: PCA plot of the blischak data after TPM normalisation
 <div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
 <img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
 <p class="caption">
-Figure 12.11: Gene length vs Mean Expression for the raw data
+Figure 12.13: Gene length vs Mean Expression for the raw data
 </p>
-</div>
-</div>
-<div id="visualize-genes" class="section level2">
-<h2><span class="header-section-number">12.5</span> Visualize genes</h2>
-<p>Now after the normalisation we are ready to visualise the gene expression:</p>
-<div id="raw-1" class="section level3">
-<h3><span class="header-section-number">12.5.1</span> Raw</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-raw"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-raw-1.png" alt="Expression of the first 6 genes of the blischak data" width="90%" />
-<p class="caption">
-Figure 12.12: Expression of the first 6 genes of the blischak data
-</p>
-</div>
-</div>
-<div id="cpm-1" class="section level3">
-<h3><span class="header-section-number">12.5.2</span> CPM</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;cpm&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-cpm"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the CPM normalisation" width="90%" />
-<p class="caption">
-Figure 12.13: Expression of the first 6 genes of the blischak data after the CPM normalisation
-</p>
-</div>
-</div>
-<div id="log2cpm" class="section level3">
-<h3><span class="header-section-number">12.5.3</span> log2(CPM)</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;exprs&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-log2-cpm"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-log2-cpm-1.png" alt="Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation" width="90%" />
-<p class="caption">
-Figure 12.14: Expression of the first 6 genes of the blischak data after the log2(CPM) normalisation
-</p>
-</div>
-</div>
-<div id="upperquantile-1" class="section level3">
-<h3><span class="header-section-number">12.5.4</span> Upperquantile</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-UQ"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-UQ-1.png" alt="Expression of the first 6 genes of the blischak data after the UQ normalisation" width="90%" />
-<p class="caption">
-Figure 12.15: Expression of the first 6 genes of the blischak data after the UQ normalisation
-</p>
-</div>
-</div>
-<div id="fpkm" class="section level3">
-<h3><span class="header-section-number">12.5.5</span> FPKM</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;fpkm&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-fpkm"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-fpkm-1.png" alt="Expression of the first 6 genes of the blischak data after the FPKM normalisation" width="90%" />
-<p class="caption">
-Figure 12.16: Expression of the first 6 genes of the blischak data after the FPKM normalisation
-</p>
-</div>
-</div>
-<div id="tpm" class="section level3">
-<h3><span class="header-section-number">12.5.6</span> TPM</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotExpression</span>(umi.qc.ann,
-                       <span class="kw">rownames</span>(umi.qc.ann)[<span class="dv">1</span>:<span class="dv">6</span>],
-                       <span class="dt">x =</span> <span class="st">&quot;individual&quot;</span>,
-                       <span class="dt">exprs_values =</span> <span class="st">&quot;tpm&quot;</span>,
-                       <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:norm-genes-tpm"></span>
-<img src="11-exprs-norm_files/figure-html/norm-genes-tpm-1.png" alt="Expression of the first 6 genes of the blischak data after the TPM normalisation" width="90%" />
-<p class="caption">
-Figure 12.17: Expression of the first 6 genes of the blischak data after the TPM normalisation
-</p>
-</div>
 </div>
 </div>
 <div id="exercise-1" class="section level2">
-<h2><span class="header-section-number">12.6</span> Exercise</h2>
+<h2><span class="header-section-number">12.5</span> Exercise</h2>
 <p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).</p>
 
 </div>
