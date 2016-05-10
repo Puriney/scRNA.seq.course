@@ -290,7 +290,7 @@ priors <- scde::scde.expression.prior(
     counts = cnts,
     length.out = 400,
     show.plot = FALSE)
-resSCDE1 <- scde::scde.expression.difference(
+resSCDE <- scde::scde.expression.difference(
     o.ifm,
     cnts,
     priors,
@@ -298,7 +298,9 @@ resSCDE1 <- scde::scde.expression.difference(
     n.randomizations = 100,
     n.cores = 1,
     verbose = 0)
-pValsSCDE <- pnorm(abs(resSCDE1$cZ), lower.tail = FALSE)*2 # Convert Z-scores into 2-tailed p-values.
+# Convert Z-scores into 2-tailed p-values
+pValsSCDE <- pnorm(abs(resSCDE$cZ), lower.tail = FALSE) * 2
+pValsSCDE <- p.adjust(pValsSCDE, method = "bonferroni")
 ```
 
 __Exercise:__ Calculate an AUROC value and compare to the other methods.
@@ -307,7 +309,7 @@ __Our answer__:
 <img src="18-de-synth_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" style="display: block; margin: auto;" />
 
 ```
-## [1] 0.8607069
+## [1] 0.7827443
 ```
 
 ## Comparison of the methods
@@ -353,7 +355,7 @@ cat(c(tprAll, fprAll))
 ```
 
 ```
-## 0.3461538 0
+## 0.1538462 0
 ```
 
 The more stringent approach results in a lower FPR at the cost of a lower TPR.

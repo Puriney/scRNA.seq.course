@@ -376,7 +376,7 @@ priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prio
     <span class="dt">length.out =</span> <span class="dv">400</span>,
     <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
 )
-resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+resSCDE &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
     o.ifm,
     cnts,
     priors,
@@ -385,48 +385,9 @@ resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.di
     <span class="dt">n.cores =</span> <span class="dv">1</span>,
     <span class="dt">verbose =</span> <span class="dv">0</span>
 )
-pValsSCDE1 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE1$cZ, <span class="dt">lower.tail =</span> F)
-
-cnts2 &lt;-<span class="st"> </span><span class="kw">apply</span>(
-    biase[ , <span class="kw">c</span>(<span class="dv">21</span>:<span class="dv">40</span>, <span class="dv">1</span>:<span class="dv">20</span>)],
-    <span class="dv">2</span>,
-    function(x) {
-        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
-        <span class="kw">return</span>(x)
-    }
-)
-<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ])
-<span class="kw">colnames</span>(cnts2) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ]) 
-o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
-    <span class="dt">counts =</span> cnts2,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
-    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>,
-    <span class="dt">min.size.entries =</span> <span class="dv">2</span>
-)
-priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
-    <span class="dt">models =</span> o.ifm,
-    <span class="dt">counts =</span> cnts2,
-    <span class="dt">length.out =</span> <span class="dv">400</span>,
-    <span class="dt">show.plot =</span> F
-)
-resSCDE2 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
-    o.ifm,
-    cnts2,
-    priors,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>
-)
-pValsSCDE2 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE2$cZ, <span class="dt">lower.tail =</span> F) 
-
-pValsSCDECombined &lt;-<span class="st"> </span><span class="kw">rbind</span>(pValsSCDE1, pValsSCDE2)
-minSCDEInds &lt;-<span class="st"> </span><span class="kw">apply</span>(pValsSCDECombined, <span class="dv">2</span>, which.min)
-pValsSCDE &lt;-<span class="st"> </span><span class="kw">apply</span>(pValsSCDECombined*<span class="dv">2</span>, <span class="dv">2</span>, min) <span class="co">#Bonferroni correction</span></code></pre></div>
+<span class="co"># Convert Z-scores into 2-tailed p-values</span>
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(resSCDE$cZ), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) *<span class="st"> </span><span class="dv">2</span> 
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSCDE, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</code></pre></div>
 </div>
 <div id="comparison-of-the-methods-1" class="section level2">
 <h2><span class="header-section-number">20.5</span> Comparison of the methods</h2>
