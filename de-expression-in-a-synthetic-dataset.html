@@ -257,7 +257,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="19.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>19.6</b> Finding DE genes using SCDE</a></li>
 <li class="chapter" data-level="19.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>19.7</b> Comparison of the methods</a></li>
 <li class="chapter" data-level="19.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>19.8</b> Beyond changes in the mean</a></li>
-<li class="chapter" data-level="19.9" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#further-comparisons"><i class="fa fa-check"></i><b>19.9</b> Further comparisons</a></li>
 </ul></li>
 <li class="chapter" data-level="20" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>20</b> DE expression in a real dataset</a><ul>
 <li class="chapter" data-level="20.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#introduction-7"><i class="fa fa-check"></i><b>20.1</b> Introduction</a></li>
@@ -324,6 +323,8 @@ notChangedGenesInds &lt;-<span class="st"> </span><span class="kw">which</span>(
 <div id="kolmogorov-smirnov-test" class="section level2">
 <h2><span class="header-section-number">19.3</span> Kolmogorov-Smirnov test</h2>
 <p>The types of test that are easiest to work with are non-parametric ones. The most commonly used non-parametric test is the <a href="https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test">Kolmogorov-Smirnov test</a> (KS-test) and we can use it to compare the distributions for each gene in the two conditions.</p>
+<p>The KS-test quantifies the distance between the empirical cummulative distributions of the expression of each gene in each of the two populations. It is sensitive to changes in mean experssion and changes in variability. However it assumes data is continuous and may perform poorly when data contains a large number of identical values (eg. zeros).</p>
+<p><strong>INSERT THE FIGURE FROM THE WIKIPEDIA PAGE?</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(g)
 pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, nGenes)
 for (i in <span class="dv">1</span>:nGenes) {
@@ -372,7 +373,8 @@ aucObj@y.values[[<span class="dv">1</span>]]</code></pre></div>
 </div>
 <div id="finding-de-genes-using-deseq2" class="section level2">
 <h2><span class="header-section-number">19.5</span> Finding DE genes using DESeq2</h2>
-<p>One could still apply bulk DE methods to scRNA-seq data. One of the most popular methods for differential expression analysis for bulk RNA-Seq data is <a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a>. Let’s try it out on our synthetic dataset:</p>
+<p>One could still apply bulk DE methods to scRNA-seq data. One of the most popular methods for differential expression analysis for bulk RNA-Seq data is <a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html">DESeq2</a>. DESeq2 estimates the variability of each gene using a quadratic relationship between mean expression and variability across all samples fit using Bayesian statistics. It then tests for a difference in mean expression across groups based on a negative binomial distribution.</p>
+<p>Let’s try it out on our synthetic dataset:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">cbind</span>(g, g2)
 cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
     <span class="kw">c</span>(
@@ -405,7 +407,7 @@ aucObjDESeq@y.values[[<span class="dv">1</span>]]</code></pre></div>
 </div>
 <div id="finding-de-genes-using-scde" class="section level2">
 <h2><span class="header-section-number">19.6</span> Finding DE genes using SCDE</h2>
-<p>There are yet much fewer methods available for scRNA-seq data than for bulk data, but one popular method is <a href="http://hms-dbmi.github.io/scde/index.html">SCDE</a>. We can use it on the synthetic data:</p>
+<p>There are yet much fewer methods available for scRNA-seq data than for bulk data, but one better known method is <a href="http://hms-dbmi.github.io/scde/index.html">SCDE</a>. SCDE uses Bayesian statistics to fit a zero-inflated negative binomial distribution to the expression of each gene and tests for differences in mean expression level between groups. We can use it on the synthetic data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">cbind</span>(g, g2)
 cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
     cnts,
@@ -446,48 +448,8 @@ resSCDE1 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.di
     <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
     <span class="dt">n.cores =</span> <span class="dv">1</span>,
     <span class="dt">verbose =</span> <span class="dv">0</span>)
-pValsSCDE1 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE1$cZ, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) 
-<span class="co"># Need to run the other way as well </span>
-cnts2 &lt;-<span class="st"> </span><span class="kw">cbind</span>(g2, g)
-cnts2 &lt;-<span class="st"> </span><span class="kw">apply</span>(
-    cnts2, 
-    <span class="dv">2</span>, 
-    function(x) {
-        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
-        <span class="kw">return</span>(x)
-    }
-)
-<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ])
-<span class="kw">colnames</span>(cnts2) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts2[<span class="dv">1</span>, ]) 
-o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
-    <span class="dt">counts =</span> cnts2,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
-    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>,
-    <span class="dt">min.size.entries =</span> <span class="dv">20</span>
-)
-priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
-    <span class="dt">models =</span> o.ifm,
-    <span class="dt">counts =</span> cnts2,
-    <span class="dt">length.out =</span> <span class="dv">400</span>,
-    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
-)
-resSCDE2 &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
-    o.ifm,
-    cnts2,
-    priors,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>
-)
-pValsSCDE2 &lt;-<span class="st"> </span><span class="kw">pnorm</span>(resSCDE2$cZ, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) </code></pre></div>
-<p>As you can see, SCDE is different from the KS-test and DESeq2 since it only searches for changes in one direction. Thus, if we want to find both upregulated and downregulated genes, we must run the software twice and then combine the results as we have done above.</p>
-<p><strong>Exercise:</strong> Merge the results from the two runs and produce a single list of p-values and (absolute) fold-changes for all genes. Based on these results, calculate an AUROC value and compare to the other methods.</p>
-<p><strong>Hint:</strong> Keep in mind that we are now doing two tests for each gene.</p>
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(resSCDE1$cZ), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)*<span class="dv">2</span> <span class="co"># Convert Z-scores into 2-tailed p-values.</span></code></pre></div>
+<p><strong>Exercise:</strong> Calculate an AUROC value and compare to the other methods.</p>
 <p><strong>Our answer</strong>: <img src="18-de-synth_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
 <pre><code>## [1] 0.8607069</code></pre>
 </div>
@@ -520,7 +482,7 @@ tnAll &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="
 tprAll &lt;-<span class="st"> </span>tpAll /<span class="st"> </span>(tpAll +<span class="st"> </span>fnAll)
 fprAll &lt;-<span class="st"> </span>fpAll /<span class="st"> </span>(fpAll +<span class="st"> </span>tnAll)
 <span class="kw">cat</span>(<span class="kw">c</span>(tprAll, fprAll))</code></pre></div>
-<pre><code>## 0.3846154 0.01351351</code></pre>
+<pre><code>## 0.3461538 0</code></pre>
 <p>The more stringent approach results in a lower FPR at the cost of a lower TPR.</p>
 <p><strong>Exercise:</strong> Calculate the TPR and FPR for the case when we require two out of three methods to agree.</p>
 </div>
@@ -543,16 +505,12 @@ synData &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">Generate
 g &lt;-<span class="st"> </span>synData$sample1
 g2 &lt;-<span class="st"> </span>synData$sample2</code></pre></div>
 <p><strong>Our answer</strong>: <img src="18-de-synth_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
-<pre><code>## [1] 0.8123021</code></pre>
+<pre><code>## [1] 0.8460339</code></pre>
 <p><img src="18-de-synth_files/figure-html/unnamed-chunk-9-2.png" title="" alt="" style="display: block; margin: auto;" /></p>
-<pre><code>## [1] 0.475142</code></pre>
+<pre><code>## [1] 0.4982175</code></pre>
 <p><img src="18-de-synth_files/figure-html/unnamed-chunk-9-3.png" title="" alt="" style="display: block; margin: auto;" /></p>
-<pre><code>## [1] 0.4312528</code></pre>
+<pre><code>## [1] 0.5011141</code></pre>
 <p>Which method performs the best? Why do some methods perform differently for this scenario? What are the properties of the genes that are identified as DE?</p>
-</div>
-<div id="further-comparisons" class="section level2">
-<h2><span class="header-section-number">19.9</span> Further comparisons</h2>
-<p>To get more confidence in saying which method is better, the methods can be compared multiple times.</p>
 
 </div>
 </div>
