@@ -8,18 +8,30 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.53 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analysis of single-cell RNA-seq data" />
+  
+  
+  
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-05-10">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -27,8 +39,9 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="de-expression-in-a-synthetic-dataset.html">
-<link rel="next" href="references.html">
+<link rel="next" href="de-expression-in-a-real-dataset-1.html">
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -264,8 +277,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
 <li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
 <li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>21</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -311,7 +336,7 @@ pheatmap::<span class="kw">pheatmap</span>(
     <span class="dt">kmeans_k =</span> <span class="dv">100</span>,
     <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>
 )</code></pre></div>
-<p><img src="19-de-real_files/figure-html/de-real-biase-fpkm-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
+<p><img src="19-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>As you can see, the cells cluster well by their developmental stage.</p>
 <p>We can now use the same methods as before to obtain a list of differentially expressed genes.</p>
 <p>Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
@@ -402,9 +427,103 @@ pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSC
     <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;KS-test&quot;</span>, <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;SCDE&quot;</span>),
     <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
 )</code></pre></div>
-<p><img src="19-de-real_files/figure-html/de-real-comparison-1.png" title="" alt="" style="display: block; margin: auto;" /></p>
+<p><img src="19-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
+</div>
+<div id="visualisation-of-the-results" class="section level2">
+<h2><span class="header-section-number">20.6</span> Visualisation of the results</h2>
+<p>To further characterize the list of genes, we can calculate the average fold-changes and compare the ones that were called as differentially expressed to the ones that were not.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cell2 &lt;-<span class="st"> </span>biase[, <span class="dv">1</span>:<span class="dv">20</span>]
+cell4 &lt;-<span class="st"> </span>biase[, <span class="dv">21</span>:<span class="dv">40</span>]
+ksGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)
+deSeqGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>)
+scdeGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>)
+ksGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&gt;=.<span class="dv">05</span>)
+deSeqGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&gt;=.<span class="dv">05</span>)
+scdeGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&gt;=.<span class="dv">05</span>)
+meanFoldChange &lt;-<span class="st"> </span><span class="kw">rowSums</span>(cell2)/<span class="kw">rowSums</span>(cell4)
+nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
 
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))
+<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
+<div id="volcano-plots" class="section level3">
+<h3><span class="header-section-number">20.6.1</span> Volcano plots</h3>
+<p>A popular method for illustrating the difference between two conditions is the volcano plot which compares the magnitude of the change and the significance.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
+     -<span class="kw">log10</span>(pVals[ksGenesNotChangedInds]/nGenes),
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), KS-test&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>)) 
+<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+       -<span class="kw">log10</span>(pVals[ksGenesChangedInds]/nGenes),
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]), 
+     -<span class="kw">log10</span>(pValsDESeq[deSeqGenesNotChangedInds]),
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), DESeq2&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>))
+<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+       -<span class="kw">log10</span>(pValsDESeq[deSeqGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ma-plot" class="section level3">
+<h3><span class="header-section-number">20.6.2</span> MA-plot</h3>
+<p>Another popular method for illustrating the difference between two conditions is the MA-plot, in which the data has been transformed onto the M (log ratios) and A (mean average) scale:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesNotChangedInds,])),
+     <span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>)) 
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesChangedInds,])),
+       <span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesNotChangedInds,])),
+     <span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>))
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesChangedInds,])),
+       <span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
+</div>
+<div id="heatmap-of-de-genes" class="section level3">
+<h3><span class="header-section-number">20.6.3</span> Heatmap of DE genes</h3>
+<p>Finally, we can plot heatmaps of the genes that were called as DE by the intersection of the three.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>),
+                            <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>),
+                                      <span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)))
+pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span><span class="kw">cbind</span>(cell2, cell4)[allChangedInds,]),
+                   <span class="co"># scale = &quot;column&quot;,</span>
+                   <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
+                   <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="19-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
+
+</div>
 </div>
 </div>
             </section>
@@ -413,9 +532,9 @@ pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSC
         </div>
       </div>
 <a href="de-expression-in-a-synthetic-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="de-expression-in-a-real-dataset-1.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -452,7 +571,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

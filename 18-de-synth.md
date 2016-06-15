@@ -1,8 +1,4 @@
 ---
-knit: bookdown::preview_chapter
----
-
----
 # knit: bookdown::preview_chapter
 output: html_document
 ---
@@ -172,7 +168,7 @@ ROCR::plot(perf)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
@@ -234,7 +230,7 @@ ROCR::plot(perfDESeq)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<img src="18-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
@@ -306,7 +302,7 @@ pValsSCDE <- p.adjust(pValsSCDE, method = "bonferroni")
 __Exercise:__ Calculate an AUROC value and compare to the other methods.
 
 __Our answer__:
-<img src="18-de-synth_files/figure-html/unnamed-chunk-8-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="18-de-synth_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
 
 ```
 ## [1] 0.7827443
@@ -336,7 +332,7 @@ limma::vennDiagram(
     circle.col = c("magenta", "blue", "green", "red"))
 ```
 
-<img src="18-de-synth_files/figure-html/synthetic-differentially-expressed-combination-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="18-de-synth_files/figure-html/synthetic-differentially-expressed-combination-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 allChangedInds <- intersect(
@@ -392,19 +388,19 @@ g2 <- synData$sample2
 ```
 
 __Our answer__:
-<img src="18-de-synth_files/figure-html/unnamed-chunk-9-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="18-de-synth_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 
 ```
 ## [1] 0.8460339
 ```
 
-<img src="18-de-synth_files/figure-html/unnamed-chunk-9-2.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="18-de-synth_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" />
 
 ```
 ## [1] 0.4982175
 ```
 
-<img src="18-de-synth_files/figure-html/unnamed-chunk-9-3.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="18-de-synth_files/figure-html/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" />
 
 ```
 ## [1] 0.5011141

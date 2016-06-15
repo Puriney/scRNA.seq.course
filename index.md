@@ -1,7 +1,7 @@
 --- 
 title: "Analysis of single-cell RNA-seq data"
 author: "Vladimir Kiselev, Tallulah Andrews and Martin Hemberg"
-date: "2016-05-10"
+date: "2016-06-15"
 knit: "bookdown::render_book"
 documentclass: book
 bibliography: [book.bib]

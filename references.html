@@ -8,27 +8,40 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.53 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analysis of single-cell RNA-seq data" />
+  
+  
+  
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-05-10">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="de-expression-in-a-real-dataset.html">
+<link rel="prev" href="de-expression-in-a-real-dataset-1.html">
 
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -264,8 +277,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
 <li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
 <li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>21</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -287,40 +312,40 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="references" class="section level1">
-<h1><span class="header-section-number">21</span> References</h1>
+<h1><span class="header-section-number">22</span> References</h1>
 
 <div id="refs" class="references">
-<div id="ref-Handley2015-yi">
+<div>
 <p>Handley, Ava, Tamás Schauer, Andreas G Ladurner, and Carla E Margulies. 2015. “Designing Cell-Type-Specific Genome-Wide Experiments.” <em>Mol. Cell</em> 58 (4): 621–31.</p>
 </div>
-<div id="ref-Hashimshony2012-kd">
+<div>
 <p>Hashimshony, Tamar, Florian Wagner, Noa Sher, and Itai Yanai. 2012. “CEL-Seq: Single-Cell RNA-Seq by Multiplexed Linear Amplification.” <em>Cell Rep.</em> 2 (3): 666–73.</p>
 </div>
-<div id="ref-Jiang2011-mu">
+<div>
 <p>Jiang, Lichun, Felix Schlesinger, Carrie A Davis, Yu Zhang, Renhua Li, Marc Salit, Thomas R Gingeras, and Brian Oliver. 2011. “Synthetic Spike-in Standards for RNA-seq Experiments.” <em>Genome Res.</em> 21 (9): 1543–51.</p>
 </div>
-<div id="ref-Kharchenko2014-ts">
+<div>
 <p>Kharchenko, Peter V, Lev Silberstein, and David T Scadden. 2014. “Bayesian Approach to Single-Cell Differential Expression Analysis.” <em>Nat. Methods</em> 11 (7): 740–42.</p>
 </div>
-<div id="ref-Kivioja2012-yt">
+<div>
 <p>Kivioja, Teemu, Anna Vähärautio, Kasper Karlsson, Martin Bonke, Martin Enge, Sten Linnarsson, and Jussi Taipale. 2012. “Counting Absolute Numbers of Molecules Using Unique Molecular Identifiers.” <em>Nat. Methods</em> 9 (1): 72–74.</p>
 </div>
-<div id="ref-Kolodziejczyk2015-xy">
+<div>
 <p>Kolodziejczyk, Aleksandra A, Jong Kyoung Kim, Valentine Svensson, John C Marioni, and Sarah A Teichmann. 2015. “The Technology and Biology of Single-Cell RNA Sequencing.” <em>Mol. Cell</em> 58 (4): 610–20.</p>
 </div>
-<div id="ref-Macosko2015-ix">
+<div>
 <p>Macosko, Evan Z, Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, et al. 2015. “Highly Parallel Genome-Wide Expression Profiling of Individual Cells Using Nanoliter Droplets.” <em>Cell</em> 161 (5): 1202–14.</p>
 </div>
-<div id="ref-Picelli2013-sb">
+<div>
 <p>Picelli, Simone, Åsa K Björklund, Omid R Faridani, Sven Sagasser, Gösta Winberg, and Rickard Sandberg. 2013. “Smart-Seq2 for Sensitive Full-Length Transcriptome Profiling in Single Cells.” <em>Nat. Methods</em> 10 (11): 1096–8.</p>
 </div>
-<div id="ref-Saliba2014-dy">
+<div>
 <p>Saliba, Antoine-Emmanuel, Alexander J Westermann, Stanislaw A Gorski, and Jörg Vogel. 2014. “Single-Cell RNA-seq: Advances and Future Challenges.” <em>Nucleic Acids Res.</em> 42 (14): 8845–60.</p>
 </div>
-<div id="ref-Stegle2015-uv">
+<div>
 <p>Stegle, Oliver, Sarah A Teichmann, and John C Marioni. 2015. “Computational and Analytical Challenges in Single-Cell Transcriptomics.” <em>Nat. Rev. Genet.</em> 16 (3): 133–45.</p>
 </div>
-<div id="ref-Tang2009-bu">
+<div>
 <p>Tang, Fuchou, Catalin Barbacioru, Yangzhou Wang, Ellen Nordman, Clarence Lee, Nanlan Xu, Xiaohui Wang, et al. 2009. “mRNA-Seq Whole-Transcriptome Analysis of a Single Cell.” <em>Nat. Methods</em> 6 (5): 377–82.</p>
 </div>
 </div>
@@ -330,10 +355,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="de-expression-in-a-real-dataset.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="de-expression-in-a-real-dataset-1.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -358,7 +383,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/20-references.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/21-references.Rmd",
 "text": "Edit"
 },
 "download": null,
@@ -370,7 +395,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

@@ -8,18 +8,30 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.53 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analysis of single-cell RNA-seq data" />
+  
+  
+  
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-05-10">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,6 +41,7 @@ MathJax.Hub.Config({
 <link rel="prev" href="clustering-analysis.html">
 <link rel="next" href="introduction-to-differential-expression-de-analysis.html">
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -264,8 +277,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
 <li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
 <li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>21</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -331,7 +356,7 @@ pca.red &lt;-<span class="st"> </span>pcaReduce::<span class="kw">PCAreduce</spa
 res &lt;-<span class="st"> </span><span class="kw">unique</span>(scRNA.seq.funcs::<span class="kw">merge_pcaReduce_results</span>(pca.red, <span class="dv">3</span>))
 pheatmap::<span class="kw">pheatmap</span>(res)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:clust-pca-reduce3"></span>
-<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$"  />
+<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$" width="672" />
 <p class="caption">
 Figure 17.1: Clustering solutions of pcaReduce method after running it for 10 times and selecting <span class="math inline">\(k=3\)</span>
 </p>
@@ -340,19 +365,19 @@ Figure 17.1: Clustering solutions of pcaReduce method after running it for 10 ti
 <p><strong>Hint</strong>: When running pcaReduce for different <span class="math inline">\(k\)</span>s you do not need to rerun pcaReduce::PCAreduce function, just use already calculated <code>pca.red</code> object.</p>
 <strong>Our solutions</strong>:
 <div class="figure" style="text-align: center"><span id="fig:clust-pca-reduce2"></span>
-<img src="16-clustering_files/figure-html/clust-pca-reduce2-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$."  />
+<img src="16-clustering_files/figure-html/clust-pca-reduce2-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$." width="672" />
 <p class="caption">
 Figure 17.2: Clustering solutions of pcaReduce method after running it for 10 times and selecting <span class="math inline">\(k=2\)</span>.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:clust-pca-reduce4"></span>
-<img src="16-clustering_files/figure-html/clust-pca-reduce4-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$."  />
+<img src="16-clustering_files/figure-html/clust-pca-reduce4-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$." width="672" />
 <p class="caption">
 Figure 17.3: Clustering solutions of pcaReduce method after running it for 10 times and selecting <span class="math inline">\(k=4\)</span>.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:clust-pca-reduce5"></span>
-<img src="16-clustering_files/figure-html/clust-pca-reduce5-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$."  />
+<img src="16-clustering_files/figure-html/clust-pca-reduce5-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$." width="672" />
 <p class="caption">
 Figure 17.4: Clustering solutions of pcaReduce method after running it for 10 times and selecting <span class="math inline">\(k=5\)</span>.
 </p>
@@ -361,7 +386,7 @@ Figure 17.4: Clustering solutions of pcaReduce method after running it for 10 ti
 </div>
 <div id="tsne-kmeans" class="section level2">
 <h2><span class="header-section-number">17.4</span> tSNE + kmeans</h2>
-<p><a href="https://lvdmaaten.github.io/tsne/">tSNE</a> plots that we saw before (@ref(visual-tsne)) when used the <strong>scater</strong> package are made by using the <a href="https://cran.r-project.org/web/packages/Rtsne/index.html">Rtsne</a> and <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a> packages. We can create a similar plots explicitly:</p>
+<p><a href="https://lvdmaaten.github.io/tsne/">tSNE</a> plots that we saw before (<a href="data-visualization.html#visual-tsne">8.3</a>) when used the <strong>scater</strong> package are made by using the <a href="https://cran.r-project.org/web/packages/Rtsne/index.html">Rtsne</a> and <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a> packages. We can create a similar plots explicitly:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne_out &lt;-<span class="st"> </span>Rtsne::<span class="kw">Rtsne</span>(<span class="kw">t</span>(input.log), <span class="dt">perplexity =</span> <span class="dv">10</span>)
 df_to_plot &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(tsne_out$Y)
 comps &lt;-<span class="st"> </span><span class="kw">colnames</span>(df_to_plot)[<span class="dv">1</span>:<span class="dv">2</span>]
@@ -371,7 +396,7 @@ ggplot2::<span class="kw">ggplot</span>(df_to_plot, <span class="kw">aes_string<
 <span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Dimension 2&quot;</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:clust-tsne"></span>
-<img src="16-clustering_files/figure-html/clust-tsne-1.png" alt="tSNE map of the patient data"  />
+<img src="16-clustering_files/figure-html/clust-tsne-1.png" alt="tSNE map of the patient data" width="672" />
 <p class="caption">
 Figure 17.5: tSNE map of the patient data
 </p>
@@ -392,7 +417,7 @@ ggplot2::<span class="kw">ggplot</span>(df_to_plot,
 <span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;Dimension 2&quot;</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:clust-tsne-kmeans2"></span>
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-1.png" alt="tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm"  />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-1.png" alt="tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm" width="672" />
 <p class="caption">
 Figure 17.6: tSNE map of the patient data with 2 colored clusters, identified by the <em>k</em>-means clustering algorithm
 </p>
@@ -404,19 +429,19 @@ Figure 17.6: tSNE map of the patient data with 2 colored clusters, identified by
 res &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">do.call</span>(rbind, tsne.res))</code></pre></div>
 <p><strong>Exercise 9</strong>: Visualize the different clustering solutions using a heatmap. Then run tSNE+kmeans algorithm with <span class="math inline">\(k = 2\)</span> or <span class="math inline">\(k = 4\)</span> and see how the clustering looks like in these cases.</p>
 <div class="figure" style="text-align: center"><span id="fig:clust-tsne-kmeans3"></span>
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans3-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$"  />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans3-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$" width="672" />
 <p class="caption">
 Figure 17.7: Clustering solutions of tSNE+kmeans method after running it for 10 times and using <span class="math inline">\(k=3\)</span>
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:clust-tsne-kmeans2-mult"></span>
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-mult-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$"  />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-mult-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$" width="672" />
 <p class="caption">
 Figure 17.8: Clustering solutions of tSNE+kmeans method after running it for 10 times and using <span class="math inline">\(k=2\)</span>
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:clust-tsne-kmeans4"></span>
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans4-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$"  />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans4-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$" width="672" />
 <p class="caption">
 Figure 17.9: Clustering solutions of tSNE+kmeans method after running it for 10 times and using <span class="math inline">\(k=4\)</span>
 </p>
@@ -485,7 +510,7 @@ for (i in <span class="dv">2</span>:<span class="kw">dim</span>(dat)[<span class
 <p><strong>Exercise 11</strong>: Visualize the SINCERA results as a heatmap. How do the results compare to the other methods? What happens if you choose <span class="math inline">\(k = 3\)</span>?</p>
 <strong>Our answer:</strong>
 <div class="figure" style="text-align: center"><span id="fig:clust-sincera"></span>
-<img src="16-clustering_files/figure-html/clust-sincera-1.png" alt="Clustering solutions of SINCERA method using $k=3$"  />
+<img src="16-clustering_files/figure-html/clust-sincera-1.png" alt="Clustering solutions of SINCERA method using $k=3$" width="672" />
 <p class="caption">
 Figure 17.10: Clustering solutions of SINCERA method using <span class="math inline">\(k=3\)</span>
 </p>
@@ -502,7 +527,7 @@ Figure 17.10: Clustering solutions of SINCERA method using <span class="math inl
 <a href="clustering-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="introduction-to-differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -539,7 +564,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

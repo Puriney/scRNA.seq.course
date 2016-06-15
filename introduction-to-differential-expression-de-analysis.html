@@ -8,18 +8,30 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.53 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analysis of single-cell RNA-seq data" />
+  
+  
+  
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-05-10">
+<meta name="date" content="2016-06-15">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,6 +41,7 @@ MathJax.Hub.Config({
 <link rel="prev" href="clust-methods.html">
 <link rel="next" href="de-expression-in-a-synthetic-dataset.html">
 
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
@@ -264,8 +277,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
 <li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
 <li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>21</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -295,7 +320,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="de-analysis-for-scrna-seq" class="section level2">
 <h2><span class="header-section-number">18.2</span> DE analysis for scRNA-seq</h2>
-<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (@ref(clust-methods)) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
+<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">17</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
 </div>
 <div id="synthetic-data-for-scrna-seq" class="section level2">
 <h2><span class="header-section-number">18.3</span> Synthetic data for scRNA-seq</h2>
@@ -314,7 +339,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
      <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
 <p class="caption">
 Figure 18.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
 </p>
@@ -344,7 +369,7 @@ Figure 18.1: Distribution of read counts for a single genes across 100 cells bas
      <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">
 Figure 18.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
 </p>
@@ -366,7 +391,7 @@ Figure 18.2: Different distributions of read counts for a single genes across 10
      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
      <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
 Figure 18.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
 </p>
@@ -397,7 +422,7 @@ Figure 18.3: Effect of sampling size on the distribution of read counts based on
      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
      <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
 Figure 18.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
 </p>
@@ -422,7 +447,7 @@ b &lt;-<span class="st"> </span><span class="dv">3</span>
        k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
        <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
 Figure 18.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
 </p>
@@ -448,7 +473,7 @@ Figure 18.5: The mean and the variance of the distribution of read counts based 
      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
      <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model"  />
+<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
 Figure 18.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
 </p>
@@ -465,7 +490,7 @@ Figure 18.6: Effect of dispersion on the distribution of read counts based on th
 <a href="clust-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="de-expression-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
-<script src="libs/gitbook-2.6.7/js/app.js"></script>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -502,7 +527,17 @@ gitbook.start({
 });
 </script>
 
-
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

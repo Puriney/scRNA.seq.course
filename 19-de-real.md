@@ -1,8 +1,4 @@
 ---
-knit: bookdown::preview_chapter
----
-
----
 # knit: bookdown::preview_chapter
 output: html_document
 ---
@@ -47,7 +43,7 @@ pheatmap::pheatmap(
 )
 ```
 
-<img src="19-de-real_files/figure-html/de-real-biase-fpkm-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="19-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" />
 
 As you can see, the cells cluster well by their developmental stage.
 
@@ -159,6 +155,133 @@ vennDiagram(
 )
 ```
 
-<img src="19-de-real_files/figure-html/de-real-comparison-1.png" title="" alt="" style="display: block; margin: auto;" />
+<img src="19-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise:__ How does this Venn diagram correspond to what you would expect based on the synthetic data? 
+
+## Visualisation of the results
+
+To further characterize the list of genes, we can calculate the
+average fold-changes and compare the ones that were called as
+differentially expressed to the ones that were not. 
+
+
+```r
+cell2 <- biase[, 1:20]
+cell4 <- biase[, 21:40]
+ksGenesChangedInds <- which(pVals<.05)
+deSeqGenesChangedInds <- which(pValsDESeq<.05)
+scdeGenesChangedInds <- which(pValsSCDE<.05)
+ksGenesNotChangedInds <- which(pVals>=.05)
+deSeqGenesNotChangedInds <- which(pValsDESeq>=.05)
+scdeGenesNotChangedInds <- which(pValsSCDE>=.05)
+meanFoldChange <- rowSums(cell2)/rowSums(cell4)
+nGenes <- nrow(cell2)
+
+par(mfrow=c(2,1))
+hist(log2(meanFoldChange[ksGenesChangedInds]),
+     breaks = -50:50,
+     freq = FALSE,
+     xlab = "# fold-change",
+     col = rgb(1, 0, 0, 1/4),
+     ylim = c(0, .4),
+     xlim = c(-8, 8))
+hist(log2(meanFoldChange[deSeqGenesChangedInds]),
+     breaks = -50:50,
+     freq = FALSE,
+     xlab = "# fold-change",
+     col = rgb(0, 0, 1, 1/4),
+     ylim = c(0, .4),
+     xlim = c(-8, 8))
+```
+
+<img src="19-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" />
+
+__Exercise:__ Create the histogram of fold-changes for SCDE. Compare
+the estimated fold-changes between the different methods? What do the
+genes where they differ have in common?
+
+### Volcano plots
+
+A popular method for illustrating the difference between two
+conditions is the volcano plot which compares the magnitude of the
+change and the significance.
+
+
+```r
+par(mfrow=c(2,1))
+plot(log2(meanFoldChange[ksGenesNotChangedInds]),
+     -log10(pVals[ksGenesNotChangedInds]/nGenes),
+     xlab = "mean expression change",
+     ylab = "-log10(P-value), KS-test",
+     ylim = c(0, 15),
+     xlim = c(-12, 12)) 
+points(log2(meanFoldChange[ksGenesChangedInds]),
+       -log10(pVals[ksGenesChangedInds]/nGenes),
+       col = "red")
+
+plot(log2(meanFoldChange[deSeqGenesNotChangedInds]), 
+     -log10(pValsDESeq[deSeqGenesNotChangedInds]),
+     xlab = "mean expression change",
+     ylab = "-log10(P-value), DESeq2",
+     ylim = c(0, 15),
+     xlim = c(-12, 12))
+points(log2(meanFoldChange[deSeqGenesChangedInds]),
+       -log10(pValsDESeq[deSeqGenesChangedInds]),
+       col = "blue")
+```
+
+<img src="19-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" />
+
+### MA-plot
+
+Another popular method for illustrating the difference between two
+conditions is the MA-plot, in which the data has been transformed onto the M (log ratios) and A (mean average) scale:
+
+```r
+par(mfrow=c(2,1))
+plot(log2(rowMeans(cell2[ksGenesNotChangedInds,])),
+     log2(meanFoldChange[ksGenesNotChangedInds]),
+     ylab = "mean expression change",
+     xlab = "mean expression",
+     ylim = c(-9, 9)) 
+points(log2(rowMeans(cell2[ksGenesChangedInds,])),
+       log2(meanFoldChange[ksGenesChangedInds]),
+       col = "red")
+
+plot(log2(rowMeans(cell2[deSeqGenesNotChangedInds,])),
+     log2(meanFoldChange[deSeqGenesNotChangedInds]),
+     ylab = "mean expression change",
+     xlab = "mean expression",
+     ylim = c(-9, 9))
+points(log2(rowMeans(cell2[deSeqGenesChangedInds,])),
+       log2(meanFoldChange[deSeqGenesChangedInds]),
+       col = "blue")
+```
+
+<img src="19-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" />
+
+__Exercise:__ The volcano and MA-plots for the SCDE are missing - can
+you generate them? Compare to the synthetic data, what do they tell
+you about the properties of the genes that have changed?
+
+### Heatmap of DE genes
+
+Finally, we can plot heatmaps of the genes that were called as DE by
+the intersection of the three.
+
+
+```r
+allChangedInds <- intersect(which(pValsDESeq<.05),
+                            intersect(which(pValsSCDE<.05),
+                                      which(pVals<.05)))
+pheatmap::pheatmap(log2(1 + cbind(cell2, cell4)[allChangedInds,]),
+                   # scale = "column",
+                   cutree_cols = 2,
+                   show_rownames = FALSE)
+```
+
+<img src="19-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" />
+
+__Exercise:__ Create heatmaps for the genes that were detected by at least 2/3 methods.
+
