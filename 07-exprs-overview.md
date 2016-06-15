@@ -73,7 +73,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 <p class="caption">(\#fig:expr-overview-pca-after-qc)PCA plot of the blischak data</p>
 </div>
 
-Comparing Figure 8.1 and Figure 8.2, it is clear that after normalization the NA19098.r2 cells no longer form a group of outliers.
+Comparing Figure 8.2 and Figure 8.3, it is clear that after quality control the NA19098.r2 cells no longer form a group of outliers.
 
 By default only the top 500 most variable genes are used by scater to calculate the PCA. This can be adjusted by changing the `ntop` argument. 
 

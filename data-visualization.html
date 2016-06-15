@@ -206,8 +206,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.3.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw"><i class="fa fa-check"></i><b>12.3.1</b> Raw</a></li>
 <li class="chapter" data-level="12.3.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm"><i class="fa fa-check"></i><b>12.3.2</b> CPM</a></li>
 <li class="chapter" data-level="12.3.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tmm"><i class="fa fa-check"></i><b>12.3.3</b> TMM</a></li>
-<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.4</b> Size-factor (RLE)</a></li>
-<li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.5</b> Upperquantile</a></li>
+<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#lsf"><i class="fa fa-check"></i><b>12.3.4</b> LSF</a></li>
+<li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.5</b> Size-factor (RLE)</a></li>
+<li class="chapter" data-level="12.3.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.6</b> Upperquantile</a></li>
 </ul></li>
 <li class="chapter" data-level="12.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#other-methods"><i class="fa fa-check"></i><b>12.4</b> Other methods</a></li>
 <li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.5</b> Exercise</a></li>
@@ -364,7 +365,7 @@ Figure 8.2: PCA plot of the blischak data
 Figure 8.3: PCA plot of the blischak data
 </p>
 </div>
-<p>Comparing Figure 8.1 and Figure 8.2, it is clear that after normalization the NA19098.r2 cells no longer form a group of outliers.</p>
+<p>Comparing Figure 8.2 and Figure 8.3, it is clear that after quality control the NA19098.r2 cells no longer form a group of outliers.</p>
 <p>By default only the top 500 most variable genes are used by scater to calculate the PCA. This can be adjusted by changing the <code>ntop</code> argument.</p>
 <p><strong>Exercise 1</strong> How do the PCA plots change if when all 14,214 genes are used? Or when only top 50 genes are used?</p>
 <p><strong>Our answer</strong></p>
