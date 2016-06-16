@@ -25,7 +25,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-06-15">
+<meta name="date" content="2016-06-16">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -39,7 +39,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="clustering-analysis.html">
-<link rel="next" href="introduction-to-differential-expression-de-analysis.html">
+<link rel="next" href="de-expression-in-a-real-dataset.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -252,46 +252,47 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="17.5" data-path="clust-methods.html"><a href="clust-methods.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
 <li class="chapter" data-level="17.6" data-path="clust-methods.html"><a href="clust-methods.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>18</b> Introduction to differential expression (DE) analysis</a><ul>
-<li class="chapter" data-level="18.1" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#background-bulk-rna-seq"><i class="fa fa-check"></i><b>18.1</b> Background (bulk RNA-seq)</a></li>
-<li class="chapter" data-level="18.2" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#de-analysis-for-scrna-seq"><i class="fa fa-check"></i><b>18.2</b> DE analysis for scRNA-seq</a></li>
-<li class="chapter" data-level="18.3" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#synthetic-data-for-scrna-seq"><i class="fa fa-check"></i><b>18.3</b> Synthetic data for scRNA-seq</a></li>
-<li class="chapter" data-level="18.4" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#modelled-expression-of-a-single-gene"><i class="fa fa-check"></i><b>18.4</b> Modelled expression of a single gene</a></li>
-<li class="chapter" data-level="18.5" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#possible-shapes-of-the-poisson-beta-distribution"><i class="fa fa-check"></i><b>18.5</b> Possible shapes of the Poisson-Beta distribution</a></li>
-<li class="chapter" data-level="18.6" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#effect-of-sampling-size-on-parameter-estimates"><i class="fa fa-check"></i><b>18.6</b> Effect of sampling size on parameter estimates</a></li>
-<li class="chapter" data-level="18.7" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#drop-out-noise"><i class="fa fa-check"></i><b>18.7</b> Drop-out noise</a></li>
-<li class="chapter" data-level="18.8" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#over--and-under-dispersion-noise"><i class="fa fa-check"></i><b>18.8</b> Over- and under-dispersion noise</a></li>
+<li class="chapter" data-level="18" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>18</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="18.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#fitting-the-models"><i class="fa fa-check"></i><b>18.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="18.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>18.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="18.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#right-outliers"><i class="fa fa-check"></i><b>18.3</b> Right outliers</a></li>
+<li class="chapter" data-level="18.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#validation-of-de-results"><i class="fa fa-check"></i><b>18.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="18.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>18.5</b> Comparing M3Drop to other methods</a></li>
 </ul></li>
-<li class="chapter" data-level="19" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html"><i class="fa fa-check"></i><b>19</b> DE expression in a synthetic dataset</a><ul>
-<li class="chapter" data-level="19.1" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#generation-of-a-synthetic-dataset"><i class="fa fa-check"></i><b>19.1</b> Generation of a synthetic dataset</a></li>
-<li class="chapter" data-level="19.2" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#differential-expression-in-scrna-seq"><i class="fa fa-check"></i><b>19.2</b> Differential expression in scRNA-seq</a></li>
-<li class="chapter" data-level="19.3" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#kolmogorov-smirnov-test"><i class="fa fa-check"></i><b>19.3</b> Kolmogorov-Smirnov test</a></li>
-<li class="chapter" data-level="19.4" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#performance-of-the-ks-test"><i class="fa fa-check"></i><b>19.4</b> Performance of the KS test</a></li>
-<li class="chapter" data-level="19.5" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-deseq2"><i class="fa fa-check"></i><b>19.5</b> Finding DE genes using DESeq2</a></li>
-<li class="chapter" data-level="19.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>19.6</b> Finding DE genes using SCDE</a></li>
-<li class="chapter" data-level="19.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>19.7</b> Comparison of the methods</a></li>
-<li class="chapter" data-level="19.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>19.8</b> Beyond changes in the mean</a></li>
+<li class="chapter" data-level="19" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html"><i class="fa fa-check"></i><b>19</b> Ordering of cells according to pseudotime</a></li>
+<li class="chapter" data-level="20" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>20</b> Introduction to differential expression (DE) analysis</a><ul>
+<li class="chapter" data-level="20.1" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#background-bulk-rna-seq"><i class="fa fa-check"></i><b>20.1</b> Background (bulk RNA-seq)</a></li>
+<li class="chapter" data-level="20.2" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#de-analysis-for-scrna-seq"><i class="fa fa-check"></i><b>20.2</b> DE analysis for scRNA-seq</a></li>
+<li class="chapter" data-level="20.3" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#synthetic-data-for-scrna-seq"><i class="fa fa-check"></i><b>20.3</b> Synthetic data for scRNA-seq</a></li>
+<li class="chapter" data-level="20.4" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#modelled-expression-of-a-single-gene"><i class="fa fa-check"></i><b>20.4</b> Modelled expression of a single gene</a></li>
+<li class="chapter" data-level="20.5" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#possible-shapes-of-the-poisson-beta-distribution"><i class="fa fa-check"></i><b>20.5</b> Possible shapes of the Poisson-Beta distribution</a></li>
+<li class="chapter" data-level="20.6" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#effect-of-sampling-size-on-parameter-estimates"><i class="fa fa-check"></i><b>20.6</b> Effect of sampling size on parameter estimates</a></li>
+<li class="chapter" data-level="20.7" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#drop-out-noise"><i class="fa fa-check"></i><b>20.7</b> Drop-out noise</a></li>
+<li class="chapter" data-level="20.8" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#over--and-under-dispersion-noise"><i class="fa fa-check"></i><b>20.8</b> Over- and under-dispersion noise</a></li>
 </ul></li>
-<li class="chapter" data-level="20" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>20</b> DE expression in a real dataset</a><ul>
-<li class="chapter" data-level="20.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#introduction-7"><i class="fa fa-check"></i><b>20.1</b> Introduction</a></li>
-<li class="chapter" data-level="20.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ks-test"><i class="fa fa-check"></i><b>20.2</b> KS-test</a></li>
-<li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
-<li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
-<li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
-<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
-<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
-<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
-<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html"><i class="fa fa-check"></i><b>21</b> DE expression in a synthetic dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#generation-of-a-synthetic-dataset"><i class="fa fa-check"></i><b>21.1</b> Generation of a synthetic dataset</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#differential-expression-in-scrna-seq"><i class="fa fa-check"></i><b>21.2</b> Differential expression in scRNA-seq</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#kolmogorov-smirnov-test"><i class="fa fa-check"></i><b>21.3</b> Kolmogorov-Smirnov test</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#performance-of-the-ks-test"><i class="fa fa-check"></i><b>21.4</b> Performance of the KS test</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-deseq2"><i class="fa fa-check"></i><b>21.5</b> Finding DE genes using DESeq2</a></li>
+<li class="chapter" data-level="21.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>21.6</b> Finding DE genes using SCDE</a></li>
+<li class="chapter" data-level="21.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>21.7</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="21.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>21.8</b> Beyond changes in the mean</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>22</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="22.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#introduction-7"><i class="fa fa-check"></i><b>22.1</b> Introduction</a></li>
+<li class="chapter" data-level="22.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ks-test"><i class="fa fa-check"></i><b>22.2</b> KS-test</a></li>
+<li class="chapter" data-level="22.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#deseq2"><i class="fa fa-check"></i><b>22.3</b> DESeq2</a></li>
+<li class="chapter" data-level="22.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#scde"><i class="fa fa-check"></i><b>22.4</b> SCDE</a></li>
+<li class="chapter" data-level="22.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>22.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="22.6" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>22.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="22.6.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#volcano-plots"><i class="fa fa-check"></i><b>22.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="22.6.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ma-plot"><i class="fa fa-check"></i><b>22.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="22.6.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>22.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
-<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
-<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
-<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
-<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
-<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
-</ul></li>
-<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
+<li class="chapter" data-level="23" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>23</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -526,7 +527,7 @@ Figure 17.10: Clustering solutions of SINCERA method using <span class="math inl
         </div>
       </div>
 <a href="clustering-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="introduction-to-differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="de-expression-in-a-real-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

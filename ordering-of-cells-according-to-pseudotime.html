@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Analysis of single-cell RNA-seq data</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="Analysis of single-cell RNA-seq data">
+  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Analysis of single-cell RNA-seq data" />
+  
+  
+  
+
+<meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
+
+<meta name="date" content="2016-06-16">
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="de-expression-in-a-real-dataset.html">
+<link rel="next" href="introduction-to-differential-expression-de-analysis.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-71525309-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="index.html">Table of Contents</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About the course</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#registration"><i class="fa fa-check"></i><b>1.1</b> Registration</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#github"><i class="fa fa-check"></i><b>1.2</b> GitHub</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#license"><i class="fa fa-check"></i><b>1.3</b> License</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.4</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#contact"><i class="fa fa-check"></i><b>1.5</b> Contact</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="technical-requirements.html"><a href="technical-requirements.html"><i class="fa fa-check"></i><b>2</b> Technical requirements</a></li>
+<li class="chapter" data-level="3" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html"><i class="fa fa-check"></i><b>3</b> Introduction to single-cell RNA-seq</a><ul>
+<li class="chapter" data-level="3.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#bulk-rna-seq"><i class="fa fa-check"></i><b>3.1</b> Bulk RNA-seq</a></li>
+<li class="chapter" data-level="3.2" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#scrna-seq"><i class="fa fa-check"></i><b>3.2</b> scRNA-seq</a></li>
+<li class="chapter" data-level="3.3" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#protocol"><i class="fa fa-check"></i><b>3.3</b> Protocol</a></li>
+<li class="chapter" data-level="3.4" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#computational-analysis"><i class="fa fa-check"></i><b>3.4</b> Computational Analysis</a></li>
+<li class="chapter" data-level="3.5" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#challenges"><i class="fa fa-check"></i><b>3.5</b> Challenges</a></li>
+<li class="chapter" data-level="3.6" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#controls"><i class="fa fa-check"></i><b>3.6</b> Controls</a><ul>
+<li class="chapter" data-level="3.6.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#spike-ins"><i class="fa fa-check"></i><b>3.6.1</b> Spike-ins</a></li>
+<li class="chapter" data-level="3.6.2" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#umis"><i class="fa fa-check"></i><b>3.6.2</b> UMIs</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html"><i class="fa fa-check"></i><b>4</b> Construction of expression matrix</a><ul>
+<li class="chapter" data-level="4.1" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-qc"><i class="fa fa-check"></i><b>4.1</b> Reads QC</a></li>
+<li class="chapter" data-level="4.2" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-alignment"><i class="fa fa-check"></i><b>4.2</b> Reads alignment</a></li>
+<li class="chapter" data-level="4.3" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#alignment-example"><i class="fa fa-check"></i><b>4.3</b> Alignment example</a></li>
+<li class="chapter" data-level="4.4" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#mapping-qc"><i class="fa fa-check"></i><b>4.4</b> Mapping QC</a></li>
+<li class="chapter" data-level="4.5" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#reads-quantification"><i class="fa fa-check"></i><b>4.5</b> Reads quantification</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="construction-of-expression-matrix.html"><a href="construction-of-expression-matrix.html#umi-quantification"><i class="fa fa-check"></i><b>4.5.1</b> UMI quantification</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="scater-package.html"><a href="scater-package.html"><i class="fa fa-check"></i><b>5</b> scater package</a><ul>
+<li class="chapter" data-level="5.1" data-path="scater-package.html"><a href="scater-package.html#introduction"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="scater-package.html"><a href="scater-package.html#scater-workflow"><i class="fa fa-check"></i><b>5.2</b> scater workflow</a></li>
+<li class="chapter" data-level="5.3" data-path="scater-package.html"><a href="scater-package.html#terminology"><i class="fa fa-check"></i><b>5.3</b> Terminology</a></li>
+<li class="chapter" data-level="5.4" data-path="scater-package.html"><a href="scater-package.html#sceset-class"><i class="fa fa-check"></i><b>5.4</b> SCESet class</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html"><i class="fa fa-check"></i><b>6</b> Expression QC (UMI)</a><ul>
+<li class="chapter" data-level="6.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#introduction-1"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#blischak-dataset"><i class="fa fa-check"></i><b>6.2</b> Blischak dataset</a></li>
+<li class="chapter" data-level="6.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-qc"><i class="fa fa-check"></i><b>6.3</b> Cell QC</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#library-size"><i class="fa fa-check"></i><b>6.3.1</b> Library size</a></li>
+<li class="chapter" data-level="6.3.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#detected-genes-1"><i class="fa fa-check"></i><b>6.3.2</b> Detected genes (1)</a></li>
+<li class="chapter" data-level="6.3.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#erccs-and-mts"><i class="fa fa-check"></i><b>6.3.3</b> ERCCs and MTs</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-filtering"><i class="fa fa-check"></i><b>6.4</b> Cell filtering</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.1</b> Default Thresholds</a></li>
+<li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.2</b> Automatic</a></li>
+<li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.3</b> Manual</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#compare-filterings"><i class="fa fa-check"></i><b>6.5</b> Compare filterings</a></li>
+<li class="chapter" data-level="6.6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-analysis"><i class="fa fa-check"></i><b>6.6</b> Gene analysis</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-expression"><i class="fa fa-check"></i><b>6.6.1</b> Gene expression</a></li>
+<li class="chapter" data-level="6.6.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-filtering"><i class="fa fa-check"></i><b>6.6.2</b> Gene filtering</a></li>
+</ul></li>
+<li class="chapter" data-level="6.7" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#save-the-data"><i class="fa fa-check"></i><b>6.7</b> Save the data</a></li>
+<li class="chapter" data-level="6.8" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#big-exercise"><i class="fa fa-check"></i><b>6.8</b> Big Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="expression-qc-reads.html"><a href="expression-qc-reads.html"><i class="fa fa-check"></i><b>7</b> Expression QC (Reads)</a></li>
+<li class="chapter" data-level="8" data-path="data-visualization.html"><a href="data-visualization.html"><i class="fa fa-check"></i><b>8</b> Data visualization</a><ul>
+<li class="chapter" data-level="8.1" data-path="data-visualization.html"><a href="data-visualization.html#introduction-2"><i class="fa fa-check"></i><b>8.1</b> Introduction</a></li>
+<li class="chapter" data-level="8.2" data-path="data-visualization.html"><a href="data-visualization.html#visual-pca"><i class="fa fa-check"></i><b>8.2</b> PCA plot</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc"><i class="fa fa-check"></i><b>8.2.1</b> Before QC</a></li>
+<li class="chapter" data-level="8.2.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc"><i class="fa fa-check"></i><b>8.2.2</b> After QC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="data-visualization.html"><a href="data-visualization.html#visual-tsne"><i class="fa fa-check"></i><b>8.3</b> tSNE map</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="data-visualization.html"><a href="data-visualization.html#before-qc-1"><i class="fa fa-check"></i><b>8.3.1</b> Before QC</a></li>
+<li class="chapter" data-level="8.3.2" data-path="data-visualization.html"><a href="data-visualization.html#after-qc-1"><i class="fa fa-check"></i><b>8.3.2</b> After QC</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="data-visualization.html"><a href="data-visualization.html#big-exercise-1"><i class="fa fa-check"></i><b>8.4</b> Big Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="expression-overview-reads.html"><a href="expression-overview-reads.html"><i class="fa fa-check"></i><b>9</b> Expression overview (Reads)</a></li>
+<li class="chapter" data-level="10" data-path="confounding-factors.html"><a href="confounding-factors.html"><i class="fa fa-check"></i><b>10</b> Confounding factors</a><ul>
+<li class="chapter" data-level="10.1" data-path="confounding-factors.html"><a href="confounding-factors.html#introduction-3"><i class="fa fa-check"></i><b>10.1</b> Introduction</a></li>
+<li class="chapter" data-level="10.2" data-path="confounding-factors.html"><a href="confounding-factors.html#correlations-with-pcs"><i class="fa fa-check"></i><b>10.2</b> Correlations with PCs</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="confounding-factors.html"><a href="confounding-factors.html#detected-genes"><i class="fa fa-check"></i><b>10.2.1</b> Detected genes</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="confounding-factors.html"><a href="confounding-factors.html#explanatory-variables"><i class="fa fa-check"></i><b>10.3</b> Explanatory variables</a></li>
+<li class="chapter" data-level="10.4" data-path="confounding-factors.html"><a href="confounding-factors.html#other-confounders"><i class="fa fa-check"></i><b>10.4</b> Other confounders</a></li>
+<li class="chapter" data-level="10.5" data-path="confounding-factors.html"><a href="confounding-factors.html#exercise"><i class="fa fa-check"></i><b>10.5</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="confounding-factors-reads.html"><a href="confounding-factors-reads.html"><i class="fa fa-check"></i><b>11</b> Confounding factors (Reads)</a></li>
+<li class="chapter" data-level="12" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html"><i class="fa fa-check"></i><b>12</b> Normalization for library size</a><ul>
+<li class="chapter" data-level="12.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#introduction-4"><i class="fa fa-check"></i><b>12.1</b> Introduction</a></li>
+<li class="chapter" data-level="12.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#library-size-1"><i class="fa fa-check"></i><b>12.2</b> Library size</a></li>
+<li class="chapter" data-level="12.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#normalisations"><i class="fa fa-check"></i><b>12.3</b> Normalisations</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw"><i class="fa fa-check"></i><b>12.3.1</b> Raw</a></li>
+<li class="chapter" data-level="12.3.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm"><i class="fa fa-check"></i><b>12.3.2</b> CPM</a></li>
+<li class="chapter" data-level="12.3.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tmm"><i class="fa fa-check"></i><b>12.3.3</b> TMM</a></li>
+<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#lsf"><i class="fa fa-check"></i><b>12.3.4</b> LSF</a></li>
+<li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.5</b> Size-factor (RLE)</a></li>
+<li class="chapter" data-level="12.3.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.6</b> Upperquantile</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#other-methods"><i class="fa fa-check"></i><b>12.4</b> Other methods</a></li>
+<li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.5</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
+<li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
+<li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Brennecke method</a></li>
+<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="14.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.6</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls (Reads)</a></li>
+<li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="16.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#introduction-6"><i class="fa fa-check"></i><b>16.1</b> Introduction</a></li>
+<li class="chapter" data-level="16.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#dimensionality-reductions"><i class="fa fa-check"></i><b>16.2</b> Dimensionality reductions</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pca"><i class="fa fa-check"></i><b>16.2.1</b> PCA</a></li>
+<li class="chapter" data-level="16.2.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#spectral"><i class="fa fa-check"></i><b>16.2.2</b> Spectral</a></li>
+<li class="chapter" data-level="16.2.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne"><i class="fa fa-check"></i><b>16.2.3</b> tSNE</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#clustering-methods"><i class="fa fa-check"></i><b>16.3</b> Clustering methods</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#hierarchical-clustering"><i class="fa fa-check"></i><b>16.3.1</b> Hierarchical clustering</a></li>
+<li class="chapter" data-level="16.3.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#k-means"><i class="fa fa-check"></i><b>16.3.2</b> k-means</a></li>
+<li class="chapter" data-level="16.3.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#graph-based-methods"><i class="fa fa-check"></i><b>16.3.3</b> Graph-based methods</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#challenges-in-clustering"><i class="fa fa-check"></i><b>16.4</b> Challenges in clustering</a></li>
+<li class="chapter" data-level="16.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tools-for-scrna-seq-data"><i class="fa fa-check"></i><b>16.5</b> Tools for scRNA-seq data</a><ul>
+<li class="chapter" data-level="16.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>16.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
+<li class="chapter" data-level="16.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>16.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
+<li class="chapter" data-level="16.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>16.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
+<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + <em>k</em>-means</a></li>
+<li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="17.1" data-path="clust-methods.html"><a href="clust-methods.html#patient-dataset"><i class="fa fa-check"></i><b>17.1</b> Patient dataset</a></li>
+<li class="chapter" data-level="17.2" data-path="clust-methods.html"><a href="clust-methods.html#sc3-1"><i class="fa fa-check"></i><b>17.2</b> SC3</a></li>
+<li class="chapter" data-level="17.3" data-path="clust-methods.html"><a href="clust-methods.html#pcareduce-1"><i class="fa fa-check"></i><b>17.3</b> pcaReduce</a></li>
+<li class="chapter" data-level="17.4" data-path="clust-methods.html"><a href="clust-methods.html#tsne-kmeans"><i class="fa fa-check"></i><b>17.4</b> tSNE + kmeans</a></li>
+<li class="chapter" data-level="17.5" data-path="clust-methods.html"><a href="clust-methods.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
+<li class="chapter" data-level="17.6" data-path="clust-methods.html"><a href="clust-methods.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>18</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="18.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#fitting-the-models"><i class="fa fa-check"></i><b>18.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="18.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>18.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="18.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#right-outliers"><i class="fa fa-check"></i><b>18.3</b> Right outliers</a></li>
+<li class="chapter" data-level="18.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#validation-of-de-results"><i class="fa fa-check"></i><b>18.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="18.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>18.5</b> Comparing M3Drop to other methods</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html"><i class="fa fa-check"></i><b>19</b> Ordering of cells according to pseudotime</a></li>
+<li class="chapter" data-level="20" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>20</b> Introduction to differential expression (DE) analysis</a><ul>
+<li class="chapter" data-level="20.1" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#background-bulk-rna-seq"><i class="fa fa-check"></i><b>20.1</b> Background (bulk RNA-seq)</a></li>
+<li class="chapter" data-level="20.2" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#de-analysis-for-scrna-seq"><i class="fa fa-check"></i><b>20.2</b> DE analysis for scRNA-seq</a></li>
+<li class="chapter" data-level="20.3" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#synthetic-data-for-scrna-seq"><i class="fa fa-check"></i><b>20.3</b> Synthetic data for scRNA-seq</a></li>
+<li class="chapter" data-level="20.4" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#modelled-expression-of-a-single-gene"><i class="fa fa-check"></i><b>20.4</b> Modelled expression of a single gene</a></li>
+<li class="chapter" data-level="20.5" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#possible-shapes-of-the-poisson-beta-distribution"><i class="fa fa-check"></i><b>20.5</b> Possible shapes of the Poisson-Beta distribution</a></li>
+<li class="chapter" data-level="20.6" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#effect-of-sampling-size-on-parameter-estimates"><i class="fa fa-check"></i><b>20.6</b> Effect of sampling size on parameter estimates</a></li>
+<li class="chapter" data-level="20.7" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#drop-out-noise"><i class="fa fa-check"></i><b>20.7</b> Drop-out noise</a></li>
+<li class="chapter" data-level="20.8" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#over--and-under-dispersion-noise"><i class="fa fa-check"></i><b>20.8</b> Over- and under-dispersion noise</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html"><i class="fa fa-check"></i><b>21</b> DE expression in a synthetic dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#generation-of-a-synthetic-dataset"><i class="fa fa-check"></i><b>21.1</b> Generation of a synthetic dataset</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#differential-expression-in-scrna-seq"><i class="fa fa-check"></i><b>21.2</b> Differential expression in scRNA-seq</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#kolmogorov-smirnov-test"><i class="fa fa-check"></i><b>21.3</b> Kolmogorov-Smirnov test</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#performance-of-the-ks-test"><i class="fa fa-check"></i><b>21.4</b> Performance of the KS test</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-deseq2"><i class="fa fa-check"></i><b>21.5</b> Finding DE genes using DESeq2</a></li>
+<li class="chapter" data-level="21.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>21.6</b> Finding DE genes using SCDE</a></li>
+<li class="chapter" data-level="21.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>21.7</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="21.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>21.8</b> Beyond changes in the mean</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>22</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="22.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#introduction-7"><i class="fa fa-check"></i><b>22.1</b> Introduction</a></li>
+<li class="chapter" data-level="22.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ks-test"><i class="fa fa-check"></i><b>22.2</b> KS-test</a></li>
+<li class="chapter" data-level="22.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#deseq2"><i class="fa fa-check"></i><b>22.3</b> DESeq2</a></li>
+<li class="chapter" data-level="22.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#scde"><i class="fa fa-check"></i><b>22.4</b> SCDE</a></li>
+<li class="chapter" data-level="22.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>22.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="22.6" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>22.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="22.6.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#volcano-plots"><i class="fa fa-check"></i><b>22.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="22.6.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ma-plot"><i class="fa fa-check"></i><b>22.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="22.6.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>22.6.3</b> Heatmap of DE genes</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>23</b> References</a></li>
+<li class="divider"></li>
+<li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Analysis of single-cell RNA-seq data</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="ordering-of-cells-according-to-pseudotime" class="section level1">
+<h1><span class="header-section-number">19</span> Ordering of cells according to pseudotime</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TSCAN)
+<span class="kw">library</span>(M3Drop)
+<span class="kw">library</span>(monocle)
+<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
+<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (killed) when the RNA is extracted.</p>
+<p>Instead, we must sample at specific time-points to obtain snapshots of the gene expression profiles. However, since some of the cells will proceed faster along the differentiation than others, the actual time may not correspond to the developmental progression. Thus, we would like to order the cells along a one-dimensional trajectory to identify the progression through state space of which can be interpreted as a temporal axis (hence the name pseudotime).</p>
+<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development that was collected by Deng et al. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
+<p>First we will try to use all genes to order the cells.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
+cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
+procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(deng, <span class="dt">clusternum=</span><span class="dv">10</span>)
+<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
+dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum=</span><span class="dv">10</span>)
+TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
+<p><img src="18-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly=</span>F)</code></pre></div>
+<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3D</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
+    M3Drop::<span class="kw">M3Drop_Differential_Expression</span>(deng, <span class="dt">suppress.plot=</span>T)$Gene
+)
+d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(m3dGenes %in%<span class="st"> </span><span class="kw">rownames</span>(deng)),]
+d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)),]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># detach(package:scater) #Required to avoid conflict</span>
+
+pd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">colnames</span>(d))
+<span class="kw">names</span>(pd) &lt;-<span class="st"> &quot;timepoint&quot;</span>
+pd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>pd)
+fd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">rownames</span>(d))
+<span class="kw">names</span>(fd) &lt;-<span class="st"> &quot;gene&quot;</span>
+fd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>fd)
+<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">dim</span>(d)[<span class="dv">2</span>]
+<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">dim</span>(d)[<span class="dv">1</span>]
+dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet</span>(d, <span class="dt">phenoData=</span>pd, <span class="dt">featureData=</span>fd)
+dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
+dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr=</span><span class="dv">1</span>)</code></pre></div>
+<pre><code>## Reducing to independent components</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse=</span>T)
+monocle::<span class="kw">plot_spanning_tree</span>(dCellDataSet)</code></pre></div>
+<p><img src="18-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As you can see, Monocle has identified 7 different states. This is probably not such a bad conclusion since we know that three of the time-points correspond to different stages of the two-cell embryo. Also, we saw that the three blastocyst stages correspond to inner cell mass and trophectoderm cells. We can take a closer look at the clusters</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dMonocleClusters &lt;-<span class="st"> </span><span class="kw">phenoData</span>(dCellDataSet)$State</code></pre></div>
+<p>Exercise: Compare the clusters identified by monocle with the annotated ones. How well do the labels correspond?</p>
+<p>Next, we investigate the order of the cells inferred by Monocle</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ts &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">phenoData</span>(dCellDataSet)$Pseudotime)
+dOrder &lt;-<span class="st"> </span><span class="kw">sort.int</span>(ts, <span class="dt">index.return=</span>T)$ix
+dOrder</code></pre></div>
+<pre><code>##   [1] 192 263 139 153 173 137 221 266 222 259 242 246 163 260 224 166 188
+##  [18] 238 227 248 264 234 231 261 258 243 241 268 233 247 226 252 262 267
+##  [35] 237 150 230 175 138 256 235 257 168 236 195 250 232 265 254 255 253
+##  [52] 178 229 223 190 196 148 152 164 147 170 155 156 140 154 186 228 167
+##  [69] 203 245 219 174 240 244 143 180 185 218 209 191 184 239 193 199 172
+##  [86] 151 145 179 136 189 204 187 181 197 220 225 176 157 144 198 182 183
+## [103] 200 160 146 165 159 207 161 194 158 142 177 171 217 249 215 251 216
+## [120] 211 201 202 162 149 210 213 141 214 206 169 212 208 205 131  72 118
+## [137] 101 125 135 102 110 117 124 133 128 109 127 120 113 134 122 129 121
+## [154] 126 119 130 132 108 105 115 114 112 100  99  88 123  97  91 111  66
+## [171]  70  96  71  63  94 106 107  90  58 104  67  76  60  89  87  86  93
+## [188]  54  55  92 116  73  98  95  51  74  61  56  53  52  49  50  75  64
+## [205]  62  79  57  85  83  68  65  59  77  84  82  69  78  80  81  38  39
+## [222]  35  41  42  44  43  37  40  36  45  46  47  48  26  30  33  34  25
+## [239]  27  29  28  31  32  17  18  13  20  24  19  14  22  23  21  15  16
+## [256]   5   8   2   1 103   4   3   9  10  11  12   7   6</code></pre>
+<p>Now, we repeat the exercise using TSCAN</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(d, <span class="dt">clusternum=</span><span class="dv">10</span>)
+<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
+dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum=</span><span class="dv">10</span>)
+TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
+<p><img src="18-pseudotime_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly=</span>F)</code></pre></div>
+<p>Exercise: Use TSCAN to obtain 7 clusters and compare the groups with those obtained from Monocle</p>
+<p>How do the trajectories inferred by TSCAN and Monocle compare?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inds &lt;-<span class="st"> </span>dengorderTSCAN$sample_name
+<span class="kw">plot</span>(
+    <span class="kw">rev</span>(dengorderTSCAN[,<span class="dv">3</span>]), 
+    <span class="kw">pData</span>(dCellDataSet)[inds,<span class="dv">3</span>], 
+    <span class="dt">col=</span>cellLabels[<span class="kw">as.numeric</span>(inds)], 
+    <span class="dt">pch=</span><span class="dv">20</span>, 
+    <span class="dt">xlab=</span><span class="st">&quot;TSCAN&quot;</span>, 
+    <span class="dt">ylab=</span><span class="st">&quot;Monocle&quot;</span>
+)</code></pre></div>
+<p><img src="18-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Exercise: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="de-expression-in-a-real-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="introduction-to-differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/18-pseudotime.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -25,7 +25,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews and Martin Hemberg">
 
-<meta name="date" content="2016-06-15">
+<meta name="date" content="2016-06-16">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -38,7 +38,7 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="clust-methods.html">
+<link rel="prev" href="ordering-of-cells-according-to-pseudotime.html">
 <link rel="next" href="de-expression-in-a-synthetic-dataset.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -252,46 +252,47 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="17.5" data-path="clust-methods.html"><a href="clust-methods.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
 <li class="chapter" data-level="17.6" data-path="clust-methods.html"><a href="clust-methods.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>18</b> Introduction to differential expression (DE) analysis</a><ul>
-<li class="chapter" data-level="18.1" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#background-bulk-rna-seq"><i class="fa fa-check"></i><b>18.1</b> Background (bulk RNA-seq)</a></li>
-<li class="chapter" data-level="18.2" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#de-analysis-for-scrna-seq"><i class="fa fa-check"></i><b>18.2</b> DE analysis for scRNA-seq</a></li>
-<li class="chapter" data-level="18.3" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#synthetic-data-for-scrna-seq"><i class="fa fa-check"></i><b>18.3</b> Synthetic data for scRNA-seq</a></li>
-<li class="chapter" data-level="18.4" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#modelled-expression-of-a-single-gene"><i class="fa fa-check"></i><b>18.4</b> Modelled expression of a single gene</a></li>
-<li class="chapter" data-level="18.5" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#possible-shapes-of-the-poisson-beta-distribution"><i class="fa fa-check"></i><b>18.5</b> Possible shapes of the Poisson-Beta distribution</a></li>
-<li class="chapter" data-level="18.6" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#effect-of-sampling-size-on-parameter-estimates"><i class="fa fa-check"></i><b>18.6</b> Effect of sampling size on parameter estimates</a></li>
-<li class="chapter" data-level="18.7" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#drop-out-noise"><i class="fa fa-check"></i><b>18.7</b> Drop-out noise</a></li>
-<li class="chapter" data-level="18.8" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#over--and-under-dispersion-noise"><i class="fa fa-check"></i><b>18.8</b> Over- and under-dispersion noise</a></li>
+<li class="chapter" data-level="18" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>18</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="18.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#fitting-the-models"><i class="fa fa-check"></i><b>18.1</b> Fitting the models</a></li>
+<li class="chapter" data-level="18.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>18.2</b> The Michaelis-Menten Equation</a></li>
+<li class="chapter" data-level="18.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#right-outliers"><i class="fa fa-check"></i><b>18.3</b> Right outliers</a></li>
+<li class="chapter" data-level="18.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#validation-of-de-results"><i class="fa fa-check"></i><b>18.4</b> Validation of DE results</a></li>
+<li class="chapter" data-level="18.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>18.5</b> Comparing M3Drop to other methods</a></li>
 </ul></li>
-<li class="chapter" data-level="19" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html"><i class="fa fa-check"></i><b>19</b> DE expression in a synthetic dataset</a><ul>
-<li class="chapter" data-level="19.1" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#generation-of-a-synthetic-dataset"><i class="fa fa-check"></i><b>19.1</b> Generation of a synthetic dataset</a></li>
-<li class="chapter" data-level="19.2" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#differential-expression-in-scrna-seq"><i class="fa fa-check"></i><b>19.2</b> Differential expression in scRNA-seq</a></li>
-<li class="chapter" data-level="19.3" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#kolmogorov-smirnov-test"><i class="fa fa-check"></i><b>19.3</b> Kolmogorov-Smirnov test</a></li>
-<li class="chapter" data-level="19.4" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#performance-of-the-ks-test"><i class="fa fa-check"></i><b>19.4</b> Performance of the KS test</a></li>
-<li class="chapter" data-level="19.5" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-deseq2"><i class="fa fa-check"></i><b>19.5</b> Finding DE genes using DESeq2</a></li>
-<li class="chapter" data-level="19.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>19.6</b> Finding DE genes using SCDE</a></li>
-<li class="chapter" data-level="19.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>19.7</b> Comparison of the methods</a></li>
-<li class="chapter" data-level="19.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>19.8</b> Beyond changes in the mean</a></li>
+<li class="chapter" data-level="19" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html"><i class="fa fa-check"></i><b>19</b> Ordering of cells according to pseudotime</a></li>
+<li class="chapter" data-level="20" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>20</b> Introduction to differential expression (DE) analysis</a><ul>
+<li class="chapter" data-level="20.1" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#background-bulk-rna-seq"><i class="fa fa-check"></i><b>20.1</b> Background (bulk RNA-seq)</a></li>
+<li class="chapter" data-level="20.2" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#de-analysis-for-scrna-seq"><i class="fa fa-check"></i><b>20.2</b> DE analysis for scRNA-seq</a></li>
+<li class="chapter" data-level="20.3" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#synthetic-data-for-scrna-seq"><i class="fa fa-check"></i><b>20.3</b> Synthetic data for scRNA-seq</a></li>
+<li class="chapter" data-level="20.4" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#modelled-expression-of-a-single-gene"><i class="fa fa-check"></i><b>20.4</b> Modelled expression of a single gene</a></li>
+<li class="chapter" data-level="20.5" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#possible-shapes-of-the-poisson-beta-distribution"><i class="fa fa-check"></i><b>20.5</b> Possible shapes of the Poisson-Beta distribution</a></li>
+<li class="chapter" data-level="20.6" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#effect-of-sampling-size-on-parameter-estimates"><i class="fa fa-check"></i><b>20.6</b> Effect of sampling size on parameter estimates</a></li>
+<li class="chapter" data-level="20.7" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#drop-out-noise"><i class="fa fa-check"></i><b>20.7</b> Drop-out noise</a></li>
+<li class="chapter" data-level="20.8" data-path="introduction-to-differential-expression-de-analysis.html"><a href="introduction-to-differential-expression-de-analysis.html#over--and-under-dispersion-noise"><i class="fa fa-check"></i><b>20.8</b> Over- and under-dispersion noise</a></li>
 </ul></li>
-<li class="chapter" data-level="20" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html"><i class="fa fa-check"></i><b>20</b> DE expression in a real dataset</a><ul>
-<li class="chapter" data-level="20.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#introduction-7"><i class="fa fa-check"></i><b>20.1</b> Introduction</a></li>
-<li class="chapter" data-level="20.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ks-test"><i class="fa fa-check"></i><b>20.2</b> KS-test</a></li>
-<li class="chapter" data-level="20.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#deseq2"><i class="fa fa-check"></i><b>20.3</b> DESeq2</a></li>
-<li class="chapter" data-level="20.4" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#scde"><i class="fa fa-check"></i><b>20.4</b> SCDE</a></li>
-<li class="chapter" data-level="20.5" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>20.5</b> Comparison of the methods</a></li>
-<li class="chapter" data-level="20.6" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>20.6</b> Visualisation of the results</a><ul>
-<li class="chapter" data-level="20.6.1" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#volcano-plots"><i class="fa fa-check"></i><b>20.6.1</b> Volcano plots</a></li>
-<li class="chapter" data-level="20.6.2" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#ma-plot"><i class="fa fa-check"></i><b>20.6.2</b> MA-plot</a></li>
-<li class="chapter" data-level="20.6.3" data-path="de-expression-in-a-real-dataset.html"><a href="de-expression-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>20.6.3</b> Heatmap of DE genes</a></li>
+<li class="chapter" data-level="21" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html"><i class="fa fa-check"></i><b>21</b> DE expression in a synthetic dataset</a><ul>
+<li class="chapter" data-level="21.1" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#generation-of-a-synthetic-dataset"><i class="fa fa-check"></i><b>21.1</b> Generation of a synthetic dataset</a></li>
+<li class="chapter" data-level="21.2" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#differential-expression-in-scrna-seq"><i class="fa fa-check"></i><b>21.2</b> Differential expression in scRNA-seq</a></li>
+<li class="chapter" data-level="21.3" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#kolmogorov-smirnov-test"><i class="fa fa-check"></i><b>21.3</b> Kolmogorov-Smirnov test</a></li>
+<li class="chapter" data-level="21.4" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#performance-of-the-ks-test"><i class="fa fa-check"></i><b>21.4</b> Performance of the KS test</a></li>
+<li class="chapter" data-level="21.5" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-deseq2"><i class="fa fa-check"></i><b>21.5</b> Finding DE genes using DESeq2</a></li>
+<li class="chapter" data-level="21.6" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#finding-de-genes-using-scde"><i class="fa fa-check"></i><b>21.6</b> Finding DE genes using SCDE</a></li>
+<li class="chapter" data-level="21.7" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>21.7</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="21.8" data-path="de-expression-in-a-synthetic-dataset.html"><a href="de-expression-in-a-synthetic-dataset.html#beyond-changes-in-the-mean"><i class="fa fa-check"></i><b>21.8</b> Beyond changes in the mean</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>22</b> DE expression in a real dataset</a><ul>
+<li class="chapter" data-level="22.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#introduction-7"><i class="fa fa-check"></i><b>22.1</b> Introduction</a></li>
+<li class="chapter" data-level="22.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ks-test"><i class="fa fa-check"></i><b>22.2</b> KS-test</a></li>
+<li class="chapter" data-level="22.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#deseq2"><i class="fa fa-check"></i><b>22.3</b> DESeq2</a></li>
+<li class="chapter" data-level="22.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#scde"><i class="fa fa-check"></i><b>22.4</b> SCDE</a></li>
+<li class="chapter" data-level="22.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparison-of-the-methods-1"><i class="fa fa-check"></i><b>22.5</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="22.6" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#visualisation-of-the-results"><i class="fa fa-check"></i><b>22.6</b> Visualisation of the results</a><ul>
+<li class="chapter" data-level="22.6.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#volcano-plots"><i class="fa fa-check"></i><b>22.6.1</b> Volcano plots</a></li>
+<li class="chapter" data-level="22.6.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#ma-plot"><i class="fa fa-check"></i><b>22.6.2</b> MA-plot</a></li>
+<li class="chapter" data-level="22.6.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>22.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html"><i class="fa fa-check"></i><b>21</b> DE expression in a real dataset</a><ul>
-<li class="chapter" data-level="21.1" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#fitting-the-models"><i class="fa fa-check"></i><b>21.1</b> Fitting the models</a></li>
-<li class="chapter" data-level="21.2" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#the-michaelis-menten-equation"><i class="fa fa-check"></i><b>21.2</b> The Michaelis-Menten Equation</a></li>
-<li class="chapter" data-level="21.3" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#right-outliers"><i class="fa fa-check"></i><b>21.3</b> Right outliers</a></li>
-<li class="chapter" data-level="21.4" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#validation-of-de-results"><i class="fa fa-check"></i><b>21.4</b> Validation of DE results</a></li>
-<li class="chapter" data-level="21.5" data-path="de-expression-in-a-real-dataset-1.html"><a href="de-expression-in-a-real-dataset-1.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>21.5</b> Comparing M3Drop to other methods</a></li>
-</ul></li>
-<li class="chapter" data-level="22" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>22</b> References</a></li>
+<li class="chapter" data-level="23" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>23</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -313,23 +314,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="introduction-to-differential-expression-de-analysis" class="section level1">
-<h1><span class="header-section-number">18</span> Introduction to differential expression (DE) analysis</h1>
+<h1><span class="header-section-number">20</span> Introduction to differential expression (DE) analysis</h1>
 <div id="background-bulk-rna-seq" class="section level2">
-<h2><span class="header-section-number">18.1</span> Background (bulk RNA-seq)</h2>
+<h2><span class="header-section-number">20.1</span> Background (bulk RNA-seq)</h2>
 <p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
 <p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
 </div>
 <div id="de-analysis-for-scrna-seq" class="section level2">
-<h2><span class="header-section-number">18.2</span> DE analysis for scRNA-seq</h2>
+<h2><span class="header-section-number">20.2</span> DE analysis for scRNA-seq</h2>
 <p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">17</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
 </div>
 <div id="synthetic-data-for-scrna-seq" class="section level2">
-<h2><span class="header-section-number">18.3</span> Synthetic data for scRNA-seq</h2>
+<h2><span class="header-section-number">20.3</span> Synthetic data for scRNA-seq</h2>
 <p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
 <p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
 </div>
 <div id="modelled-expression-of-a-single-gene" class="section level2">
-<h2><span class="header-section-number">18.4</span> Modelled expression of a single gene</h2>
+<h2><span class="header-section-number">20.4</span> Modelled expression of a single gene</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
@@ -340,9 +341,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
      <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
      <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
 <p class="caption">
-Figure 18.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
+Figure 20.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
 </p>
 </div>
 <p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
@@ -350,7 +351,7 @@ Figure 18.1: Distribution of read counts for a single genes across 100 cells bas
 <p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
 </div>
 <div id="possible-shapes-of-the-poisson-beta-distribution" class="section level2">
-<h2><span class="header-section-number">18.5</span> Possible shapes of the Poisson-Beta distribution</h2>
+<h2><span class="header-section-number">20.5</span> Possible shapes of the Poisson-Beta distribution</h2>
 <p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
 <p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
@@ -370,15 +371,15 @@ Figure 18.1: Distribution of read counts for a single genes across 100 cells bas
      <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">
-Figure 18.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
+Figure 20.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
 </p>
 </div>
 <p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
 </div>
 <div id="effect-of-sampling-size-on-parameter-estimates" class="section level2">
-<h2><span class="header-section-number">18.6</span> Effect of sampling size on parameter estimates</h2>
+<h2><span class="header-section-number">20.6</span> Effect of sampling size on parameter estimates</h2>
 <p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
      <span class="dt">freq =</span> <span class="ot">FALSE</span>,
@@ -392,15 +393,15 @@ Figure 18.2: Different distributions of read counts for a single genes across 10
      <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
      <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
-Figure 18.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
+Figure 20.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
 </p>
 </div>
 <p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
 </div>
 <div id="drop-out-noise" class="section level2">
-<h2><span class="header-section-number">18.7</span> Drop-out noise</h2>
+<h2><span class="header-section-number">20.7</span> Drop-out noise</h2>
 <p>The stochastic bursting model only captures the biological variability. In practice there will also be experimental variability. We model the noise as drop-outs, i.e. we assume that there is a small probality that each transcript is lost. For gene <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> it is assumed that the probability of loosing the transcript is given by <span class="math inline">\(p_d = \mu/(d+\mu)\)</span>, where <span class="math inline">\(\mu\)</span> is the mean expression level of the gene and <span class="math inline">\(d\)</span> is a drop-out parameter. Thus, the probability of drop-outs monotonically decreases as the mean expression level increases.</p>
 <p>To visualize the impact of the drop-outs on a sample, we can tune the drop-out parameter:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
@@ -423,15 +424,15 @@ Figure 18.3: Effect of sampling size on the distribution of read counts based on
      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
      <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
-Figure 18.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
+Figure 20.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
 </p>
 </div>
 <p><strong>Exercise 3</strong>: Explore the different parameter regimes for the same drop-out rate. Do you think that we are more sensitive to drop-outs in any specific regime?</p>
 </div>
 <div id="over--and-under-dispersion-noise" class="section level2">
-<h2><span class="header-section-number">18.8</span> Over- and under-dispersion noise</h2>
+<h2><span class="header-section-number">20.8</span> Over- and under-dispersion noise</h2>
 <p>Another example of noise is under- or over-dispersion. This can be modelled using a single parameter multiplying the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the Poisson-Beta distribution by a scalar <span class="math inline">\(s\)</span>. We can see that the mean is left unchanged while the variance is inversely proportional to <span class="math inline">\(s\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="dv">10</span>^(-<span class="dv">3</span>:<span class="dv">3</span>)
 k &lt;-<span class="st"> </span><span class="dv">100</span>
@@ -448,9 +449,9 @@ b &lt;-<span class="st"> </span><span class="dv">3</span>
        k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
        <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
-Figure 18.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
+Figure 20.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
 </p>
 </div>
 <p>To illustrate the effect of the dispersion parameter on the distribution consider:</p>
@@ -474,9 +475,9 @@ Figure 18.5: The mean and the variance of the distribution of read counts based 
      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
      <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="17-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">
-Figure 18.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
+Figure 20.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
 </p>
 </div>
 <p><strong>Exercise 4</strong>: Explore what happens when you have both drop-outs and under/over-dispersion. Can the effects be deconvoluted?</p>
@@ -488,7 +489,7 @@ Figure 18.6: Effect of dispersion on the distribution of read counts based on th
           </div>
         </div>
       </div>
-<a href="clust-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ordering-of-cells-according-to-pseudotime.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="de-expression-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -516,7 +517,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/17-de-intro.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-de-intro.Rmd",
 "text": "Edit"
 },
 "download": null,
