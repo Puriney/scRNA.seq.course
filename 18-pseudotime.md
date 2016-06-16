@@ -36,6 +36,8 @@ illustrate the methods we will be using a dataset on mouse embryonic
 development that was collected by Deng et al. The dataset consists of
 268 cells from 10 different time-points of early mouse development.
 
+## TSCAN
+
 First we will try to use all genes to order the cells.
 
 ```r
@@ -53,6 +55,8 @@ TSCAN::plotmclust(dengclust)
 dengorderTSCAN <- TSCAN::TSCANorder(dengclust, orderonly=F)
 ```
 
+## monocle
+
 Unfortunately, Monocle does not work when all the genes are used, so
 we must carry out feature selection. First, we use M3D
 
@@ -66,8 +70,6 @@ d <- d[!duplicated(rownames(d)),]
 
 
 ```r
-# detach(package:scater) #Required to avoid conflict
-
 pd <- as.data.frame(colnames(d))
 names(pd) <- "timepoint"
 pd <- new("AnnotatedDataFrame", data=pd)
@@ -150,6 +152,7 @@ dengorderTSCAN <- TSCAN::TSCANorder(dengclust, orderonly=F)
 
 Exercise: Use TSCAN to obtain 7 clusters and compare the groups with those obtained from Monocle
 
+## Comparison of the methods
 
 How do the trajectories inferred by TSCAN and Monocle compare?
 

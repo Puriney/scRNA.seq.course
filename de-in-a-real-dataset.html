@@ -38,8 +38,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="ordering-of-cells-according-to-pseudotime.html">
-<link rel="next" href="de-in-a-synthetic-dataset.html">
+<link rel="prev" href="de-in-a-synthetic-dataset.html">
+<link rel="next" href="advanced-exercises.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -330,175 +330,219 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="differential-expression-de-analysis" class="section level1">
-<h1><span class="header-section-number">20</span> Differential Expression (DE) analysis</h1>
-<div id="bulk-rna-seq-1" class="section level2">
-<h2><span class="header-section-number">20.1</span> Bulk RNA-seq</h2>
-<p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
-<p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
-</div>
-<div id="single-cell-rna-seq" class="section level2">
-<h2><span class="header-section-number">20.2</span> Single cell RNA-seq</h2>
-<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">17</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
-</div>
-<div id="scrna-seq-synthetic-data" class="section level2">
-<h2><span class="header-section-number">20.3</span> scRNA-seq synthetic data</h2>
-<p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
-<p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
-</div>
-<div id="single-gene-expression" class="section level2">
-<h2><span class="header-section-number">20.4</span> Single gene expression</h2>
+<div id="de-in-a-real-dataset" class="section level1">
+<h1><span class="header-section-number">22</span> DE in a real dataset</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">library</span>(DESeq2)
+<span class="kw">library</span>(scde)
+<span class="kw">library</span>(ROCR)
+<span class="kw">library</span>(limma)
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
-<p>We then plot the results as a histogram:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(s,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 20.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
-</p>
+<div id="introduction-7" class="section level2">
+<h2><span class="header-section-number">22.1</span> Introduction</h2>
+<p>The main advantage of using synthetic data is that we have full control over all aspects of the data, and this facilitates the interpretation of the results. However, the transcriptional bursting model is unable to capture the full complexity of a real scRNA-seq dataset. Next, we are going to analyze the difference between the transcriptomes of the 2-cell and the 4-cell state of a mouse embryo as described by <a href="http://genome.cshlp.org/content/24/11/1787.short">Biase et al</a>. For our purposes you need to download the <a href="http://hemberg-lab.github.io/scRNA.seq.course/biase/biase.txt"><code>biase</code></a> into the <code>biase</code> folder in your working directory. We can then look at the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(
+    <span class="kw">read.table</span>(
+        <span class="st">&quot;biase/biase_et_al_2cell_4cell_fpkm.tsv&quot;</span>
+    )
+)
+<span class="co"># keep those genes that are expressed in at least 6 cells</span>
+biase &lt;-<span class="st"> </span>biase[<span class="kw">rowSums</span>(biase &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">5</span>, ]
+pheatmap::<span class="kw">pheatmap</span>(
+    <span class="kw">log2</span>(biase +<span class="st"> </span><span class="dv">1</span>),
+    <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>,
+    <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
+    <span class="dt">kmeans_k =</span> <span class="dv">100</span>,
+    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>
+)</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>As you can see, the cells cluster well by their developmental stage.</p>
+<p>We can now use the same methods as before to obtain a list of differentially expressed genes.</p>
+<p>Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span>biase[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(biase), <span class="dv">500</span>), ]</code></pre></div>
 </div>
-<p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
-<p><span class="math inline">\(\mu = k\cdot a/(a+b)\)</span></p>
-<p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
+<div id="ks-test" class="section level2">
+<h2><span class="header-section-number">22.2</span> KS-test</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(biase))
+for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(biase)) {
+    res &lt;-<span class="st"> </span><span class="kw">ks.test</span>(
+        biase[i, <span class="dv">1</span>:<span class="dv">20</span>],
+        biase[i , <span class="dv">21</span>:<span class="dv">40</span>]
+    )
+    <span class="co"># Bonferroni correction</span>
+    pVals[i] &lt;-<span class="st"> </span>res$p.value *<span class="st"> </span><span class="kw">nrow</span>(biase)
+}</code></pre></div>
 </div>
-<div id="poisson-beta-distribution" class="section level2">
-<h2><span class="header-section-number">20.5</span> Poisson-Beta distribution</h2>
-<p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
-<p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, <span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">
-Figure 20.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
-</p>
+<div id="deseq2-1" class="section level2">
+<h2><span class="header-section-number">22.3</span> DESeq2</h2>
+<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take some time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
+    <span class="kw">c</span>(
+        <span class="kw">rep</span>(<span class="st">&quot;cell2&quot;</span>, <span class="dv">20</span>),
+        <span class="kw">rep</span>(<span class="st">&quot;cell4&quot;</span>, <span class="dv">20</span>)
+    )
+)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeqDataSetFromMatrix</span>(
+    <span class="kw">round</span>(biase) +<span class="st"> </span><span class="dv">1</span>,
+    <span class="dt">colData =</span> <span class="kw">DataFrame</span>(cond),
+    <span class="dt">design =</span> ~<span class="st"> </span>cond
+)
+dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeq</span>(dds)
+resDESeq &lt;-<span class="st"> </span>DESeq2::<span class="kw">results</span>(dds)
+pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj</code></pre></div>
 </div>
-<p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
+<div id="scde-1" class="section level2">
+<h2><span class="header-section-number">22.4</span> SCDE</h2>
+<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take quite a lot of time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
+    biase,
+    <span class="dv">2</span>,
+    function(x) {
+        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
+        <span class="kw">return</span>(x)
+    }
+)
+<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ])
+<span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ]) 
+o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
+    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>,
+    <span class="dt">min.size.entries =</span> <span class="dv">2</span>
+)
+priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
+    <span class="dt">models =</span> o.ifm,
+    <span class="dt">counts =</span> cnts,
+    <span class="dt">length.out =</span> <span class="dv">400</span>,
+    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
+)
+resSCDE &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
+    o.ifm,
+    cnts,
+    priors,
+    <span class="dt">groups =</span> cond,
+    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
+    <span class="dt">n.cores =</span> <span class="dv">1</span>,
+    <span class="dt">verbose =</span> <span class="dv">0</span>
+)
+<span class="co"># Convert Z-scores into 2-tailed p-values</span>
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(resSCDE$cZ), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) *<span class="st"> </span><span class="dv">2</span> 
+pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSCDE, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</code></pre></div>
 </div>
-<div id="sample-size" class="section level2">
-<h2><span class="header-section-number">20.6</span> Sample size</h2>
-<p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">50</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
-     <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 20.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
-</p>
+<div id="comparison-of-the-methods-2" class="section level2">
+<h2><span class="header-section-number">22.5</span> Comparison of the methods</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vennDiagram</span>(
+    <span class="kw">vennCounts</span>(
+        <span class="kw">cbind</span>(
+            pVals &lt;<span class="st"> </span><span class="fl">0.05</span>,
+            pValsDESeq &lt;<span class="st"> </span><span class="fl">0.05</span>,
+            pValsSCDE &lt;<span class="st"> </span><span class="fl">0.05</span>
+        )
+    ),
+    <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;KS-test&quot;</span>, <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;SCDE&quot;</span>),
+    <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
+)</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
 </div>
-<p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
-</div>
-<div id="dropout-noise" class="section level2">
-<h2><span class="header-section-number">20.7</span> Dropout noise</h2>
-<p>The stochastic bursting model only captures the biological variability. In practice there will also be experimental variability. We model the noise as drop-outs, i.e. we assume that there is a small probality that each transcript is lost. For gene <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> it is assumed that the probability of loosing the transcript is given by <span class="math inline">\(p_d = \mu/(d+\mu)\)</span>, where <span class="math inline">\(\mu\)</span> is the mean expression level of the gene and <span class="math inline">\(d\)</span> is a drop-out parameter. Thus, the probability of drop-outs monotonically decreases as the mean expression level increases.</p>
-<p>To visualize the impact of the drop-outs on a sample, we can tune the drop-out parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">1</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 20.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p><strong>Exercise 3</strong>: Explore the different parameter regimes for the same drop-out rate. Do you think that we are more sensitive to drop-outs in any specific regime?</p>
-</div>
-<div id="dispersion-noise" class="section level2">
-<h2><span class="header-section-number">20.8</span> Dispersion noise</h2>
-<p>Another example of noise is under- or over-dispersion. This can be modelled using a single parameter multiplying the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the Poisson-Beta distribution by a scalar <span class="math inline">\(s\)</span>. We can see that the mean is left unchanged while the variance is inversely proportional to <span class="math inline">\(s\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="dv">10</span>^(-<span class="dv">3</span>:<span class="dv">3</span>)
-k &lt;-<span class="st"> </span><span class="dv">100</span>
-a &lt;-<span class="st"> </span><span class="dv">2</span>
-b &lt;-<span class="st"> </span><span class="dv">3</span>
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(s,
-     k*a*s/(a*s +<span class="st"> </span>b*s),
-     <span class="dt">log =</span> <span class="st">&quot;x&quot;</span>,
-     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>),
-     <span class="dt">ylab =</span> <span class="st">&quot;Moments&quot;</span>)
-<span class="kw">points</span>(s,
-       k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 20.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p>To illustrate the effect of the dispersion parameter on the distribution consider:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>/<span class="dv">10</span>, <span class="dv">3</span>/<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>*<span class="dv">10</span>, <span class="dv">3</span>*<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 20.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p><strong>Exercise 4</strong>: Explore what happens when you have both drop-outs and under/over-dispersion. Can the effects be deconvoluted?</p>
+<div id="visualisation" class="section level2">
+<h2><span class="header-section-number">22.6</span> Visualisation</h2>
+<p>To further characterize the list of genes, we can calculate the average fold-changes and compare the ones that were called as differentially expressed to the ones that were not.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cell2 &lt;-<span class="st"> </span>biase[, <span class="dv">1</span>:<span class="dv">20</span>]
+cell4 &lt;-<span class="st"> </span>biase[, <span class="dv">21</span>:<span class="dv">40</span>]
+ksGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)
+deSeqGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>)
+scdeGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>)
+ksGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&gt;=.<span class="dv">05</span>)
+deSeqGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&gt;=.<span class="dv">05</span>)
+scdeGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&gt;=.<span class="dv">05</span>)
+meanFoldChange &lt;-<span class="st"> </span><span class="kw">rowSums</span>(cell2)/<span class="kw">rowSums</span>(cell4)
+nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
 
+<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))
+<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
+     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
+<div id="volcano-plots" class="section level3">
+<h3><span class="header-section-number">22.6.1</span> Volcano plots</h3>
+<p>A popular method for illustrating the difference between two conditions is the volcano plot which compares the magnitude of the change and the significance.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
+     -<span class="kw">log10</span>(pVals[ksGenesNotChangedInds]/nGenes),
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), KS-test&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>)) 
+<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+       -<span class="kw">log10</span>(pVals[ksGenesChangedInds]/nGenes),
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]), 
+     -<span class="kw">log10</span>(pValsDESeq[deSeqGenesNotChangedInds]),
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), DESeq2&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
+     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>))
+<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+       -<span class="kw">log10</span>(pValsDESeq[deSeqGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ma-plot" class="section level3">
+<h3><span class="header-section-number">22.6.2</span> MA-plot</h3>
+<p>Another popular method for illustrating the difference between two conditions is the MA-plot, in which the data has been transformed onto the M (log ratios) and A (mean average) scale:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesNotChangedInds,])),
+     <span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>)) 
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesChangedInds,])),
+       <span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
+
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesNotChangedInds,])),
+     <span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
+     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>))
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesChangedInds,])),
+       <span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
+       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
+</div>
+<div id="heatmap-of-de-genes" class="section level3">
+<h3><span class="header-section-number">22.6.3</span> Heatmap of DE genes</h3>
+<p>Finally, we can plot heatmaps of the genes that were called as DE by the intersection of the three.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>),
+                            <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>),
+                                      <span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)))
+pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span><span class="kw">cbind</span>(cell2, cell4)[allChangedInds,]),
+                   <span class="co"># scale = &quot;column&quot;,</span>
+                   <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
+                   <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="21-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
+
+</div>
 </div>
 </div>
             </section>
@@ -506,8 +550,8 @@ Figure 20.6: Effect of dispersion on the distribution of read counts based on th
           </div>
         </div>
       </div>
-<a href="ordering-of-cells-according-to-pseudotime.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="advanced-exercises.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -534,7 +578,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-de-intro.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/21-de-real.Rmd",
 "text": "Edit"
 },
 "download": null,

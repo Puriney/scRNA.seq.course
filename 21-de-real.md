@@ -3,7 +3,7 @@
 output: html_document
 ---
 
-# DE expression in a real dataset
+# DE in a real dataset
 
 
 
@@ -159,7 +159,7 @@ vennDiagram(
 
 __Exercise:__ How does this Venn diagram correspond to what you would expect based on the synthetic data? 
 
-## Visualisation of the results
+## Visualisation
 
 To further characterize the list of genes, we can calculate the
 average fold-changes and compare the ones that were called as

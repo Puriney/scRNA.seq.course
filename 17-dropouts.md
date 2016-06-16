@@ -3,7 +3,7 @@
 output: html_document
 ---
 
-# DE expression in a real dataset
+# Identification of important genes
 
 
 
