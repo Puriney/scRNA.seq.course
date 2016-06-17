@@ -337,11 +337,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">library</span>(M3Drop)
 <span class="kw">library</span>(monocle)
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (killed) when the RNA is extracted.</p>
-<p>Instead, we must sample at specific time-points to obtain snapshots of the gene expression profiles. However, since some of the cells will proceed faster along the differentiation than others, the actual time may not correspond to the developmental progression. Thus, we would like to order the cells along a one-dimensional trajectory to identify the progression through state space of which can be interpreted as a temporal axis (hence the name pseudotime).</p>
+<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (destroyed) when the RNA is extracted.</p>
+<p>Instead, we must sample at multiple time-points and obtain snapshots of the gene expression profiles. Since some of the cells will proceed faster along the differentiation than others, each snapshot may contain cells at varying points along the developmental progression. We use statistical methods to order the cells along one or more trajectories which represent the underlying developmental trajectories, this ordering is referred to a “pseudotime”.</p>
 <p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development that was collected by Deng et al. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
 <div id="tscan" class="section level2">
 <h2><span class="header-section-number">19.1</span> TSCAN</h2>
+<p>TSCAN combines clustering with pseudotime analysis. First it clustering the cells using <code>mclust</code>, which is based on a mixture of normal distributions. Then it builds a minimum spanning tree to connect the clusters together. The branch of this tree which connects the largest number of clusters is the main branch which is used to determine pseudotime.</p>
 <p>First we will try to use all genes to order the cells.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
 cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
@@ -350,11 +351,42 @@ procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>
 dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum=</span><span class="dv">10</span>)
 TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly=</span>F)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly=</span>F)
+pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.character</span>(dengorderTSCAN$sample_name)
+pseudotime_order_tscan</code></pre></div>
+<pre><code>##   [1] &quot;9&quot;   &quot;12&quot;  &quot;3&quot;   &quot;2&quot;   &quot;8&quot;   &quot;4&quot;   &quot;1&quot;   &quot;6&quot;   &quot;10&quot;  &quot;11&quot;  &quot;7&quot;  
+##  [12] &quot;5&quot;   &quot;16&quot;  &quot;15&quot;  &quot;18&quot;  &quot;14&quot;  &quot;17&quot;  &quot;19&quot;  &quot;23&quot;  &quot;24&quot;  &quot;21&quot;  &quot;20&quot; 
+##  [23] &quot;22&quot;  &quot;29&quot;  &quot;28&quot;  &quot;30&quot;  &quot;32&quot;  &quot;13&quot;  &quot;31&quot;  &quot;27&quot;  &quot;34&quot;  &quot;25&quot;  &quot;33&quot; 
+##  [34] &quot;26&quot;  &quot;40&quot;  &quot;47&quot;  &quot;45&quot;  &quot;46&quot;  &quot;48&quot;  &quot;37&quot;  &quot;43&quot;  &quot;38&quot;  &quot;44&quot;  &quot;39&quot; 
+##  [45] &quot;41&quot;  &quot;81&quot;  &quot;85&quot;  &quot;111&quot; &quot;97&quot;  &quot;104&quot; &quot;96&quot;  &quot;128&quot; &quot;87&quot;  &quot;93&quot;  &quot;71&quot; 
+##  [56] &quot;99&quot;  &quot;114&quot; &quot;116&quot; &quot;60&quot;  &quot;64&quot;  &quot;105&quot; &quot;117&quot; &quot;100&quot; &quot;119&quot; &quot;51&quot;  &quot;115&quot;
+##  [67] &quot;108&quot; &quot;50&quot;  &quot;106&quot; &quot;89&quot;  &quot;132&quot; &quot;112&quot; &quot;58&quot;  &quot;75&quot;  &quot;63&quot;  &quot;66&quot;  &quot;65&quot; 
+##  [78] &quot;61&quot;  &quot;133&quot; &quot;120&quot; &quot;59&quot;  &quot;94&quot;  &quot;68&quot;  &quot;52&quot;  &quot;80&quot;  &quot;82&quot;  &quot;79&quot;  &quot;67&quot; 
+##  [89] &quot;91&quot;  &quot;88&quot;  &quot;124&quot; &quot;56&quot;  &quot;122&quot; &quot;62&quot;  &quot;121&quot; &quot;126&quot; &quot;125&quot; &quot;69&quot;  &quot;113&quot;
+## [100] &quot;123&quot; &quot;84&quot;  &quot;36&quot;  &quot;35&quot;  &quot;42&quot;  &quot;57&quot;  &quot;90&quot;  &quot;86&quot;  &quot;107&quot; &quot;92&quot;  &quot;70&quot; 
+## [111] &quot;135&quot; &quot;98&quot;  &quot;78&quot;  &quot;73&quot;  &quot;76&quot;  &quot;53&quot;  &quot;95&quot;  &quot;74&quot;  &quot;129&quot; &quot;55&quot;  &quot;49&quot; 
+## [122] &quot;130&quot; &quot;77&quot;  &quot;127&quot; &quot;54&quot;  &quot;134&quot; &quot;83&quot;  &quot;208&quot; &quot;228&quot; &quot;173&quot; &quot;205&quot; &quot;153&quot;
+## [133] &quot;142&quot; &quot;72&quot;  &quot;164&quot; &quot;207&quot; &quot;152&quot; &quot;179&quot; &quot;227&quot; &quot;165&quot; &quot;144&quot; &quot;169&quot; &quot;219&quot;
+## [144] &quot;171&quot; &quot;262&quot; &quot;170&quot; &quot;199&quot; &quot;253&quot; &quot;198&quot; &quot;200&quot; &quot;155&quot; &quot;212&quot; &quot;158&quot; &quot;197&quot;
+## [155] &quot;258&quot; &quot;157&quot; &quot;209&quot; &quot;156&quot; &quot;194&quot; &quot;188&quot; &quot;189&quot; &quot;252&quot; &quot;160&quot; &quot;191&quot; &quot;265&quot;
+## [166] &quot;187&quot; &quot;190&quot; &quot;195&quot; &quot;220&quot; &quot;263&quot; &quot;161&quot; &quot;213&quot; &quot;214&quot; &quot;222&quot; &quot;148&quot; &quot;196&quot;
+## [177] &quot;225&quot; &quot;259&quot; &quot;162&quot; &quot;183&quot; &quot;251&quot; &quot;193&quot; &quot;143&quot; &quot;182&quot; &quot;140&quot; &quot;206&quot; &quot;141&quot;
+## [188] &quot;201&quot; &quot;249&quot; &quot;261&quot; &quot;181&quot; &quot;239&quot; &quot;223&quot; &quot;255&quot; &quot;159&quot; &quot;260&quot; &quot;216&quot; &quot;151&quot;
+## [199] &quot;145&quot; &quot;235&quot; &quot;215&quot; &quot;211&quot; &quot;240&quot; &quot;268&quot; &quot;267&quot; &quot;257&quot; &quot;245&quot; &quot;256&quot; &quot;250&quot;
+## [210] &quot;217&quot; &quot;244&quot; &quot;237&quot; &quot;254&quot; &quot;233&quot; &quot;186&quot; &quot;234&quot; &quot;236&quot; &quot;246&quot; &quot;203&quot; &quot;180&quot;
+## [221] &quot;177&quot; &quot;149&quot; &quot;136&quot; &quot;185&quot; &quot;184&quot; &quot;231&quot; &quot;264&quot; &quot;178&quot; &quot;243&quot; &quot;204&quot; &quot;230&quot;
+## [232] &quot;176&quot; &quot;147&quot; &quot;202&quot; &quot;229&quot; &quot;154&quot; &quot;247&quot; &quot;172&quot; &quot;146&quot; &quot;232&quot; &quot;167&quot; &quot;238&quot;
+## [243] &quot;218&quot; &quot;266&quot; &quot;174&quot; &quot;168&quot; &quot;248&quot; &quot;241&quot; &quot;210&quot; &quot;242&quot; &quot;163&quot; &quot;224&quot; &quot;226&quot;
+## [254] &quot;221&quot; &quot;139&quot; &quot;150&quot; &quot;166&quot;</code></pre>
+<p>We can also examine which cells have been assigned to each state:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">1</span>]</code></pre></div>
+<pre><code>##  [1] &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot;</code></pre>
+<p><strong>Exercise</strong> Compare results for different numbers of clusters (<code>clusternum</code>).</p>
 </div>
 <div id="monocle" class="section level2">
 <h2><span class="header-section-number">19.2</span> monocle</h2>
-<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3D</p>
+<p>Monocle skips the clustering stage of TSCAN and directly builds a minimum spanning tree to connect all cells. Monocle then identifies the longest path in this tree to determine pseudotime. If the data contains diverging trajectories (i.e. one cell type differentiation into two different cell-types), monocle can identify alternative long paths in the tree using the argument <code>num_paths</code>. Each of the resulting forked paths is defined as a separate cell state, thus <code>num_paths=2</code> will identify three different cell states.</p>
+<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3Drop:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
     M3Drop::<span class="kw">M3Drop_Differential_Expression</span>(deng, <span class="dt">suppress.plot=</span>T)$Gene
 )
@@ -372,55 +404,47 @@ dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet
 dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
 dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr=</span><span class="dv">1</span>)</code></pre></div>
 <pre><code>## Reducing to independent components</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse=</span>T)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse=</span>T, <span class="dt">num_paths=</span><span class="dv">2</span>)
 monocle::<span class="kw">plot_spanning_tree</span>(dCellDataSet)</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>As you can see, Monocle has identified 7 different states. This is probably not such a bad conclusion since we know that three of the time-points correspond to different stages of the two-cell embryo. Also, we saw that the three blastocyst stages correspond to inner cell mass and trophectoderm cells. We can take a closer look at the clusters</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dMonocleClusters &lt;-<span class="st"> </span><span class="kw">phenoData</span>(dCellDataSet)$State</code></pre></div>
-<p>Exercise: Compare the clusters identified by monocle with the annotated ones. How well do the labels correspond?</p>
-<p>Next, we investigate the order of the cells inferred by Monocle</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ts &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">phenoData</span>(dCellDataSet)$Pseudotime)
-dOrder &lt;-<span class="st"> </span><span class="kw">sort.int</span>(ts, <span class="dt">index.return=</span>T)$ix
-dOrder</code></pre></div>
-<pre><code>##   [1] 192 263 139 153 173 137 221 266 222 259 242 246 163 260 224 166 188
-##  [18] 238 227 248 264 234 231 261 258 243 241 268 233 247 226 252 262 267
-##  [35] 237 150 230 175 138 256 235 257 168 236 195 250 232 265 254 255 253
-##  [52] 178 229 223 190 196 148 152 164 147 170 155 156 140 154 186 228 167
-##  [69] 203 245 219 174 240 244 143 180 185 218 209 191 184 239 193 199 172
-##  [86] 151 145 179 136 189 204 187 181 197 220 225 176 157 144 198 182 183
-## [103] 200 160 146 165 159 207 161 194 158 142 177 171 217 249 215 251 216
-## [120] 211 201 202 162 149 210 213 141 214 206 169 212 208 205 131  72 118
-## [137] 101 125 135 102 110 117 124 133 128 109 127 120 113 134 122 129 121
-## [154] 126 119 130 132 108 105 115 114 112 100  99  88 123  97  91 111  66
-## [171]  70  96  71  63  94 106 107  90  58 104  67  76  60  89  87  86  93
-## [188]  54  55  92 116  73  98  95  51  74  61  56  53  52  49  50  75  64
-## [205]  62  79  57  85  83  68  65  59  77  84  82  69  78  80  81  38  39
-## [222]  35  41  42  44  43  37  40  36  45  46  47  48  26  30  33  34  25
-## [239]  27  29  28  31  32  17  18  13  20  24  19  14  22  23  21  15  16
-## [256]   5   8   2   1 103   4   3   9  10  11  12   7   6</code></pre>
-<p>Now, we repeat the exercise using TSCAN</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(d, <span class="dt">clusternum=</span><span class="dv">10</span>)
-<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
-dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum=</span><span class="dv">10</span>)
-TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
-<p><img src="18-pseudotime_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly=</span>F)</code></pre></div>
-<p>Exercise: Use TSCAN to obtain 7 clusters and compare the groups with those obtained from Monocle</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pseudotime_monocle &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Cell =</span> cellLabels, 
+                                <span class="dt">time =</span> <span class="kw">phenoData</span>(dCellDataSet)$Pseudotime, 
+                                <span class="dt">State=</span><span class="kw">phenoData</span>(dCellDataSet)$State)
+pseudotime_order_monocle &lt;-<span class="st"> </span><span class="kw">rownames</span>(pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$time), ])
+pseudotime_order_monocle</code></pre></div>
+<pre><code>##   [1] &quot;192&quot; &quot;263&quot; &quot;139&quot; &quot;153&quot; &quot;173&quot; &quot;137&quot; &quot;221&quot; &quot;266&quot; &quot;222&quot; &quot;259&quot; &quot;242&quot;
+##  [12] &quot;246&quot; &quot;163&quot; &quot;260&quot; &quot;224&quot; &quot;166&quot; &quot;188&quot; &quot;238&quot; &quot;227&quot; &quot;248&quot; &quot;264&quot; &quot;234&quot;
+##  [23] &quot;231&quot; &quot;261&quot; &quot;258&quot; &quot;243&quot; &quot;241&quot; &quot;268&quot; &quot;233&quot; &quot;247&quot; &quot;226&quot; &quot;252&quot; &quot;262&quot;
+##  [34] &quot;267&quot; &quot;237&quot; &quot;150&quot; &quot;230&quot; &quot;175&quot; &quot;138&quot; &quot;256&quot; &quot;235&quot; &quot;257&quot; &quot;168&quot; &quot;236&quot;
+##  [45] &quot;195&quot; &quot;250&quot; &quot;232&quot; &quot;265&quot; &quot;254&quot; &quot;255&quot; &quot;253&quot; &quot;178&quot; &quot;229&quot; &quot;223&quot; &quot;190&quot;
+##  [56] &quot;196&quot; &quot;148&quot; &quot;152&quot; &quot;164&quot; &quot;147&quot; &quot;170&quot; &quot;155&quot; &quot;156&quot; &quot;140&quot; &quot;154&quot; &quot;186&quot;
+##  [67] &quot;228&quot; &quot;167&quot; &quot;203&quot; &quot;245&quot; &quot;219&quot; &quot;174&quot; &quot;240&quot; &quot;244&quot; &quot;143&quot; &quot;180&quot; &quot;185&quot;
+##  [78] &quot;218&quot; &quot;209&quot; &quot;191&quot; &quot;184&quot; &quot;239&quot; &quot;193&quot; &quot;199&quot; &quot;172&quot; &quot;151&quot; &quot;145&quot; &quot;179&quot;
+##  [89] &quot;136&quot; &quot;189&quot; &quot;204&quot; &quot;187&quot; &quot;181&quot; &quot;197&quot; &quot;220&quot; &quot;225&quot; &quot;176&quot; &quot;157&quot; &quot;144&quot;
+## [100] &quot;198&quot; &quot;182&quot; &quot;183&quot; &quot;200&quot; &quot;160&quot; &quot;146&quot; &quot;165&quot; &quot;159&quot; &quot;207&quot; &quot;161&quot; &quot;194&quot;
+## [111] &quot;158&quot; &quot;142&quot; &quot;177&quot; &quot;171&quot; &quot;217&quot; &quot;249&quot; &quot;215&quot; &quot;251&quot; &quot;216&quot; &quot;211&quot; &quot;201&quot;
+## [122] &quot;202&quot; &quot;162&quot; &quot;149&quot; &quot;210&quot; &quot;213&quot; &quot;141&quot; &quot;214&quot; &quot;206&quot; &quot;169&quot; &quot;212&quot; &quot;208&quot;
+## [133] &quot;205&quot; &quot;131&quot; &quot;72&quot;  &quot;118&quot; &quot;101&quot; &quot;125&quot; &quot;135&quot; &quot;102&quot; &quot;110&quot; &quot;117&quot; &quot;124&quot;
+## [144] &quot;133&quot; &quot;128&quot; &quot;109&quot; &quot;127&quot; &quot;120&quot; &quot;113&quot; &quot;134&quot; &quot;122&quot; &quot;129&quot; &quot;121&quot; &quot;126&quot;
+## [155] &quot;119&quot; &quot;130&quot; &quot;132&quot; &quot;108&quot; &quot;105&quot; &quot;115&quot; &quot;114&quot; &quot;112&quot; &quot;100&quot; &quot;99&quot;  &quot;88&quot; 
+## [166] &quot;123&quot; &quot;97&quot;  &quot;91&quot;  &quot;111&quot; &quot;66&quot;  &quot;70&quot;  &quot;96&quot;  &quot;71&quot;  &quot;94&quot;  &quot;63&quot;  &quot;98&quot; 
+## [177] &quot;95&quot;  &quot;51&quot;  &quot;73&quot;  &quot;74&quot;  &quot;116&quot; &quot;92&quot;  &quot;61&quot;  &quot;55&quot;  &quot;54&quot;  &quot;56&quot;  &quot;93&quot; 
+## [188] &quot;53&quot;  &quot;52&quot;  &quot;86&quot;  &quot;49&quot;  &quot;87&quot;  &quot;50&quot;  &quot;89&quot;  &quot;75&quot;  &quot;64&quot;  &quot;60&quot;  &quot;62&quot; 
+## [199] &quot;76&quot;  &quot;79&quot;  &quot;67&quot;  &quot;57&quot;  &quot;85&quot;  &quot;104&quot; &quot;83&quot;  &quot;58&quot;  &quot;90&quot;  &quot;107&quot; &quot;106&quot;
+## [210] &quot;68&quot;  &quot;65&quot;  &quot;59&quot;  &quot;77&quot;  &quot;84&quot;  &quot;82&quot;  &quot;69&quot;  &quot;78&quot;  &quot;80&quot;  &quot;81&quot;  &quot;38&quot; 
+## [221] &quot;39&quot;  &quot;35&quot;  &quot;41&quot;  &quot;42&quot;  &quot;44&quot;  &quot;43&quot;  &quot;37&quot;  &quot;40&quot;  &quot;36&quot;  &quot;45&quot;  &quot;46&quot; 
+## [232] &quot;47&quot;  &quot;48&quot;  &quot;26&quot;  &quot;30&quot;  &quot;33&quot;  &quot;34&quot;  &quot;25&quot;  &quot;27&quot;  &quot;29&quot;  &quot;28&quot;  &quot;31&quot; 
+## [243] &quot;32&quot;  &quot;17&quot;  &quot;18&quot;  &quot;13&quot;  &quot;20&quot;  &quot;24&quot;  &quot;19&quot;  &quot;14&quot;  &quot;22&quot;  &quot;23&quot;  &quot;21&quot; 
+## [254] &quot;15&quot;  &quot;16&quot;  &quot;5&quot;   &quot;8&quot;   &quot;2&quot;   &quot;1&quot;   &quot;103&quot; &quot;4&quot;   &quot;3&quot;   &quot;9&quot;   &quot;10&quot; 
+## [265] &quot;11&quot;  &quot;12&quot;  &quot;7&quot;   &quot;6&quot;</code></pre>
 </div>
 <div id="comparison-of-the-methods" class="section level2">
 <h2><span class="header-section-number">19.3</span> Comparison of the methods</h2>
 <p>How do the trajectories inferred by TSCAN and Monocle compare?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inds &lt;-<span class="st"> </span>dengorderTSCAN$sample_name
-<span class="kw">plot</span>(
-    <span class="kw">rev</span>(dengorderTSCAN[,<span class="dv">3</span>]), 
-    <span class="kw">pData</span>(dCellDataSet)[inds,<span class="dv">3</span>], 
-    <span class="dt">col=</span>cellLabels[<span class="kw">as.numeric</span>(inds)], 
-    <span class="dt">pch=</span><span class="dv">20</span>, 
-    <span class="dt">xlab=</span><span class="st">&quot;TSCAN&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Monocle&quot;</span>
-)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">matched_ordering &lt;-<span class="st"> </span><span class="kw">match</span>(pseudotime_order_tscan, pseudotime_order_monocle)
+<span class="kw">plot</span>(matched_ordering, <span class="dt">xlab =</span> <span class="st">&quot;Monocle Order&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;TSCAN Order&quot;</span>)</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Exercise: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
+<p><strong>Exercise</strong>: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
 
 </div>
 </div>
