@@ -224,11 +224,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
-<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
-<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="14.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.6</b> Exercise</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.2</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.3</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
@@ -340,34 +339,82 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 Figure 13.1: PCA plot of the blischak data
 </p>
 </div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-raw-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-raw-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 13.2: Cell-wise RLE of the blischak data
+</p>
+</div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-cpm-reads"></span>
 <img src="12-exprs-norm-reads_files/figure-html/norm-pca-cpm-reads-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
 <p class="caption">
-Figure 13.2: PCA plot of the blischak data after CPM normalisation
+Figure 13.3: PCA plot of the blischak data after CPM normalisation
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:norm-pca-log2-cpm-reads"></span>
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-log2-cpm-reads-1.png" alt="PCA plot of the blischak data after log2(CPM) normalisation" width="90%" />
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-cpm-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-cpm-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
-Figure 13.3: PCA plot of the blischak data after log2(CPM) normalisation
+Figure 13.4: Cell-wise RLE of the blischak data
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tmm-reads"></span>
 <img src="12-exprs-norm-reads_files/figure-html/norm-pca-tmm-reads-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
 <p class="caption">
-Figure 13.4: PCA plot of the blischak data after TMM normalisation
+Figure 13.5: PCA plot of the blischak data after TMM normalisation
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-tmm-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-tmm-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 13.6: Cell-wise RLE of the blischak data
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-pca-lsf-umi"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-lsf-umi-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
+<p class="caption">
+Figure 13.7: PCA plot of the blischak data after RLE normalisation
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-scran-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-scran-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 13.8: Cell-wise RLE of the blischak data
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-rle-reads"></span>
 <img src="12-exprs-norm-reads_files/figure-html/norm-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
-Figure 13.5: PCA plot of the blischak data after RLE normalisation
+Figure 13.9: PCA plot of the blischak data after RLE normalisation
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-rle-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-rle-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 13.10: Cell-wise RLE of the blischak data
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-uq-reads"></span>
 <img src="12-exprs-norm-reads_files/figure-html/norm-pca-uq-reads-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">
-Figure 13.6: PCA plot of the blischak data after UQ normalisation
+Figure 13.11: PCA plot of the blischak data after UQ normalisation
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-uq-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-uq-reads-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 13.12: Cell-wise RLE of the blischak data
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-fpkm-reads-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
+<p class="caption">
+Figure 13.13: PCA plot of the blischak data after FPKM normalisation
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:norm-pca-tpm-reads"></span>
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-tpm-reads-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
+<p class="caption">
+Figure 13.14: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
 

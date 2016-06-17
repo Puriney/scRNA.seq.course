@@ -17,58 +17,13 @@ Since the same amount of ERCC spike-in was added to each cell in our experiment 
 library(scRNA.seq.funcs)
 library(RUVSeq)
 library(scater, quietly = TRUE)
+library(scran)
 options(stringsAsFactors = FALSE)
 umi <- readRDS("blischak/umi.rds")
 umi.qc <- umi[fData(umi)$use, pData(umi)$use]
 endog_genes <- !fData(umi.qc)$is_feature_control
+erccs <- fData(umi.qc)$is_feature_control
 ```
-
-## Highly variable genes via Brennecke method
-
-
-We will demonstrate some of the methods starting from the simplest one proposed by [Brennecke et al.](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html), which identifies genes with significant variation above technical noise (ERCCs).
-
-To use the method, we first normalize for library size then calculate
-the mean and the square coefficient of variation (variation divided by
-the squared mean expression). A quadratic curve is fit to the relationship
-between these two variables for the ERCC spike-in (subject to just
-technical variation) then a chi-square test is used to find genes
-significantly above the curve. This has been provided for you as the
-Brenneck_getVariableGenes(counts, spikes) function.
-
-
-```r
-qclust <- scran::quickCluster(umi.qc, min.size = 30)
-umi.qc <- scran::computeSumFactors(umi.qc, sizes = 15, clusters = qclust)
-umi.qc <- scater::normalize(umi.qc)
-erccs <- grep("ERCC-", rownames(exprs(umi.qc)))
-highly.var.genes <- scRNA.seq.funcs::Brennecke_getVariableGenes(
-            exprs(umi.qc),
-            erccs
-)
-```
-
-```
-## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(exprs(umi.qc),
-## erccs): Only 25 spike-ins to be used in fitting, may result in poor fit.
-```
-
-```
-## Warning in xy.coords(x, y, xlabel, ylabel, log): 844 x values <= 0 omitted
-## from logarithmic plot
-```
-
-<div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-brennecke-1.png" alt="(\#fig:rm-conf-brennecke)Results of using the Brennecke method on the Blischak dataset" width="90%" />
-<p class="caption">(\#fig:rm-conf-brennecke)Results of using the Brennecke method on the Blischak dataset</p>
-</div>
-
-In the figure above blue points are the ERCC spike-ins. The red curve
-is the fitted technical noise model and the dashed line is the 95%
-CI. Pink dots are the genes with significant biological variability
-after multiple-testing correction. Since our dataset is relatively
-homogeneous only 7148 genes are identified as significantly
-variable.
 
 ## Remove Unwanted Variation
 
@@ -84,6 +39,9 @@ method which uses [singular value decomposition](https://en.wikipedia.org/wiki/S
 
 
 ```r
+qclust <- scran::quickCluster(umi.qc, min.size = 30)
+umi.qc <- scran::computeSumFactors(umi.qc, sizes = 15, clusters = qclust)
+umi.qc <- scater::normalize(umi.qc)
 assayData(umi.qc)$ruv_counts <- RUVSeq::RUVg(
     round(exprs(umi.qc)),
     erccs,
@@ -109,7 +67,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation" width="90%" />
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation" width="672" />
 <p class="caption">(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation</p>
 </div>
 
@@ -123,7 +81,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations" width="90%" />
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations" width="672" />
 <p class="caption">(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations</p>
 </div>
 
@@ -134,12 +92,12 @@ confirm technical noise has been removed from the dataset.
 
 
 ```r
-boxplot(list(scRNA.seq.funcs::calc_cell_RLE(exprs(umi.qc)),
-             scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$ruv_counts)))
+boxplot(list(scRNA.seq.funcs::calc_cell_RLE(exprs(umi.qc), erccs),
+             scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$ruv_counts, erccs)))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />
+<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="672" />
 <p class="caption">(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation</p>
 </div>
 

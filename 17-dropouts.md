@@ -102,13 +102,29 @@ title(main = "Usoskin")
 
 ## Right outliers
 
-[Note to TA: Add diagram/example of averaging to get outliers]
-
 There are many outliers to the right of the fitted MM curve. Genes
 which are expressed at different levels in subpopulations of our cells
 will be shifted to the right of the curve. This happens because the MM
 curve is a convex function, whereas averaging dropout rate and
 expression is a linear function.
+
+
+```r
+K = 49.473
+S_sim = 10^seq(from=-3, to=4, by=0.05)
+MM = 1-S_sim/(K+S_sim)
+plot(S_sim, MM, type="l", lwd=3, xlab="Expression", ylab="Dropout Rate", xlim=c(1,1000))
+S1 = 10; P1 = 1-S1/(K+S1) # Expression & dropouts for cells in condition 1
+S2 = 750; P2 = 1-S2/(K+S2) # Expression & dropouts for cells in condition 2
+points(c(S1,S2),c(P1,P2), pch=16, col="grey85", cex=3)
+mix = 0.5; # proportion of population in condition 1
+points(S1*mix+S2*(1-mix), P1*mix+P2*(1-mix), pch=16, col="grey35", cex=3)
+```
+
+<img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="816" style="display: block; margin: auto;" />
+__Note__: add `log="x"` to the `plot` call above to see how this looks on the log scale, which is used in M3Drop figures. 
+
+__Exercise__: Produce the same plot as above with different expression levels (S1 & S2) and/or mixtures (mix).
 
 We use M3Drop to identify significant outliers to the right of the MM
 curve. We also apply 1% FDR multiple testing correction:
@@ -123,7 +139,7 @@ DE_genes <- M3Drop::M3Drop_Differential_Expression(
 title(main = "Usoskin")
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" />
 
 Check which of the known neuron markers are identified as DE:
 
@@ -156,7 +172,7 @@ M3Drop::M3Drop_Expression_Heatmap(
 )
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 
 ## Comparing M3Drop to other methods
 
@@ -175,6 +191,23 @@ length(unique(DESeq_table$Gene))
 ## [1] 2604
 ```
 
+We will demonstrate some of the methods starting from the simplest one proposed by [Brennecke et al.](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html), which identifies genes with significant variation above technical noise (ERCCs).
+
+To use the method, we first normalize for library size then calculate
+the mean and the square coefficient of variation (variation divided by
+the squared mean expression). A quadratic curve is fit to the relationship
+between these two variables for the ERCC spike-in (subject to just
+technical variation) then a chi-square test is used to find genes
+significantly above the curve. This has been provided for you as the
+Brenneck_getVariableGenes(counts, spikes) function.
+
+In the figure above blue points are the ERCC spike-ins. The red curve
+is the fitted technical noise model and the dashed line is the 95%
+CI. Pink dots are the genes with significant biological variability
+after multiple-testing correction. Since our dataset is relatively
+homogeneous only  genes are identified as significantly
+variable.
+
 We can also use the Brennecke method introduced earlier to identify 
 highly variable genes. However, there are only 9 spike-ins detected in this dataset
 so we will use the entire dataset as spike-ins. 
@@ -187,7 +220,7 @@ Brennecke_HVG <- M3Drop::Brennecke_getVariableGenes(
 )
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 length(Brennecke_HVG)
@@ -226,4 +259,4 @@ limma::vennDiagram(
 )
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" />

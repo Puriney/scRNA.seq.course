@@ -118,6 +118,7 @@ We will continue to work with the Blischak data that was used in the previous ch
 
 
 ```r
+library(scRNA.seq.funcs)
 library(scater, quietly = TRUE)
 options(stringsAsFactors = FALSE)
 umi <- readRDS("blischak/umi.rds")
@@ -142,7 +143,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 
 
 ```r
-boxplot(calc_cell_RLE(counts(umi.qc)),
+boxplot(calc_cell_RLE(counts(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim=c(-1,1))
@@ -170,7 +171,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(cpm(umi.qc)),
+boxplot(calc_cell_RLE(cpm(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim = c(-1,1))
@@ -188,8 +189,7 @@ boxplot(calc_cell_RLE(cpm(umi.qc)),
 umi.qc <- 
     scater::normaliseExprs(umi.qc,
                            method = "TMM",
-                           feature_set = endog_genes,
-                           lib.size = rep(1, ncol(umi.qc)))
+                           feature_set = endog_genes)
 scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
@@ -203,7 +203,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(norm_counts(umi.qc)),
+boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim=c(-1,1))
@@ -233,7 +233,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(norm_counts(umi.qc)),
+boxplot(calc_cell_RLE(exprs(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim=c(-1,1))
@@ -244,18 +244,13 @@ boxplot(calc_cell_RLE(norm_counts(umi.qc)),
 <p class="caption">(\#fig:norm-ours-rle-scran)Cell-wise RLE of the blischak data</p>
 </div>
 
-__Exercise:__ 
-
-Use `method = "RLE"` and `method = "upperquartile"` to perform size-factor and UQ normalizations and compare to the results above.
-
 ### Size-factor (RLE)
 
 ```r
 umi.qc <- 
     scater::normaliseExprs(umi.qc,
                            method = "RLE", 
-                           feature_set = endog_genes,
-                           lib.size = rep(1, ncol(umi.qc)))
+                           feature_set = endog_genes)
 scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
@@ -269,7 +264,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(norm_counts(umi.qc)),
+boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim=c(-1,1))
@@ -288,8 +283,7 @@ umi.qc <-
     scater::normaliseExprs(umi.qc,
                            method = "upperquartile", 
                            feature_set = endog_genes,
-                           p = 0.99,
-                           lib.size = rep(1, ncol(umi.qc)))
+                           p = 0.99)
 scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
@@ -303,7 +297,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(norm_counts(umi.qc)),
+boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim=c(-1,1))
@@ -327,7 +321,8 @@ of the transcript which contains the UMI was preferentially
 sequenced. Furthermore in general these should only be calculated
 using appropriate quantification software from aligned BAM files not
 from read counts since often only a portion of the entire
-gene/transcript is sequenced, not the entire length.
+gene/transcript is sequenced, not the entire length. If in doubt check 
+for a relationship between gene/transcript length and expression level.
 
 However, here we show how these normalisations can be calculated using scater. First, we need to find the effective transcript length in Kilobases. However, our dataset containes only gene IDs, therefore we will be using the gene lengths instead of transcripts. scater uses the [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html) package, which allows one to annotate genes by other attributes:
 
@@ -421,7 +416,8 @@ scater::plotPCA(umi.qc.ann,
 <p class="caption">(\#fig:norm-pca-tpm)PCA plot of the blischak data after TPM normalisation</p>
 </div>
 
-__Note:__ The PCA primarily looks for differences between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.
+__Note:__ The PCA looks for differences between cells. Gene length is the same across cells for each gene thus FPKM is almost identical to the CPM plot (it is just rotated) since it performs CPM first then normalizes gene length. Whereas, TPM is different because it weights genes by their length before performing CPM. 
+
 
 ```r
 plot(eff_length, rowMeans(counts(umi.qc.ann)))

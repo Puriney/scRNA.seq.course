@@ -224,11 +224,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
-<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
-<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="14.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.6</b> Exercise</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.2</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.3</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
@@ -375,8 +374,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="right-outliers" class="section level2">
 <h2><span class="header-section-number">18.3</span> Right outliers</h2>
-<p>[Note to TA: Add diagram/example of averaging to get outliers]</p>
 <p>There are many outliers to the right of the fitted MM curve. Genes which are expressed at different levels in subpopulations of our cells will be shifted to the right of the curve. This happens because the MM curve is a convex function, whereas averaging dropout rate and expression is a linear function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">K =<span class="st"> </span><span class="fl">49.473</span>
+S_sim =<span class="st"> </span><span class="dv">10</span>^<span class="kw">seq</span>(<span class="dt">from=</span>-<span class="dv">3</span>, <span class="dt">to=</span><span class="dv">4</span>, <span class="dt">by=</span><span class="fl">0.05</span>)
+MM =<span class="st"> </span><span class="dv">1</span>-S_sim/(K+S_sim)
+<span class="kw">plot</span>(S_sim, MM, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">lwd=</span><span class="dv">3</span>, <span class="dt">xlab=</span><span class="st">&quot;Expression&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Dropout Rate&quot;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1000</span>))
+S1 =<span class="st"> </span><span class="dv">10</span>; P1 =<span class="st"> </span><span class="dv">1</span>-S1/(K+S1) <span class="co"># Expression &amp; dropouts for cells in condition 1</span>
+S2 =<span class="st"> </span><span class="dv">750</span>; P2 =<span class="st"> </span><span class="dv">1</span>-S2/(K+S2) <span class="co"># Expression &amp; dropouts for cells in condition 2</span>
+<span class="kw">points</span>(<span class="kw">c</span>(S1,S2),<span class="kw">c</span>(P1,P2), <span class="dt">pch=</span><span class="dv">16</span>, <span class="dt">col=</span><span class="st">&quot;grey85&quot;</span>, <span class="dt">cex=</span><span class="dv">3</span>)
+mix =<span class="st"> </span><span class="fl">0.5</span>; <span class="co"># proportion of population in condition 1</span>
+<span class="kw">points</span>(S1*mix+S2*(<span class="dv">1</span>-mix), P1*mix+P2*(<span class="dv">1</span>-mix), <span class="dt">pch=</span><span class="dv">16</span>, <span class="dt">col=</span><span class="st">&quot;grey35&quot;</span>, <span class="dt">cex=</span><span class="dv">3</span>)</code></pre></div>
+<p><img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="816" style="display: block; margin: auto;" /> <strong>Note</strong>: add <code>log=&quot;x&quot;</code> to the <code>plot</code> call above to see how this looks on the log scale, which is used in M3Drop figures.</p>
+<p><strong>Exercise</strong>: Produce the same plot as above with different expression levels (S1 &amp; S2) and/or mixtures (mix).</p>
 <p>We use M3Drop to identify significant outliers to the right of the MM curve. We also apply 1% FDR multiple testing correction:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DE_genes &lt;-<span class="st"> </span>M3Drop::<span class="kw">M3Drop_Differential_Expression</span>(
     uso_list$data,
@@ -384,7 +393,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     <span class="dt">mt_threshold =</span> <span class="fl">0.01</span>
 ) 
 <span class="kw">title</span>(<span class="dt">main =</span> <span class="st">&quot;Usoskin&quot;</span>)</code></pre></div>
-<p><img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="17-dropouts_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Check which of the known neuron markers are identified as DE:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">uso_markers &lt;-<span class="st"> </span>
 <span class="st">    </span><span class="kw">c</span>(<span class="st">&quot;Nefh&quot;</span>, <span class="st">&quot;Tac1&quot;</span>, <span class="st">&quot;Mrgprd&quot;</span>, <span class="st">&quot;Th&quot;</span>, <span class="st">&quot;Vim&quot;</span>, <span class="st">&quot;B2m&quot;</span>, 
@@ -406,7 +415,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     <span class="dt">cell_labels =</span> uso_list$labels,
     <span class="dt">key_genes =</span> uso_markers
 )</code></pre></div>
-<p><img src="17-dropouts_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="17-dropouts_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="comparing-m3drop-to-other-methods" class="section level2">
 <h2><span class="header-section-number">18.5</span> Comparing M3Drop to other methods</h2>
@@ -414,13 +423,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DESeq_table &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;usoskin/DESeq_table.rds&quot;</span>)
 <span class="kw">length</span>(<span class="kw">unique</span>(DESeq_table$Gene))</code></pre></div>
 <pre><code>## [1] 2604</code></pre>
+<p>We will demonstrate some of the methods starting from the simplest one proposed by <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Brennecke et al.</a>, which identifies genes with significant variation above technical noise (ERCCs).</p>
+<p>To use the method, we first normalize for library size then calculate the mean and the square coefficient of variation (variation divided by the squared mean expression). A quadratic curve is fit to the relationship between these two variables for the ERCC spike-in (subject to just technical variation) then a chi-square test is used to find genes significantly above the curve. This has been provided for you as the Brenneck_getVariableGenes(counts, spikes) function.</p>
+<p>In the figure above blue points are the ERCC spike-ins. The red curve is the fitted technical noise model and the dashed line is the 95% CI. Pink dots are the genes with significant biological variability after multiple-testing correction. Since our dataset is relatively homogeneous only genes are identified as significantly variable.</p>
 <p>We can also use the Brennecke method introduced earlier to identify highly variable genes. However, there are only 9 spike-ins detected in this dataset so we will use the entire dataset as spike-ins.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Brennecke_HVG &lt;-<span class="st"> </span>M3Drop::<span class="kw">Brennecke_getVariableGenes</span>(
     uso_list$data,
     <span class="dt">fdr =</span> <span class="fl">0.01</span>,
     <span class="dt">minBiolDisp =</span> <span class="fl">0.5</span>
 )</code></pre></div>
-<p><img src="17-dropouts_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="17-dropouts_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(Brennecke_HVG)</code></pre></div>
 <pre><code>## [1] 1595</code></pre>
 <p><strong>Exercise</strong>: Plot a heatmap of the expression of the HVGs and DESeq DE genes. Do they look differentially expressed?</p>
@@ -445,7 +457,7 @@ limma::<span class="kw">vennDiagram</span>(
     <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;DESeq&quot;</span>, <span class="st">&quot;HVG&quot;</span>, <span class="st">&quot;M3Drop&quot;</span>),
     <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
 )</code></pre></div>
-<p><img src="17-dropouts_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="17-dropouts_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

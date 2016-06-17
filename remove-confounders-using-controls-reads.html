@@ -224,11 +224,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
-<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
-<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="14.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.6</b> Exercise</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.2</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.3</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
@@ -334,31 +333,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="remove-confounders-using-controls-reads" class="section level1">
 <h1><span class="header-section-number">15</span> Remove confounders using controls (Reads)</h1>
-<pre><code>## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(reads.qc)
-## $norm_counts, : Only 15 spike-ins to be used in fitting, may result in poor
-## fit.</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:rm-conf-brennecke-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-brennecke-reads-1.png" alt="Results of using the Brennecke method on the Blischak dataset" width="90%" />
-<p class="caption">
-Figure 15.1: Results of using the Brennecke method on the Blischak dataset
-</p>
-</div>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
+<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-reads-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="672" />
 <p class="caption">
-Figure 15.2: PCA plot of the blischak data after RLE normalisation
+Figure 15.1: PCA plot of the blischak data after RLE normalisation
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle-ruv-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-ruv-reads-1.png" alt="PCA plot of the blischak data after RLE and RUV normalisations" width="90%" />
+<img src="14-remove-conf-reads_files/figure-html/rm-conf-pca-rle-ruv-reads-1.png" alt="PCA plot of the blischak data after RLE and RUV normalisations" width="672" />
 <p class="caption">
-Figure 15.3: PCA plot of the blischak data after RLE and RUV normalisations
+Figure 15.2: PCA plot of the blischak data after RLE and RUV normalisations
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-rle-comp-reads"></span>
-<img src="14-remove-conf-reads_files/figure-html/rm-conf-rle-comp-reads-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />
+<img src="14-remove-conf-reads_files/figure-html/rm-conf-rle-comp-reads-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="672" />
 <p class="caption">
-Figure 15.4: Comparison of the relative log expression of the blischak data before and after the RUV normalisation
+Figure 15.3: Comparison of the relative log expression of the blischak data before and after the RUV normalisation
 </p>
 </div>
 

@@ -224,11 +224,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
-<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
-<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="14.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.6</b> Exercise</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.2</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.3</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>14.5</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="16" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>16</b> Clustering analysis</a><ul>
@@ -406,7 +405,8 @@ function (expr_mat, <span class="dt">spikes =</span> <span class="ot">NULL</span
 <p><strong>scater</strong> acts as a wrapper for the <code>calcNormFactors</code> function from <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a> which implements several library size normalization methods making it easy to apply any of these methods to our data. The <strong>LSF</strong> method is implementated in the Bioconductor package <a href="https://bioconductor.org/packages/release/bioc/html/scran.html">scran</a>, which allows seamless integrationinto the <code>scater</code> workflow. (The <code>scran</code> package itself depends on <code>scater</code>).</p>
 <p><strong>Note:</strong> edgeR makes extra adjustments to some of the normalization methods which may result in somewhat different results than if the original methods are followed exactly, e.g. edgeR’s and scater’s “RLE” method which is based on the “size factor” used by <a href="http://bioconductor.org/packages/release/bioc/html/DESeq.html">DESeq</a> may give different results to the <code>estimateSizeFactorsForMatrix</code> method in the DESeq/DESeq2 packages. In addition, some versions of edgeR will not calculate the normalization factors correctly unless <code>lib.size</code> is set at 1 for all cells.</p>
 <p>We will continue to work with the Blischak data that was used in the previous chapter.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
 umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
@@ -424,7 +424,7 @@ endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)
 Figure 12.1: PCA plot of the blischak data
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -449,7 +449,7 @@ Figure 12.2: Cell-wise RLE of the blischak data
 Figure 12.3: PCA plot of the blischak data after CPM normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">cpm</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">cpm</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -465,8 +465,7 @@ Figure 12.4: Cell-wise RLE of the blischak data
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
 <span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
                            <span class="dt">method =</span> <span class="st">&quot;TMM&quot;</span>,
-                           <span class="dt">feature_set =</span> endog_genes,
-                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+                           <span class="dt">feature_set =</span> endog_genes)
 scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -478,7 +477,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 Figure 12.5: PCA plot of the blischak data after TMM normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -505,7 +504,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 Figure 12.7: PCA plot of the blischak data after LSF normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">exprs</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -515,16 +514,13 @@ Figure 12.7: PCA plot of the blischak data after LSF normalisation
 Figure 12.8: Cell-wise RLE of the blischak data
 </p>
 </div>
-<p><strong>Exercise:</strong></p>
-<p>Use <code>method = &quot;RLE&quot;</code> and <code>method = &quot;upperquartile&quot;</code> to perform size-factor and UQ normalizations and compare to the results above.</p>
 </div>
 <div id="size-factor-rle" class="section level3">
 <h3><span class="header-section-number">12.3.5</span> Size-factor (RLE)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
 <span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
                            <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>, 
-                           <span class="dt">feature_set =</span> endog_genes,
-                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+                           <span class="dt">feature_set =</span> endog_genes)
 scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -536,7 +532,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 Figure 12.9: PCA plot of the blischak data after RLE normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -553,8 +549,7 @@ Figure 12.10: Cell-wise RLE of the blischak data
 <span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
                            <span class="dt">method =</span> <span class="st">&quot;upperquartile&quot;</span>, 
                            <span class="dt">feature_set =</span> endog_genes,
-                           <span class="dt">p =</span> <span class="fl">0.99</span>,
-                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
+                           <span class="dt">p =</span> <span class="fl">0.99</span>)
 scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
@@ -566,7 +561,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 Figure 12.11: PCA plot of the blischak data after UQ normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
@@ -586,7 +581,7 @@ Figure 12.12: Cell-wise RLE of the blischak data
 <li><strong>FPKM</strong> - Fragments Per Kilobase Million (same as <strong>RPKM</strong> but for paired-end sequencing, makes sure that paired ends mapped to the same fragment are not counted twice)</li>
 <li><strong>TPM</strong> - Transcripts Per Kilobase Million (same as <strong>RPKM</strong>, but the order of normalizations is reversed - length first and sequencing depth second)</li>
 </ul>
-<p>These methods are not applicable to our dataset since the end of the transcript which contains the UMI was preferentially sequenced. Furthermore in general these should only be calculated using appropriate quantification software from aligned BAM files not from read counts since often only a portion of the entire gene/transcript is sequenced, not the entire length.</p>
+<p>These methods are not applicable to our dataset since the end of the transcript which contains the UMI was preferentially sequenced. Furthermore in general these should only be calculated using appropriate quantification software from aligned BAM files not from read counts since often only a portion of the entire gene/transcript is sequenced, not the entire length. If in doubt check for a relationship between gene/transcript length and expression level.</p>
 <p>However, here we show how these normalisations can be calculated using scater. First, we need to find the effective transcript length in Kilobases. However, our dataset containes only gene IDs, therefore we will be using the gene lengths instead of transcripts. scater uses the <a href="https://bioconductor.org/packages/release/bioc/html/biomaRt.html">biomaRt</a> package, which allows one to annotate genes by other attributes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-
 <span class="st">    </span>scater::<span class="kw">getBMFeatureAnnos</span>(umi.qc,
@@ -657,7 +652,7 @@ Figure 12.13: PCA plot of the blischak data after FPKM normalisation
 Figure 12.14: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
-<p><strong>Note:</strong> The PCA primarily looks for differences between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.</p>
+<p><strong>Note:</strong> The PCA looks for differences between cells. Gene length is the same across cells for each gene thus FPKM is almost identical to the CPM plot (it is just rotated) since it performs CPM first then normalizes gene length. Whereas, TPM is different because it weights genes by their length before performing CPM.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(eff_length, <span class="kw">rowMeans</span>(<span class="kw">counts</span>(umi.qc.ann)))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
 <img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
