@@ -25,7 +25,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-16">
+<meta name="date" content="2016-06-17">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -214,7 +214,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.3.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw"><i class="fa fa-check"></i><b>12.3.1</b> Raw</a></li>
 <li class="chapter" data-level="12.3.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm"><i class="fa fa-check"></i><b>12.3.2</b> CPM</a></li>
 <li class="chapter" data-level="12.3.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tmm"><i class="fa fa-check"></i><b>12.3.3</b> TMM</a></li>
-<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#lsf"><i class="fa fa-check"></i><b>12.3.4</b> LSF</a></li>
+<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#scran"><i class="fa fa-check"></i><b>12.3.4</b> scran</a></li>
 <li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.5</b> Size-factor (RLE)</a></li>
 <li class="chapter" data-level="12.3.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.6</b> Upperquantile</a></li>
 </ul></li>
@@ -224,7 +224,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Brennecke method</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
 <li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
 <li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
 <li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
@@ -378,6 +378,7 @@ function (expr_mat, <span class="dt">spikes =</span> <span class="ot">NULL</span
     <span class="kw">return</span>(<span class="kw">t</span>(<span class="kw">t</span>(expr_mat)/norm_factor))
 }</code></pre></div>
 <p>Another method is called <strong>TMM</strong> is the weighted trimmed mean of M-values (to the reference) proposed by <a href="https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25">Robinson and Oshlack (2010)</a>. The M-values in question are the gene-wise log2 fold changes between individual cells. One cell is used as the reference then the M-values for each other cell is calculated compared to this reference. These values are then trimmed by removing the top and bottom ~30%, and the average of the remaining values is calculated by weighting them to account for the effect of the log scale on variance. Each non-reference cell is multiplied by the calculated factor. Two potential issues with this method are insufficient non-zero genes left after trimming, and the assumption that most genes are not differentially expressed.</p>
+<p>Finally the <code>scran</code> package implements a variant on CPM specialized for single-cell data (<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-016-0947-7">Lun et al 2016</a>). Briefly this method deals with the problem of vary large numbers of zero values per cell by pooling cells together calculating a normalization factor (similar to CPM) for the sum of each pool. Since each cell is found in many different pools, cell-specific factors can be deconvoluted from the collection of pool-specific factors using linear algebra.</p>
 <p>We will use visual inspection of PCA plots and calculation of cell-wise relative log expression (<code>calc_cell_RLE()</code>) to compare the efficiency of different normalization methods. Cells with many[few] reads have higher[lower] than median expression for most genes resulting in a positive[negative] RLE across the cell, whereas normalized cells have an RLE close to zero.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">calc_cell_RLE &lt;-
 function (expr_mat, <span class="dt">spikes =</span> <span class="ot">NULL</span>) 
@@ -486,8 +487,8 @@ Figure 12.6: Cell-wise RLE of the blischak data
 </p>
 </div>
 </div>
-<div id="lsf" class="section level3">
-<h3><span class="header-section-number">12.3.4</span> LSF</h3>
+<div id="scran" class="section level3">
+<h3><span class="header-section-number">12.3.4</span> scran</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qclust &lt;-<span class="st"> </span>scran::<span class="kw">quickCluster</span>(umi.qc, <span class="dt">min.size =</span> <span class="dv">30</span>)
 umi.qc &lt;-<span class="st"> </span>scran::<span class="kw">computeSumFactors</span>(umi.qc, <span class="dt">sizes =</span> <span class="dv">15</span>, <span class="dt">clusters =</span> qclust)
 umi.qc &lt;-<span class="st"> </span>scater::<span class="kw">normalize</span>(umi.qc)
@@ -500,6 +501,16 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 <img src="11-exprs-norm_files/figure-html/norm-pca-lsf-1.png" alt="PCA plot of the blischak data after LSF normalisation" width="90%" />
 <p class="caption">
 Figure 12.7: PCA plot of the blischak data after LSF normalisation
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
+        <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
+        <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-scran"></span>
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-scran-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 12.8: Cell-wise RLE of the blischak data
 </p>
 </div>
 <p><strong>Exercise:</strong></p>
@@ -520,7 +531,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-rle"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
-Figure 12.8: PCA plot of the blischak data after RLE normalisation
+Figure 12.9: PCA plot of the blischak data after RLE normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
@@ -530,7 +541,7 @@ Figure 12.8: PCA plot of the blischak data after RLE normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-rle"></span>
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-rle-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
-Figure 12.9: Cell-wise RLE of the blischak data
+Figure 12.10: Cell-wise RLE of the blischak data
 </p>
 </div>
 </div>
@@ -550,7 +561,7 @@ scater::<span class="kw">plotPCA</span>(umi.qc[endog_genes, ],
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-uq"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">
-Figure 12.10: PCA plot of the blischak data after UQ normalisation
+Figure 12.11: PCA plot of the blischak data after UQ normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">norm_counts</span>(umi.qc)),
@@ -560,7 +571,7 @@ Figure 12.10: PCA plot of the blischak data after UQ normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-uq"></span>
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-uq-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">
-Figure 12.11: Cell-wise RLE of the blischak data
+Figure 12.12: Cell-wise RLE of the blischak data
 </p>
 </div>
 </div>
@@ -630,7 +641,7 @@ Figure 12.11: Cell-wise RLE of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
-Figure 12.12: PCA plot of the blischak data after FPKM normalisation
+Figure 12.13: PCA plot of the blischak data after FPKM normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc.ann,
@@ -641,15 +652,15 @@ Figure 12.12: PCA plot of the blischak data after FPKM normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
 <p class="caption">
-Figure 12.13: PCA plot of the blischak data after TPM normalisation
+Figure 12.14: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
-<p><strong>Note:</strong> The PCA primarily looks for difference between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.</p>
+<p><strong>Note:</strong> The PCA primarily looks for differences between cells. Since gene length is the same across cells for each gene FPKM is almost identical to the CPM plot (it is just rotated). However, if we plot the mean expression vs gene length it is apparent that normalizing for gene length should not be performed for this dataset.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(eff_length, <span class="kw">rowMeans</span>(<span class="kw">counts</span>(umi.qc.ann)))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
 <img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
 <p class="caption">
-Figure 12.14: Gene length vs Mean Expression for the raw data
+Figure 12.15: Gene length vs Mean Expression for the raw data
 </p>
 </div>
 </div>

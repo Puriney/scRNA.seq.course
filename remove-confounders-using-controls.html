@@ -25,7 +25,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-16">
+<meta name="date" content="2016-06-17">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -214,7 +214,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.3.1" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#raw"><i class="fa fa-check"></i><b>12.3.1</b> Raw</a></li>
 <li class="chapter" data-level="12.3.2" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#cpm"><i class="fa fa-check"></i><b>12.3.2</b> CPM</a></li>
 <li class="chapter" data-level="12.3.3" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#tmm"><i class="fa fa-check"></i><b>12.3.3</b> TMM</a></li>
-<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#lsf"><i class="fa fa-check"></i><b>12.3.4</b> LSF</a></li>
+<li class="chapter" data-level="12.3.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#scran"><i class="fa fa-check"></i><b>12.3.4</b> scran</a></li>
 <li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.5</b> Size-factor (RLE)</a></li>
 <li class="chapter" data-level="12.3.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.6</b> Upperquantile</a></li>
 </ul></li>
@@ -224,7 +224,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="14.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-5"><i class="fa fa-check"></i><b>14.1</b> Introduction</a></li>
-<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Brennecke method</a></li>
+<li class="chapter" data-level="14.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#highly-variable-genes-via-brennecke-method"><i class="fa fa-check"></i><b>14.2</b> Highly variable genes via Brennecke method</a></li>
 <li class="chapter" data-level="14.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>14.3</b> Remove Unwanted Variation</a></li>
 <li class="chapter" data-level="14.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>14.4</b> Effectiveness 1</a></li>
 <li class="chapter" data-level="14.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>14.5</b> Effectiveness 2</a></li>
@@ -335,7 +335,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="introduction-5" class="section level2">
 <h2><span class="header-section-number">14.1</span> Introduction</h2>
 <p>In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data using the ERCC spike-in controls. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed.</p>
-<p>Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and “substracting” this from the endogenous genes. There are several methods available based on this premise (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>); each using different noise models and different fitting procedures.</p>
+<p>Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and “substracting” this from the endogenous genes. There are several methods available based on this premise (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Highly variable genes</a>)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
 <span class="kw">library</span>(RUVSeq)
 <span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
@@ -344,36 +344,35 @@ umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="s
 umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
 endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
-<div id="brennecke-method" class="section level2">
-<h2><span class="header-section-number">14.2</span> Brennecke method</h2>
+<div id="highly-variable-genes-via-brennecke-method" class="section level2">
+<h2><span class="header-section-number">14.2</span> Highly variable genes via Brennecke method</h2>
 <p>We will demonstrate some of the methods starting from the simplest one proposed by <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Brennecke et al.</a>, which identifies genes with significant variation above technical noise (ERCCs).</p>
 <p>To use the method, we first normalize for library size then calculate the mean and the square coefficient of variation (variation divided by the squared mean expression). A quadratic curve is fit to the relationship between these two variables for the ERCC spike-in (subject to just technical variation) then a chi-square test is used to find genes significantly above the curve. This has been provided for you as the Brenneck_getVariableGenes(counts, spikes) function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>
-<span class="st">    </span>scater::<span class="kw">normaliseExprs</span>(umi.qc,
-                           <span class="dt">method =</span> <span class="st">&quot;RLE&quot;</span>,
-                           <span class="dt">feature_set =</span> endog_genes,
-                           <span class="dt">lib.size =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">ncol</span>(umi.qc)))
-erccs &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;ERCC-&quot;</span>, <span class="kw">rownames</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qclust &lt;-<span class="st"> </span>scran::<span class="kw">quickCluster</span>(umi.qc, <span class="dt">min.size =</span> <span class="dv">30</span>)
+umi.qc &lt;-<span class="st"> </span>scran::<span class="kw">computeSumFactors</span>(umi.qc, <span class="dt">sizes =</span> <span class="dv">15</span>, <span class="dt">clusters =</span> qclust)
+umi.qc &lt;-<span class="st"> </span>scater::<span class="kw">normalize</span>(umi.qc)
+erccs &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;ERCC-&quot;</span>, <span class="kw">rownames</span>(<span class="kw">exprs</span>(umi.qc)))
 highly.var.genes &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">Brennecke_getVariableGenes</span>(
-            <span class="kw">assayData</span>(umi.qc)$norm_counts,
+            <span class="kw">exprs</span>(umi.qc),
             erccs
 )</code></pre></div>
-<pre><code>## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(umi.qc)
-## $norm_counts, : Only 11 spike-ins to be used in fitting, may result in poor
-## fit.</code></pre>
+<pre><code>## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(exprs(umi.qc),
+## erccs): Only 25 spike-ins to be used in fitting, may result in poor fit.</code></pre>
+<pre><code>## Warning in xy.coords(x, y, xlabel, ylabel, log): 844 x values &lt;= 0 omitted
+## from logarithmic plot</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-brennecke"></span>
 <img src="13-remove-conf_files/figure-html/rm-conf-brennecke-1.png" alt="Results of using the Brennecke method on the Blischak dataset" width="90%" />
 <p class="caption">
 Figure 14.1: Results of using the Brennecke method on the Blischak dataset
 </p>
 </div>
-<p>In the figure above blue points are the ERCC spike-ins. The red curve is the fitted technical noise model and the dashed line is the 95% CI. Pink dots are the genes with significant biological variability after multiple-testing correction. Since our dataset is relatively homogeneous only 570 genes are identified as significantly variable.</p>
+<p>In the figure above blue points are the ERCC spike-ins. The red curve is the fitted technical noise model and the dashed line is the 95% CI. Pink dots are the genes with significant biological variability after multiple-testing correction. Since our dataset is relatively homogeneous only 7148 genes are identified as significantly variable.</p>
 </div>
 <div id="remove-unwanted-variation" class="section level2">
 <h2><span class="header-section-number">14.3</span> Remove Unwanted Variation</h2>
 <p>Factors contributing to technical noise frequently appear as “batch effects” where cells processed on different days or by different technicians systematically vary from one another. Removing technical noise and correcting for batch effects can frequently be performed using the same tool or slight variants on it. We will be considering the <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">Remove Unwanted Variation (RUV)</a> method which uses <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">singular value decomposition</a> (similar to PCA) on subsets of the dataset which should be invariant (e.g. <a href="https://www.thermofisher.com/order/catalog/product/4456740">ERCC spike-ins</a>). Then the method removes the identified unwanted factors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">assayData</span>(umi.qc)$ruv_counts &lt;-<span class="st"> </span>RUVSeq::<span class="kw">RUVg</span>(
-    <span class="kw">round</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts),
+    <span class="kw">round</span>(<span class="kw">exprs</span>(umi.qc)),
     erccs,
     <span class="dt">k =</span> <span class="dv">1</span>)$normalizedCounts</code></pre></div>
 </div>
@@ -384,7 +383,7 @@ Figure 14.1: Results of using the Brennecke method on the Blischak dataset
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
-                <span class="dt">exprs_values =</span> <span class="st">&quot;norm_counts&quot;</span>)</code></pre></div>
+                <span class="dt">exprs_values =</span> <span class="st">&quot;exprs&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-pca-rle"></span>
 <img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">
@@ -406,7 +405,7 @@ Figure 14.3: PCA plot of the blischak data after RLE and RUV normalisations
 <div id="effectiveness-2" class="section level2">
 <h2><span class="header-section-number">14.5</span> Effectiveness 2</h2>
 <p>We can also examine the relative log expression (RLE) across cells to confirm technical noise has been removed from the dataset.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">list</span>(scRNA.seq.funcs::<span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$norm_counts),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">list</span>(scRNA.seq.funcs::<span class="kw">calc_cell_RLE</span>(<span class="kw">exprs</span>(umi.qc)),
              scRNA.seq.funcs::<span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruv_counts)))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:rm-conf-rle-comp"></span>
 <img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="90%" />

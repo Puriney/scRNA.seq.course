@@ -33,7 +33,7 @@ For this section we will be working with the [Usoskin et
 al](http://www.nature.com/neuro/journal/v18/n1/full/nn.3881.html)
 data. It contains 4 cell types: NP = non-peptidergic nociceptors, PEP
 = peptidergic nociceptors, NF = neurofilament containing and TH =
-tyrosine hydroxylase containing
+tyrosine hydroxylase containing neurons.
 
 
 ```r
@@ -102,6 +102,8 @@ title(main = "Usoskin")
 
 ## Right outliers
 
+[Note to TA: Add diagram/example of averaging to get outliers]
+
 There are many outliers to the right of the fitted MM curve. Genes
 which are expressed at different levels in subpopulations of our cells
 will be shifted to the right of the curve. This happens because the MM
@@ -162,11 +164,20 @@ We can compare the genes identified as DE using M3Drop to those
 identified using other methods. Running differential expression
 methods which compare two groups at a time is slow for this dataset (6
 possible pairs of groups x 15,708 genes) thus we have provided you
-with the output for DESeq2 as \code{DESeq_table}. We can also use the
-Brennecke method introduced earlier to identify highly variable genes
-by using the entire dataset as spike-ins.
+with the output for DESeq. Load it using:
 
+```r
+DESeq_table <- readRDS("usoskin/DESeq_table.rds")
+length(unique(DESeq_table$Gene))
+```
 
+```
+## [1] 2604
+```
+
+We can also use the Brennecke method introduced earlier to identify 
+highly variable genes. However, there are only 9 spike-ins detected in this dataset
+so we will use the entire dataset as spike-ins. 
 
 ```r
 Brennecke_HVG <- M3Drop::Brennecke_getVariableGenes(
@@ -176,7 +187,7 @@ Brennecke_HVG <- M3Drop::Brennecke_getVariableGenes(
 )
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 length(Brennecke_HVG)
@@ -184,15 +195,6 @@ length(Brennecke_HVG)
 
 ```
 ## [1] 1595
-```
-
-```r
-DESeq_table <- readRDS("usoskin/DESeq_table.rds")
-length(unique(DESeq_table$Gene))
-```
-
-```
-## [1] 2604
 ```
 
 __Exercise__: Plot a heatmap of the expression of the HVGs and DESeq DE genes. Do they look differentially expressed?
@@ -224,4 +226,4 @@ limma::vennDiagram(
 )
 ```
 
-<img src="17-dropouts_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
+<img src="17-dropouts_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />

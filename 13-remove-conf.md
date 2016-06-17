@@ -8,7 +8,7 @@ knit: bookdown::preview_chapter
 
 In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data using the ERCC spike-in controls. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed. 
 
-Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and "substracting" this from the endogenous genes. There are several methods available based on this premise (eg. [BASiCS](https://github.com/catavallejos/BASiCS), [scLVM](https://github.com/PMBio/scLVM), [RUV](http://bioconductor.org/packages/release/bioc/html/RUVSeq.html)); each using different noise models and different fitting procedures.
+Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and "substracting" this from the endogenous genes. There are several methods available based on this premise (eg. [BASiCS](https://github.com/catavallejos/BASiCS), [scLVM](https://github.com/PMBio/scLVM), [RUV](http://bioconductor.org/packages/release/bioc/html/RUVSeq.html)); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, [Highly variable genes](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html))
 
 
 
@@ -23,7 +23,7 @@ umi.qc <- umi[fData(umi)$use, pData(umi)$use]
 endog_genes <- !fData(umi.qc)$is_feature_control
 ```
 
-## Brennecke method
+## Highly variable genes via Brennecke method
 
 
 We will demonstrate some of the methods starting from the simplest one proposed by [Brennecke et al.](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html), which identifies genes with significant variation above technical noise (ERCCs).
@@ -38,22 +38,24 @@ Brenneck_getVariableGenes(counts, spikes) function.
 
 
 ```r
-umi.qc <- 
-    scater::normaliseExprs(umi.qc,
-                           method = "RLE",
-                           feature_set = endog_genes,
-                           lib.size = rep(1, ncol(umi.qc)))
-erccs <- grep("ERCC-", rownames(assayData(umi.qc)$norm_counts))
+qclust <- scran::quickCluster(umi.qc, min.size = 30)
+umi.qc <- scran::computeSumFactors(umi.qc, sizes = 15, clusters = qclust)
+umi.qc <- scater::normalize(umi.qc)
+erccs <- grep("ERCC-", rownames(exprs(umi.qc)))
 highly.var.genes <- scRNA.seq.funcs::Brennecke_getVariableGenes(
-            assayData(umi.qc)$norm_counts,
+            exprs(umi.qc),
             erccs
 )
 ```
 
 ```
-## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(assayData(umi.qc)
-## $norm_counts, : Only 11 spike-ins to be used in fitting, may result in poor
-## fit.
+## Warning in scRNA.seq.funcs::Brennecke_getVariableGenes(exprs(umi.qc),
+## erccs): Only 25 spike-ins to be used in fitting, may result in poor fit.
+```
+
+```
+## Warning in xy.coords(x, y, xlabel, ylabel, log): 844 x values <= 0 omitted
+## from logarithmic plot
 ```
 
 <div class="figure" style="text-align: center">
@@ -65,7 +67,7 @@ In the figure above blue points are the ERCC spike-ins. The red curve
 is the fitted technical noise model and the dashed line is the 95%
 CI. Pink dots are the genes with significant biological variability
 after multiple-testing correction. Since our dataset is relatively
-homogeneous only 570 genes are identified as significantly
+homogeneous only 7148 genes are identified as significantly
 variable.
 
 ## Remove Unwanted Variation
@@ -83,7 +85,7 @@ method which uses [singular value decomposition](https://en.wikipedia.org/wiki/S
 
 ```r
 assayData(umi.qc)$ruv_counts <- RUVSeq::RUVg(
-    round(assayData(umi.qc)$norm_counts),
+    round(exprs(umi.qc)),
     erccs,
     k = 1)$normalizedCounts
 ```
@@ -103,7 +105,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
                 shape_by = "individual",
-                exprs_values = "norm_counts")
+                exprs_values = "exprs")
 ```
 
 <div class="figure" style="text-align: center">
@@ -132,7 +134,7 @@ confirm technical noise has been removed from the dataset.
 
 
 ```r
-boxplot(list(scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$norm_counts),
+boxplot(list(scRNA.seq.funcs::calc_cell_RLE(exprs(umi.qc)),
              scRNA.seq.funcs::calc_cell_RLE(assayData(umi.qc)$ruv_counts)))
 ```
 
