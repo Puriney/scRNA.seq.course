@@ -124,6 +124,12 @@ biocLite("SC3")
 RSelenium::checkForServer()
 ```
 
+[SEURAT](https://github.com/Puriney/seurat) for density clustering of scRNA-seq data:
+
+```r
+devtools::install_github('Puriney/seurat')
+```
+
 ## Dropouts
 
 [M3Drop](https://github.com/tallulandrews/M3D) for identification of important and DE genes:

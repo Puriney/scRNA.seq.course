@@ -248,17 +248,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>16.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
 <li class="chapter" data-level="16.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>16.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
 <li class="chapter" data-level="16.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>16.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
-<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + <em>k</em>-means</a></li>
-<li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
+<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + k-means</a></li>
+<li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#seurat"><i class="fa fa-check"></i><b>16.5.5</b> <a href="https://github.com/Puriney/seurat">SEURAT</a></a></li>
+<li class="chapter" data-level="16.5.6" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.6</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="17" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>17</b> Clustering example</a><ul>
 <li class="chapter" data-level="17.1" data-path="clust-methods.html"><a href="clust-methods.html#patient-dataset"><i class="fa fa-check"></i><b>17.1</b> Patient dataset</a></li>
 <li class="chapter" data-level="17.2" data-path="clust-methods.html"><a href="clust-methods.html#sc3-1"><i class="fa fa-check"></i><b>17.2</b> SC3</a></li>
 <li class="chapter" data-level="17.3" data-path="clust-methods.html"><a href="clust-methods.html#pcareduce-1"><i class="fa fa-check"></i><b>17.3</b> pcaReduce</a></li>
 <li class="chapter" data-level="17.4" data-path="clust-methods.html"><a href="clust-methods.html#tsne-kmeans"><i class="fa fa-check"></i><b>17.4</b> tSNE + kmeans</a></li>
 <li class="chapter" data-level="17.5" data-path="clust-methods.html"><a href="clust-methods.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
 <li class="chapter" data-level="17.6" data-path="clust-methods.html"><a href="clust-methods.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
+<li class="chapter" data-level="17.7" data-path="clust-methods.html"><a href="clust-methods.html#seurat-1"><i class="fa fa-check"></i><b>17.7</b> SEURAT</a></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html"><i class="fa fa-check"></i><b>18</b> Identification of important genes</a><ul>
 <li class="chapter" data-level="18.1" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html#fitting-the-models"><i class="fa fa-check"></i><b>18.1</b> Fitting the models</a></li>
@@ -331,7 +333,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="clust-methods" class="section level1">
-<h1><span class="header-section-number">17</span> Clustering analysis</h1>
+<h1><span class="header-section-number">17</span> Clustering example</h1>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
 <span class="kw">library</span>(pcaMethods)
 <span class="kw">library</span>(pcaReduce)
@@ -346,12 +348,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Traditionally, clonal heterogeneity has been assessed by genotyping sub-clones. Genotyping through Sanger sequencing of two key loci has been carried out for this patient and it has revealed the presence of 3 different sub-clones (WT, WT/Tet2 and Jak2/Tet2). Our goal is to identify clusters corresponding to the three genotypes from the scRNA-seq data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">patient.data &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;clustering/patient.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)</code></pre></div>
 <p>For convenience we have performed all quality control and normalization steps (SF + RUV) in advance. The dataset contains 51 cells and 8710 genes.</p>
-<p>Here we present several methods available for clustering of scRNA-seq data.</p>
+<p>Now we are ready to cluster the data using the methods described in the previous chapter.</p>
 </div>
 <div id="sc3-1" class="section level2">
 <h2><span class="header-section-number">17.2</span> SC3</h2>
-<p>SC3 is based on k-means clustering. The data is transformed using different dimensionality reduction strategies and distance metrics. Each transformed version of the data is clustered using k-means. We take the consensus of all these different clusterings by calculating the frequency that each pair of cells is found in the same cluster. This consensus matrix is then clustered using hierarchical clustering.</p>
-<p>To use <strong>SC3</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SC3::<span class="kw">sc3</span>(patient.data, <span class="dt">ks =</span> <span class="dv">2</span>:<span class="dv">5</span>)</code></pre></div>
 <p>This command will open SC3 in a web browser. Once it is opened please perform the following exercises:</p>
 <ul>
@@ -364,8 +364,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="pcareduce-1" class="section level2">
 <h2><span class="header-section-number">17.3</span> pcaReduce</h2>
-<p><a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a> combines k-means clustering with hierarchical clustering. At each stage PCA is used for dimensionality reduction followed by k-means. Starting from a large number of clusters pcaReduce iteratively merges similar clusters; after each merging event it removes the principle component explaning the least variance in the data.</p>
-<p>To run <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a> on the same dataset, use the following commands</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use the same gene filter as in SC3</span>
 input &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">gene_filter</span>(patient.data, <span class="fl">0.06</span>)
 <span class="co"># log transform before the analysis</span>
@@ -468,8 +466,7 @@ Figure 17.9: Clustering solutions of tSNE+kmeans method after running it for 10 
 </div>
 <div id="snn-cliq-1" class="section level2">
 <h2><span class="header-section-number">17.5</span> SNN-Cliq</h2>
-<p><a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a> is a graph-based method. First the method identifies the <em>k</em>-nearest-neighbours of each cell according to the <em>distance</em> measure. This is used to calculate the number of Shared Nearest Neighbours (SNN) between each pair of cells. A graph is built by placing an edge between two cells If they have at least one SNN. Clusters are defined as groups of cells with many edges between them using a “clique” method that requires two parameters: <em>r</em> and <em>m</em>.</p>
-<p>To run the <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a> method:</p>
+<p>Here we run SNN-cliq with te default parameters provided in the author’s example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">distan &lt;-<span class="st"> &quot;euclidean&quot;</span>
 par.k &lt;-<span class="st"> </span><span class="dv">3</span>
 par.r &lt;-<span class="st"> </span><span class="fl">0.7</span>
@@ -535,7 +532,109 @@ Figure 17.10: Clustering solutions of SINCERA method using <span class="math inl
 </p>
 </div>
 <p><strong>Exercise 12</strong>: Is using the singleton cluster criteria for finding <strong>k</strong> a good idea?</p>
+</div>
+<div id="seurat-1" class="section level2">
+<h2><span class="header-section-number">17.7</span> SEURAT</h2>
+<p>Here we follow an <a href="http://www.satijalab.org/clustertutorial1.html">example</a> created by the authors of SEURAT. We had to introduce some modifications due to the errors produced by the original code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Seurat)
+<span class="co"># Create a SEURAT object</span>
+d &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;seurat&quot;</span>, <span class="dt">raw.data =</span> <span class="kw">as.data.frame</span>(<span class="kw">log</span>(patient.data +<span class="st"> </span><span class="dv">1</span>)))
 
+<span class="co"># Setup a SEURAT object</span>
+d &lt;-<span class="st"> </span><span class="kw">setup</span>(
+    d,
+    <span class="dt">project =</span> <span class="st">&quot;NBT&quot;</span>,
+    <span class="dt">min.cells =</span> <span class="dv">3</span>,
+    <span class="dt">names.field =</span> <span class="dv">2</span>,
+    <span class="dt">names.delim =</span> <span class="st">&quot;_&quot;</span>,
+    <span class="dt">min.genes =</span> <span class="dv">10</span>,
+    <span class="dt">is.expr =</span> <span class="dv">1</span>
+) 
+
+<span class="co"># Genes placed into 20 bins based on X-axis (average expression).</span>
+<span class="co"># Y-axis is within-bin z-score of log(Variance/mean). </span>
+d &lt;-<span class="st"> </span><span class="kw">mean.var.plot</span>(
+    d,
+    <span class="dt">y.cutoff =</span> <span class="dv">2</span>,
+    <span class="dt">x.low.cutoff =</span> <span class="dv">2</span>,
+    <span class="dt">fxn.x =</span> expMean,
+    <span class="dt">fxn.y =</span> logVarDivMean
+)</code></pre></div>
+<p><img src="16-clustering_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Run a PCA using the variable genes as input</span>
+d &lt;-<span class="st"> </span><span class="kw">pca</span>(d, <span class="dt">do.print =</span> <span class="ot">FALSE</span>, <span class="dt">pcs.store =</span> <span class="dv">25</span>)
+
+<span class="co"># Do 200 random samplings to find significant genes, </span>
+<span class="co"># each time randomly permute 1% of genes.</span>
+<span class="co"># This returns a &#39;p-value&#39; for each gene in each PC, </span>
+<span class="co"># based on how likely the gene/PC score would have been observed by chance</span>
+d &lt;-<span class="st"> </span><span class="kw">jackStraw</span>(
+    d,
+    <span class="dt">num.replicate =</span> <span class="dv">200</span>,
+    <span class="dt">do.print =</span> <span class="ot">FALSE</span>,
+    <span class="dt">num.pc =</span> <span class="dv">25</span>
+)
+
+<span class="co"># Compare the distribution of P-values for each PC with a uniform distribution.</span>
+<span class="co"># &#39;Significant&#39; PCs will have a strong enrichment of genes with low p-values</span>
+pAll &lt;-<span class="st"> </span>d@jackStraw.empP
+pAll$Contig &lt;-<span class="st"> </span><span class="kw">rownames</span>(pAll)
+pAll.l &lt;-<span class="st"> </span><span class="kw">melt</span>(pAll, <span class="dt">id.vars =</span> <span class="st">&quot;Contig&quot;</span>)
+<span class="kw">colnames</span>(pAll.l) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Contig&quot;</span>, <span class="st">&quot;PC&quot;</span>, <span class="st">&quot;Value&quot;</span>)
+
+score.df &lt;-<span class="st"> </span><span class="ot">NULL</span>
+score.thresh=<span class="fl">1e-5</span>
+for (i in <span class="kw">unique</span>(pAll.l$PC)){
+    q &lt;-<span class="st"> </span><span class="kw">qqplot</span>(pAll[, i], <span class="kw">runif</span>(<span class="dv">1000</span>), <span class="dt">plot.it =</span> <span class="ot">FALSE</span>)
+    pc.score &lt;-<span class="st"> </span><span class="kw">prop.test</span>(
+        <span class="kw">c</span>(
+            <span class="kw">length</span>(<span class="kw">which</span>(pAll[, i] &lt;=<span class="st"> </span>score.thresh)), 
+            <span class="kw">floor</span>(<span class="kw">nrow</span>(pAll) *<span class="st"> </span>score.thresh)
+        ), 
+        <span class="kw">c</span>(<span class="kw">nrow</span>(pAll), <span class="kw">nrow</span>(pAll))
+    )$p.val
+    if (<span class="kw">length</span>(<span class="kw">which</span>(pAll[, i] &lt;=<span class="st"> </span>score.thresh)) ==<span class="st"> </span><span class="dv">0</span>) pc.score &lt;-<span class="st"> </span><span class="dv">1</span>
+
+    if(<span class="kw">is.null</span>(score.df))
+      score.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">PC =</span> i, <span class="dt">Score =</span> pc.score)
+    else
+      score.df &lt;-<span class="st"> </span><span class="kw">rbind</span>(score.df, <span class="kw">data.frame</span>(<span class="dt">PC =</span> i, <span class="dt">Score =</span> pc.score))
+}
+
+<span class="co"># There are no significant PCs:</span>
+<span class="kw">head</span>(score.df)</code></pre></div>
+<pre><code>##    PC     Score
+## 1 PC1 0.4704864
+## 2 PC2 1.0000000
+## 3 PC3 1.0000000
+## 4 PC4 1.0000000
+## 5 PC5 1.0000000
+## 6 PC6 1.0000000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ndim &lt;-<span class="st"> </span><span class="dv">2</span>
+
+<span class="co"># Project data on a 2D using tSNE</span>
+d &lt;-<span class="st"> </span><span class="kw">run_tsne</span>(d, <span class="dt">dims.use =</span> <span class="dv">1</span>:ndim, <span class="dt">max_iter =</span> <span class="dv">2000</span>)
+
+<span class="co"># Find clusters in the tSNE map</span>
+d &lt;-<span class="st"> </span><span class="kw">DBclust_dimension</span>(
+    d, 
+    <span class="dv">1</span>, 
+    <span class="dv">2</span>, 
+    <span class="dt">reduction.use =</span> <span class="st">&quot;tsne&quot;</span>, 
+    <span class="dt">G.use =</span> <span class="dv">8</span>, 
+    <span class="dt">set.ident =</span> <span class="ot">TRUE</span>
+)
+<span class="kw">tsne.plot</span>(d, <span class="dt">pt.size =</span> <span class="dv">1</span>)</code></pre></div>
+<p><img src="16-clustering_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise 13</strong>: As you can see DBSCAN could find only one cluster. It is known that DBSCAN cannot cluster data sets well with large differences in densities, since the <em>G.use</em> parameter cannot then be chosen appropriately for all clusters. Try to change <em>G.use</em> to be able to find more than one cluster in the data.</p>
+<p><strong>Note</strong> We found that in general SEURAT does not work well for small datasets (<em>N</em> &lt; 200 cells). For a comprehensive comparisons of the methods please look at the SC3 paper (<span class="citation">(Kiselev et al. <a href="#ref-Kiselev2016-bq">2016</a>)</span>).</p>
+
+</div>
+</div>
+<h3> References</h3>
+<div id="refs" class="references">
+<div id="ref-Kiselev2016-bq">
+<p>Kiselev, Vladimir Yu, Kristina Kirschner, Michael T Schaub, Tallulah Andrews, Tamir Chandra, Kedar N Natarajan, Wolf Reik, Mauricio Barahona, Anthony R Green, and Martin Hemberg. 2016. “SC3 - Consensus Clustering of Single-Cell RNA-Seq Data.” <em>BioRxiv</em>.</p>
 </div>
 </div>
             </section>

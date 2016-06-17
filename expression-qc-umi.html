@@ -248,17 +248,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="16.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>16.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
 <li class="chapter" data-level="16.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>16.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
 <li class="chapter" data-level="16.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>16.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
-<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + <em>k</em>-means</a></li>
-<li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.5</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
+<li class="chapter" data-level="16.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>16.5.4</b> tSNE + k-means</a></li>
+<li class="chapter" data-level="16.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#seurat"><i class="fa fa-check"></i><b>16.5.5</b> <a href="https://github.com/Puriney/seurat">SEURAT</a></a></li>
+<li class="chapter" data-level="16.5.6" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>16.5.6</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
+<li class="chapter" data-level="17" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>17</b> Clustering example</a><ul>
 <li class="chapter" data-level="17.1" data-path="clust-methods.html"><a href="clust-methods.html#patient-dataset"><i class="fa fa-check"></i><b>17.1</b> Patient dataset</a></li>
 <li class="chapter" data-level="17.2" data-path="clust-methods.html"><a href="clust-methods.html#sc3-1"><i class="fa fa-check"></i><b>17.2</b> SC3</a></li>
 <li class="chapter" data-level="17.3" data-path="clust-methods.html"><a href="clust-methods.html#pcareduce-1"><i class="fa fa-check"></i><b>17.3</b> pcaReduce</a></li>
 <li class="chapter" data-level="17.4" data-path="clust-methods.html"><a href="clust-methods.html#tsne-kmeans"><i class="fa fa-check"></i><b>17.4</b> tSNE + kmeans</a></li>
 <li class="chapter" data-level="17.5" data-path="clust-methods.html"><a href="clust-methods.html#snn-cliq-1"><i class="fa fa-check"></i><b>17.5</b> SNN-Cliq</a></li>
 <li class="chapter" data-level="17.6" data-path="clust-methods.html"><a href="clust-methods.html#sincera-1"><i class="fa fa-check"></i><b>17.6</b> SINCERA</a></li>
+<li class="chapter" data-level="17.7" data-path="clust-methods.html"><a href="clust-methods.html#seurat-1"><i class="fa fa-check"></i><b>17.7</b> SEURAT</a></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html"><i class="fa fa-check"></i><b>18</b> Identification of important genes</a><ul>
 <li class="chapter" data-level="18.1" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html#fitting-the-models"><i class="fa fa-check"></i><b>18.1</b> Fitting the models</a></li>
@@ -339,7 +341,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="blischak-dataset" class="section level2">
 <h2><span class="header-section-number">6.2</span> Blischak dataset</h2>
-<p>To illustrate cell QC, we consider a <a href="http://jdblischak.github.io/singleCellSeq/analysis/">dataset</a> of induced pluripotent stem cells generated from three different individuals by John Blischak in <a href="http://giladlab.uchicago.edu/">Yoav Gilad</a>’s lab at the University of Chicago. The experiments were carried out on the Fluidigm C1 platform and to facilitate the quantification both unique molecular identifiers (UMIs) and ERCC <em>spike-ins</em> were used. For our purposes you need to download the files <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/annotation.txt"><code>annotation.txt</code></a>, <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/molecules.txt"><code>molecules.txt</code></a>, and <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/reads.txt"><code>reads.txt</code></a> into the <code>blischak</code> folder in your working directory. These files are the copies of the original files made on the 15/03/16. We will use these copies for reproducibility purposes.</p>
+<p>To illustrate cell QC, we consider a <a href="http://jdblischak.github.io/singleCellSeq/analysis/">dataset</a> of induced pluripotent stem cells generated from three different individuals by John Blischak in <a href="http://giladlab.uchicago.edu/">Yoav Gilad</a>’s lab at the University of Chicago. The experiments were carried out on the Fluidigm C1 platform and to facilitate the quantification both unique molecular identifiers (UMIs) and ERCC <em>spike-ins</em> were used. The data files are located in the <code>blischak</code> folder in your working directory. These files are the copies of the original files made on the 15/03/16. We will use these copies for reproducibility purposes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Load the data and annotations:</p>
