@@ -372,6 +372,18 @@ eff_length <- abs(fData(umi.qc.ann)$end_position -
                       fData(umi.qc.ann)$start_position)/1000
 ```
 
+
+```r
+plot(eff_length, rowMeans(counts(umi.qc.ann)))
+```
+
+<div class="figure" style="text-align: center">
+<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data" width="90%" />
+<p class="caption">(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data</p>
+</div>
+There is no relationship between gene length and mean expression so FPKMs & TPMs are inappropriate for this dataset. 
+But we will demonstrate them anyway.
+
 Now we are ready to perform the normalisations:
 
 ```r
@@ -419,14 +431,6 @@ scater::plotPCA(umi.qc.ann,
 __Note:__ The PCA looks for differences between cells. Gene length is the same across cells for each gene thus FPKM is almost identical to the CPM plot (it is just rotated) since it performs CPM first then normalizes gene length. Whereas, TPM is different because it weights genes by their length before performing CPM. 
 
 
-```r
-plot(eff_length, rowMeans(counts(umi.qc.ann)))
-```
-
-<div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data" width="90%" />
-<p class="caption">(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data</p>
-</div>
 
 ## Exercise
 

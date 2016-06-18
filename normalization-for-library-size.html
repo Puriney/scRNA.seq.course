@@ -25,7 +25,7 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-17">
+<meta name="date" content="2016-06-18">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -618,6 +618,14 @@ Figure 12.12: Cell-wise RLE of the blischak data
 <p>Now we compute the total gene length in Kilobases by using the <code>end_position</code> and <code>start_position</code> fields:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eff_length &lt;-<span class="st"> </span><span class="kw">abs</span>(<span class="kw">fData</span>(umi.qc.ann)$end_position -
 <span class="st">                      </span><span class="kw">fData</span>(umi.qc.ann)$start_position)/<span class="dv">1000</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(eff_length, <span class="kw">rowMeans</span>(<span class="kw">counts</span>(umi.qc.ann)))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
+<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
+<p class="caption">
+Figure 12.13: Gene length vs Mean Expression for the raw data
+</p>
+</div>
+<p>There is no relationship between gene length and mean expression so FPKMs &amp; TPMs are inappropriate for this dataset. But we will demonstrate them anyway.</p>
 <p>Now we are ready to perform the normalisations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tpm</span>(umi.qc.ann) &lt;-
 <span class="st">    </span><span class="kw">calculateTPM</span>(
@@ -638,7 +646,7 @@ Figure 12.12: Cell-wise RLE of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
-Figure 12.13: PCA plot of the blischak data after FPKM normalisation
+Figure 12.14: PCA plot of the blischak data after FPKM normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc.ann,
@@ -649,17 +657,10 @@ Figure 12.13: PCA plot of the blischak data after FPKM normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
 <p class="caption">
-Figure 12.14: PCA plot of the blischak data after TPM normalisation
+Figure 12.15: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
 <p><strong>Note:</strong> The PCA looks for differences between cells. Gene length is the same across cells for each gene thus FPKM is almost identical to the CPM plot (it is just rotated) since it performs CPM first then normalizes gene length. Whereas, TPM is different because it weights genes by their length before performing CPM.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(eff_length, <span class="kw">rowMeans</span>(<span class="kw">counts</span>(umi.qc.ann)))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
-<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
-<p class="caption">
-Figure 12.15: Gene length vs Mean Expression for the raw data
-</p>
-</div>
 </div>
 <div id="exercise-1" class="section level2">
 <h2><span class="header-section-number">12.5</span> Exercise</h2>
