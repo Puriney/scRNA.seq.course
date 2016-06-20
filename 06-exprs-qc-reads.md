@@ -273,11 +273,6 @@ TRUE      605
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/dropout-overview-reads-1.png" alt="(\#fig:dropout-overview-reads)Dropout rate vs mean expression" width="90%" />
-<p class="caption">(\#fig:dropout-overview-reads)Dropout rate vs mean expression</p>
-</div>
-
-<div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes</p>
 </div>

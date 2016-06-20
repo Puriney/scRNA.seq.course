@@ -16,4 +16,7 @@ knit: bookdown::preview_chapter
 <p class="caption">(\#fig:confound-find-pcs-total-features-reads)PC correlation with the number of detected genes</p>
 </div>
 
-
+<div class="figure" style="text-align: center">
+<img src="10-confounders-reads_files/figure-html/confound-find-expl-vars-reads-1.png" alt="(\#fig:confound-find-expl-vars-reads)Explanatory variables" width="90%" />
+<p class="caption">(\#fig:confound-find-expl-vars-reads)Explanatory variables</p>
+</div>
