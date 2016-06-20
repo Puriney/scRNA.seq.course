@@ -218,8 +218,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.3.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#size-factor-rle"><i class="fa fa-check"></i><b>12.3.5</b> Size-factor (RLE)</a></li>
 <li class="chapter" data-level="12.3.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#upperquantile"><i class="fa fa-check"></i><b>12.3.6</b> Upperquantile</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#other-methods"><i class="fa fa-check"></i><b>12.4</b> Other methods</a></li>
-<li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.5</b> Exercise</a></li>
+<li class="chapter" data-level="12.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#downsampling"><i class="fa fa-check"></i><b>12.4</b> Downsampling</a></li>
+<li class="chapter" data-level="12.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#normalizing-for-genetranscript-length"><i class="fa fa-check"></i><b>12.5</b> Normalizing for gene/transcript length</a></li>
+<li class="chapter" data-level="12.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>12.6</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>13</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="14" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>14</b> Remove confounders using controls</a><ul>
@@ -574,8 +575,47 @@ Figure 12.12: Cell-wise RLE of the blischak data
 </div>
 </div>
 </div>
-<div id="other-methods" class="section level2">
-<h2><span class="header-section-number">12.4</span> Other methods</h2>
+<div id="downsampling" class="section level2">
+<h2><span class="header-section-number">12.4</span> Downsampling</h2>
+<p>A final way to correct for library size is to downsample the expression matrix so that each cell has approximately the same total number of molecules. The benefit of this method is that zero values will be introduced by the down sampling thus eliminating any biases due to differing numbers of detected genes. However, the major drawback is that the process is not deterministic so each time the downsampling is run the resulting expression matrix is slightly different. Thus, often analyses must be run on multiple downsamplings to ensure results are robust.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Down_Sample_Matrix &lt;-<span class="st"> </span>function(expr_mat) {
+        min_lib_size =<span class="st"> </span><span class="kw">min</span>(<span class="kw">colSums</span>(expr_mat))
+        down_sample &lt;-<span class="st"> </span>function(x) {
+                prob =<span class="st"> </span>min_lib_size/<span class="kw">sum</span>(x)
+                <span class="kw">return</span>(<span class="kw">unlist</span>(<span class="kw">lapply</span>(x, function(y) {<span class="kw">rbinom</span>(<span class="dv">1</span>,y,prob)})))
+        }
+        down_sampled_mat =<span class="st"> </span><span class="kw">apply</span>(expr_mat,<span class="dv">2</span>,down_sample)
+        <span class="kw">return</span>(down_sampled_mat)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">downsampled &lt;-<span class="st"> </span><span class="kw">Down_Sample_Matrix</span>(<span class="kw">counts</span>(umi.qc));
+tmp =<span class="st"> </span>umi.qc;
+<span class="kw">assayData</span>(tmp)$counts &lt;-<span class="st"> </span>downsampled
+
+scater::<span class="kw">plotPCA</span>(tmp[endog_genes, ],
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:norm-pca-downsample"></span>
+<img src="11-exprs-norm_files/figure-html/norm-pca-downsample-1.png" alt="PCA plot of the blischak data after downsampling" width="90%" />
+<p class="caption">
+Figure 12.13: PCA plot of the blischak data after downsampling
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(downsampled[<span class="kw">rowMeans</span>(downsampled)&gt;<span class="dv">0</span>,]), <span class="co">#Ignore genes which are not detected </span>
+                                                              <span class="co">#in any cells following downsampling</span>
+        <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
+        <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
+        <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim=</span><span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:norm-ours-rle-downsample"></span>
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-downsample-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">
+Figure 12.14: Cell-wise RLE of the blischak data
+</p>
+</div>
+</div>
+<div id="normalizing-for-genetranscript-length" class="section level2">
+<h2><span class="header-section-number">12.5</span> Normalizing for gene/transcript length</h2>
 <p>Some methods combine library size and fragment/gene length normalization such as:</p>
 <ul>
 <li><strong>RPKM</strong> - Reads Per Kilobase Million (for single-end sequencing)</li>
@@ -623,7 +663,7 @@ Figure 12.12: Cell-wise RLE of the blischak data
 <div class="figure" style="text-align: center"><span id="fig:length-vs-mean"></span>
 <img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
 <p class="caption">
-Figure 12.13: Gene length vs Mean Expression for the raw data
+Figure 12.15: Gene length vs Mean Expression for the raw data
 </p>
 </div>
 <p>There is no relationship between gene length and mean expression so FPKMs &amp; TPMs are inappropriate for this dataset. But we will demonstrate them anyway.</p>
@@ -647,7 +687,7 @@ Figure 12.13: Gene length vs Mean Expression for the raw data
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-fpkm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">
-Figure 12.14: PCA plot of the blischak data after FPKM normalisation
+Figure 12.16: PCA plot of the blischak data after FPKM normalisation
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(umi.qc.ann,
@@ -658,13 +698,13 @@ Figure 12.14: PCA plot of the blischak data after FPKM normalisation
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-tpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
 <p class="caption">
-Figure 12.15: PCA plot of the blischak data after TPM normalisation
+Figure 12.17: PCA plot of the blischak data after TPM normalisation
 </p>
 </div>
 <p><strong>Note:</strong> The PCA looks for differences between cells. Gene length is the same across cells for each gene thus FPKM is almost identical to the CPM plot (it is just rotated) since it performs CPM first then normalizes gene length. Whereas, TPM is different because it weights genes by their length before performing CPM.</p>
 </div>
 <div id="exercise-1" class="section level2">
-<h2><span class="header-section-number">12.5</span> Exercise</h2>
+<h2><span class="header-section-number">12.6</span> Exercise</h2>
 <p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter).</p>
 
 </div>
