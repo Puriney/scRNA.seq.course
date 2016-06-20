@@ -62,6 +62,15 @@ knit: bookdown::preview_chapter
 <p class="caption">(\#fig:norm-ours-rle-uq-reads)Cell-wise RLE of the blischak data</p>
 </div>
 
+<div class="figure" style="text-align: center">
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-downsample-reads-1.png" alt="(\#fig:norm-pca-downsample-reads)PCA plot of the blischak data after downsampling" width="90%" />
+<p class="caption">(\#fig:norm-pca-downsample-reads)PCA plot of the blischak data after downsampling</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="12-exprs-norm-reads_files/figure-html/norm-ours-rle-downsample-reads-1.png" alt="(\#fig:norm-ours-rle-downsample-reads)Cell-wise RLE of the blischak data" width="90%" />
+<p class="caption">(\#fig:norm-ours-rle-downsample-reads)Cell-wise RLE of the blischak data</p>
+</div>
+
 
 
 
