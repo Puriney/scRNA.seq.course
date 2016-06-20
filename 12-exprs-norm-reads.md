@@ -34,8 +34,8 @@ knit: bookdown::preview_chapter
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="12-exprs-norm-reads_files/figure-html/norm-pca-lsf-umi-1.png" alt="(\#fig:norm-pca-lsf-umi)PCA plot of the blischak data after RLE normalisation" width="90%" />
-<p class="caption">(\#fig:norm-pca-lsf-umi)PCA plot of the blischak data after RLE normalisation</p>
+<img src="12-exprs-norm-reads_files/figure-html/norm-pca-lsf-umi-1.png" alt="(\#fig:norm-pca-lsf-umi)PCA plot of the blischak data after LSF normalisation" width="90%" />
+<p class="caption">(\#fig:norm-pca-lsf-umi)PCA plot of the blischak data after LSF normalisation</p>
 </div>
 
 <div class="figure" style="text-align: center">
