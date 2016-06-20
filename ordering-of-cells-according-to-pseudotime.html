@@ -340,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (destroyed) when the RNA is extracted.</p>
 <p>Instead, we must sample at multiple time-points and obtain snapshots of the gene expression profiles. Since some of the cells will proceed faster along the differentiation than others, each snapshot may contain cells at varying points along the developmental progression. We use statistical methods to order the cells along one or more trajectories which represent the underlying developmental trajectories, this ordering is referred to as “pseudotime”.</p>
-<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development that was collected by Deng et al. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
+<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development <span class="citation">(Deng et al. <a href="#ref-Deng2014-mx">2014</a>)</span>. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
 <div id="tscan" class="section level2">
 <h2><span class="header-section-number">19.1</span> TSCAN</h2>
 <p>TSCAN combines clustering with pseudotime analysis. First it clusters the cells using <code>mclust</code>, which is based on a mixture of normal distributions. Then it builds a minimum spanning tree to connect the clusters together. The branch of this tree that connects the largest number of clusters is the main branch which is used to determine pseudotime.</p>
@@ -448,6 +448,12 @@ TSCAN::<span class="kw">singlegeneplot</span>(
 <p><img src="18-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise 2</strong>: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
 
+</div>
+</div>
+<h3> References</h3>
+<div id="refs" class="references">
+<div id="ref-Deng2014-mx">
+<p>Deng, Qiaolin, Daniel Ramsköld, Björn Reinius, and Rickard Sandberg. 2014. “Single-Cell RNA-seq Reveals Dynamic, Random Monoallelic Gene Expression in Mammalian Cells.” <em>Science</em> 343 (6167): 193–96.</p>
 </div>
 </div>
             </section>

@@ -412,14 +412,14 @@ Figure 16.4: Schematic representation of the graph network
 <div id="sincera" class="section level3">
 <h3><span class="header-section-number">16.5.1</span> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></h3>
 <ul>
-<li>SINCERA (<span class="citation">(Guo et al. <a href="#ref-Guo2015-ok">2015</a>)</span>) is based on hierarchical clustering</li>
+<li>SINCERA <span class="citation">(Guo et al. <a href="#ref-Guo2015-ok">2015</a>)</span> is based on hierarchical clustering</li>
 <li>Data is converted to <em>z</em>-scores before clustering</li>
 <li>Identify <em>k</em> by finding the first singleton cluster in the hierarchy</li>
 </ul>
 </div>
 <div id="pcareduce" class="section level3">
 <h3><span class="header-section-number">16.5.2</span> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></h3>
-<p>pcaReduce (<span class="citation">(Žurauskienė and Yau <a href="#ref-Zurauskiene2016-kg">2016</a>)</span>) combines PCA, <em>k</em>-means and “iterative” hierarchical clustering. Starting from a large number of clusters pcaReduce iteratively merges similar clusters; after each merging event it removes the principle component explaning the least variance in the data.</p>
+<p>pcaReduce <span class="citation">(Žurauskienė and Yau <a href="#ref-Zurauskiene2016-kg">2016</a>)</span> combines PCA, <em>k</em>-means and “iterative” hierarchical clustering. Starting from a large number of clusters pcaReduce iteratively merges similar clusters; after each merging event it removes the principle component explaning the least variance in the data.</p>
 </div>
 <div id="sc3" class="section level3">
 <h3><span class="header-section-number">16.5.3</span> <a href="http://bioconductor.org/packages/SC3/">SC3</a></h3>
@@ -430,7 +430,7 @@ Figure 16.5: SC3 pipeline
 </p>
 </div>
 <ul>
-<li>SC3 (<span class="citation">(Kiselev et al. <a href="#ref-Kiselev2016-bq">2016</a>)</span>) is based on PCA and spectral dimensionality reductions</li>
+<li>SC3 <span class="citation">(Kiselev et al. <a href="#ref-Kiselev2016-bq">2016</a>)</span> is based on PCA and spectral dimensionality reductions</li>
 <li>Utilises <em>k</em>-means</li>
 <li>Additionally performs the consensus clustering</li>
 </ul>
@@ -444,11 +444,11 @@ Figure 16.5: SC3 pipeline
 </div>
 <div id="seurat" class="section level3">
 <h3><span class="header-section-number">16.5.5</span> <a href="https://github.com/Puriney/seurat">SEURAT</a></h3>
-<p>SEURAT (<span class="citation">(Macosko et al. <a href="#ref-Macosko2015-ix">2015</a>)</span>) first ustilises PCA on a set of cells, then a number of statistically significant PCs is defined. Those PCs are further projected to a 2D space using tSNE. The remaining cells are then projected on the same tSNE map. Density clustering algorithm (<a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a>) is then used to identify cell clusters in the 2D space.</p>
+<p>SEURAT <span class="citation">(Macosko et al. <a href="#ref-Macosko2015-ix">2015</a>)</span> first ustilises PCA on a set of cells, then a number of statistically significant PCs is defined. Those PCs are further projected to a 2D space using tSNE. The remaining cells are then projected on the same tSNE map. Density clustering algorithm (<a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a>) is then used to identify cell clusters in the 2D space.</p>
 </div>
 <div id="snn-cliq" class="section level3">
 <h3><span class="header-section-number">16.5.6</span> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></h3>
-<p>SNN-Cliq (<span class="citation">(C. Xu and Su <a href="#ref-Xu2015-vf">2015</a>)</span>) is a graph-based method. First the method identifies the k-nearest-neighbours of each cell according to the <em>distance</em> measure. This is used to calculate the number of Shared Nearest Neighbours (SNN) between each pair of cells. A graph is built by placing an edge between two cells If they have at least one SNN. Clusters are defined as groups of cells with many edges between them using a “clique” method. SNN-Cliq requires several parameters to be defined manually.</p>
+<p>SNN-Cliq <span class="citation">(C. Xu and Su <a href="#ref-Xu2015-vf">2015</a>)</span> is a graph-based method. First the method identifies the k-nearest-neighbours of each cell according to the <em>distance</em> measure. This is used to calculate the number of Shared Nearest Neighbours (SNN) between each pair of cells. A graph is built by placing an edge between two cells If they have at least one SNN. Clusters are defined as groups of cells with many edges between them using a “clique” method. SNN-Cliq requires several parameters to be defined manually.</p>
 
 </div>
 </div>
