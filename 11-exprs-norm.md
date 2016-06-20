@@ -300,7 +300,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
-        main = "", ylim=c(-1,1))
+        main = "", ylim = c(-1, 1))
 ```
 
 <div class="figure" style="text-align: center">
@@ -313,27 +313,30 @@ A final way to correct for library size is to downsample the expression matrix s
 
 
 ```r
-Down_Sample_Matrix <- function(expr_mat) {
-        min_lib_size = min(colSums(expr_mat))
-        down_sample <- function(x) {
-                prob = min_lib_size/sum(x)
-                return(unlist(lapply(x, function(y) {rbinom(1,y,prob)})))
-        }
-        down_sampled_mat = apply(expr_mat,2,down_sample)
-        return(down_sampled_mat)
+Down_Sample_Matrix <-
+function (expr_mat) 
+{
+    min_lib_size <- min(colSums(expr_mat))
+    down_sample <- function(x) {
+        prob <- min_lib_size/sum(x)
+        return(unlist(lapply(x, function(y) {
+            rbinom(1, y, prob)
+        })))
+    }
+    down_sampled_mat <- apply(expr_mat, 2, down_sample)
+    return(down_sampled_mat)
 }
 ```
 
-```r
-downsampled <- Down_Sample_Matrix(counts(umi.qc));
-tmp = umi.qc;
-assayData(tmp)$counts <- downsampled
 
-scater::plotPCA(tmp[endog_genes, ],
+```r
+norm_counts(umi.qc) <- 
+    scRNA.seq.funcs::Down_Sample_Matrix(counts(umi.qc))
+scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
                 shape_by = "individual",
-                exprs_values = "counts")
+                exprs_values = "norm_counts")
 ```
 
 <div class="figure" style="text-align: center">
@@ -342,18 +345,18 @@ scater::plotPCA(tmp[endog_genes, ],
 </div>
 
 ```r
-boxplot(calc_cell_RLE(downsampled[rowMeans(downsampled)>0,]), #Ignore genes which are not detected 
-                                                              #in any cells following downsampling
+tmp <- norm_counts(umi.qc[endog_genes, ])
+# ignore genes which are not detected in any cells following downsampling
+boxplot(calc_cell_RLE(tmp[rowMeans(tmp) > 0, ]), 
         col = "grey50",
         ylab = "RLE",
-        main = "", ylim=c(-1,1))
+        main = "", ylim = c(-1, 1))
 ```
 
 <div class="figure" style="text-align: center">
 <img src="11-exprs-norm_files/figure-html/norm-ours-rle-downsample-1.png" alt="(\#fig:norm-ours-rle-downsample)Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-downsample)Cell-wise RLE of the blischak data</p>
 </div>
-
 
 ## Normalizing for gene/transcript length
 

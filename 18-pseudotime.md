@@ -70,10 +70,13 @@ cellLabels[dengclust$clusterid == 1]
 ```
 
 ```r
+colours <- rainbow(n = 10) # red = early, violet = late
 plot(
     cellLabels[as.numeric(pseudotime_order_tscan)], 
     xlab="Pseudotime Order", 
-    ylab="Timepoint"
+    ylab="Timepoint",
+    col = colours[as.numeric(cellLabels[as.numeric(pseudotime_order_tscan)])],
+    pch = 16
 )
 ```
 
@@ -138,7 +141,9 @@ plot(
     pseudotime_monocle$pseudotime, 
     pseudotime_monocle$Timepoint, 
     xlab="Pseudotime", 
-    ylab="Timepoint"
+    ylab="Timepoint",
+    col = colours[pseudotime_monocle$Timepoint],
+    pch = 16
 )
 ```
 
@@ -156,7 +161,6 @@ matched_ordering <-
     )
 timepoint_ordered <- 
     pseudotime_monocle[order(pseudotime_monocle$pseudotime), 1]
-colours <- rainbow(n = 10) # red = early, violet = late
 plot(
     matched_ordering, 
     xlab = "Monocle Order", 

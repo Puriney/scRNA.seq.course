@@ -358,10 +358,13 @@ pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.charact
 <p>We can also examine which timepoints have been assigned to each state:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">1</span>]</code></pre></div>
 <pre><code>##  [1] &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
+<span class="kw">plot</span>(
     cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)], 
     <span class="dt">xlab=</span><span class="st">&quot;Pseudotime Order&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>
+    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
+    <span class="dt">col =</span> colours[<span class="kw">as.numeric</span>(cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)])],
+    <span class="dt">pch =</span> <span class="dv">16</span>
 )</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise 1</strong> Compare results for different numbers of clusters (<code>clusternum</code>).</p>
@@ -407,7 +410,9 @@ pseudotime_order_monocle &lt;-<span class="st"> </span>
     pseudotime_monocle$pseudotime, 
     pseudotime_monocle$Timepoint, 
     <span class="dt">xlab=</span><span class="st">&quot;Pseudotime&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>
+    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
+    <span class="dt">col =</span> colours[pseudotime_monocle$Timepoint],
+    <span class="dt">pch =</span> <span class="dv">16</span>
 )</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
@@ -421,7 +426,6 @@ pseudotime_order_monocle &lt;-<span class="st"> </span>
     )
 timepoint_ordered &lt;-<span class="st"> </span>
 <span class="st">    </span>pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), <span class="dv">1</span>]
-colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
 <span class="kw">plot</span>(
     matched_ordering, 
     <span class="dt">xlab =</span> <span class="st">&quot;Monocle Order&quot;</span>, 

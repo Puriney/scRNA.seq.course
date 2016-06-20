@@ -73,8 +73,6 @@ for (i in 1:nrow(biase)) {
 
 ## DESeq2
 
-Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take some time. You do __not__ need to run it during the course, instead just check the results below.
-
 
 ```r
 cond <- factor(
@@ -94,8 +92,6 @@ pValsDESeq <- resDESeq$padj
 ```
 
 ## SCDE
-
-Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take quite a lot of time. You do __not__ need to run it during the course, instead just check the results below.
 
 
 ```r
@@ -157,7 +153,7 @@ vennDiagram(
 
 <img src="21-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" />
 
-__Exercise:__ How does this Venn diagram correspond to what you would expect based on the synthetic data? 
+__Exercise 1:__ How does this Venn diagram correspond to what you would expect based on the synthetic data? 
 
 ## Visualisation
 
@@ -197,7 +193,7 @@ hist(log2(meanFoldChange[deSeqGenesChangedInds]),
 
 <img src="21-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" />
 
-__Exercise:__ Create the histogram of fold-changes for SCDE. Compare
+__Exercise 2:__ Create the histogram of fold-changes for SCDE. Compare
 the estimated fold-changes between the different methods? What do the
 genes where they differ have in common?
 
@@ -261,7 +257,7 @@ points(log2(rowMeans(cell2[deSeqGenesChangedInds,])),
 
 <img src="21-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" />
 
-__Exercise:__ The volcano and MA-plots for the SCDE are missing - can
+__Exercise 3:__ The volcano and MA-plots for the SCDE are missing - can
 you generate them? Compare to the synthetic data, what do they tell
 you about the properties of the genes that have changed?
 
@@ -276,12 +272,11 @@ allChangedInds <- intersect(which(pValsDESeq<.05),
                             intersect(which(pValsSCDE<.05),
                                       which(pVals<.05)))
 pheatmap::pheatmap(log2(1 + cbind(cell2, cell4)[allChangedInds,]),
-                   # scale = "column",
                    cutree_cols = 2,
                    show_rownames = FALSE)
 ```
 
 <img src="21-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" />
 
-__Exercise:__ Create heatmaps for the genes that were detected by at least 2/3 methods.
+__Exercise 4:__ Create heatmaps for the genes that were detected by at least 2/3 methods.
 

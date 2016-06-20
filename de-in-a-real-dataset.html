@@ -378,7 +378,6 @@ for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(biase)) {
 </div>
 <div id="deseq2-1" class="section level2">
 <h2><span class="header-section-number">22.3</span> DESeq2</h2>
-<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take some time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
     <span class="kw">c</span>(
         <span class="kw">rep</span>(<span class="st">&quot;cell2&quot;</span>, <span class="dv">20</span>),
@@ -396,7 +395,6 @@ pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj</code></pre></div>
 </div>
 <div id="scde-1" class="section level2">
 <h2><span class="header-section-number">22.4</span> SCDE</h2>
-<p>Because the number of genes now is 500, which is about 100 times more than the number of genes we used for the synthetic dataset, this calculation will take quite a lot of time. You do <strong>not</strong> need to run it during the course, instead just check the results below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
     biase,
     <span class="dv">2</span>,
@@ -450,7 +448,7 @@ pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSC
     <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
 )</code></pre></div>
 <p><img src="21-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
+<p><strong>Exercise 1:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
 </div>
 <div id="visualisation" class="section level2">
 <h2><span class="header-section-number">22.6</span> Visualisation</h2>
@@ -482,7 +480,7 @@ nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
      <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
      <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))</code></pre></div>
 <p><img src="21-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
+<p><strong>Exercise 2:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
 <div id="volcano-plots" class="section level3">
 <h3><span class="header-section-number">22.6.1</span> Volcano plots</h3>
 <p>A popular method for illustrating the difference between two conditions is the volcano plot which compares the magnitude of the change and the significance.</p>
@@ -530,7 +528,7 @@ nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
        <span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
        <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
 <p><img src="21-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
+<p><strong>Exercise 3:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
 </div>
 <div id="heatmap-of-de-genes" class="section level3">
 <h3><span class="header-section-number">22.6.3</span> Heatmap of DE genes</h3>
@@ -539,11 +537,10 @@ nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
                             <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>),
                                       <span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)))
 pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span><span class="kw">cbind</span>(cell2, cell4)[allChangedInds,]),
-                   <span class="co"># scale = &quot;column&quot;,</span>
                    <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
                    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="21-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
+<p><strong>Exercise 4:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
 
 </div>
 </div>
