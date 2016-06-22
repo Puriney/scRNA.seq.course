@@ -171,9 +171,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#erccs-and-mts"><i class="fa fa-check"></i><b>6.3.3</b> ERCCs and MTs</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-filtering"><i class="fa fa-check"></i><b>6.4</b> Cell filtering</a><ul>
-<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.1</b> Default Thresholds</a></li>
-<li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.2</b> Automatic</a></li>
-<li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.3</b> Manual</a></li>
+<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.1</b> Manual</a></li>
+<li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.2</b> Default Thresholds</a></li>
+<li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.3</b> Automatic</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#compare-filterings"><i class="fa fa-check"></i><b>6.5</b> Compare filterings</a></li>
 <li class="chapter" data-level="6.6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-analysis"><i class="fa fa-check"></i><b>6.6</b> Gene analysis</a><ul>
@@ -344,11 +344,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">6.2</span> Blischak dataset</h2>
 <p>To illustrate cell QC, we consider a <a href="http://jdblischak.github.io/singleCellSeq/analysis/">dataset</a> of induced pluripotent stem cells generated from three different individuals by John Blischak in <a href="http://giladlab.uchicago.edu/">Yoav Gilad</a>’s lab at the University of Chicago. The experiments were carried out on the Fluidigm C1 platform and to facilitate the quantification both unique molecular identifiers (UMIs) and ERCC <em>spike-ins</em> were used. The data files are located in the <code>blischak</code> folder in your working directory. These files are the copies of the original files made on the 15/03/16. We will use these copies for reproducibility purposes.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(knitr)
 <span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Load the data and annotations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">molecules &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/molecules.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>)
 anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;blischak/annotation.txt&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>, <span class="dt">header =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>Inspect a small portion of the expression matrix</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+    <span class="kw">head</span>(molecules[ , <span class="dv">1</span>:<span class="dv">3</span>]), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+    <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
@@ -398,6 +403,10 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 </tr>
 </tbody>
 </table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+    <span class="kw">head</span>(anno), <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+    <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
@@ -500,6 +509,13 @@ Figure 6.1: Histogram of library sizes for all cells
 <li><p>What distribution do you expect that the total number of molecules for each cell should follow?</p></li>
 </ol>
 <p><strong>Our answer</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_total_counts &lt;-<span class="st"> </span>(umi$total_counts &gt;<span class="st"> </span><span class="dv">25000</span>)
+knitr::<span class="kw">kable</span>(
+    <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_by_total_counts)),
+    <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+    <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+    <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total counts filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-9">Table 6.3: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
@@ -519,7 +535,6 @@ Figure 6.1: Histogram of library sizes for all cells
 </tr>
 </tbody>
 </table>
-<p>If your answer is different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
 <div id="detected-genes-1" class="section level3">
 <h3><span class="header-section-number">6.3.2</span> Detected genes (1)</h3>
@@ -539,6 +554,13 @@ Figure 6.2: Histogram of the number of detected genes in all cells
 <p><strong>Exercise 2</strong></p>
 <p>How many cells does our filter remove?</p>
 <p><strong>Our answer</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_expr_features &lt;-<span class="st"> </span>(umi$total_features &gt;<span class="st"> </span><span class="dv">7000</span>)
+knitr::<span class="kw">kable</span>(
+    <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_by_expr_features)),
+    <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+    <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+    <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total features filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-10">Table 6.4: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
@@ -558,7 +580,6 @@ Figure 6.2: Histogram of the number of detected genes in all cells
 </tr>
 </tbody>
 </table>
-<p>If your answer is different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
 <div id="erccs-and-mts" class="section level3">
 <h3><span class="header-section-number">6.3.3</span> ERCCs and MTs</h3>
@@ -591,6 +612,13 @@ Figure 6.4: Percentage of counts in ERCCs
 <p><strong>Exercise 3</strong></p>
 <p>Create filters for removing batch NA19098.r2 and cells with high expression of mitochondrial genes (&gt;10% of total counts in a cell).</p>
 <p><strong>Our answer</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_ERCC &lt;-<span class="st"> </span>umi$batch !=<span class="st"> &quot;NA19098.r2&quot;</span>
+knitr::<span class="kw">kable</span>(
+  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_by_ERCC)),
+  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by ERCC filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-11">Table 6.5: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
@@ -610,6 +638,13 @@ Figure 6.4: Percentage of counts in ERCCs
 </tr>
 </tbody>
 </table>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_MT &lt;-<span class="st"> </span>umi$pct_counts_feature_controls_MT &lt;<span class="st"> </span><span class="dv">10</span>
+knitr::<span class="kw">kable</span>(
+  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_by_MT)),
+  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by MT filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-11">Table 6.6: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
@@ -629,7 +664,6 @@ Figure 6.4: Percentage of counts in ERCCs
 </tr>
 </tbody>
 </table>
-<p>If your answer is different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 <p><strong>Exercise 4</strong></p>
 <p>What would you expect to see in the ERCC vs counts plot if you were examining a dataset containing cells of different sizes (eg. normal &amp; senescent cells)?</p>
 <p><strong>Answer</strong></p>
@@ -638,8 +672,47 @@ Figure 6.4: Percentage of counts in ERCCs
 </div>
 <div id="cell-filtering" class="section level2">
 <h2><span class="header-section-number">6.4</span> Cell filtering</h2>
+<div id="manual" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Manual</h3>
+<p>Now we can define a cell filter based on our previous analysis:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use &lt;-<span class="st"> </span>(
+    <span class="co"># sufficient features (genes)</span>
+    filter_by_expr_features &amp;
+<span class="st">    </span><span class="co"># sufficient molecules counted</span>
+<span class="st">    </span>filter_by_total_counts &amp;
+<span class="st">    </span><span class="co"># sufficient endogenous RNA</span>
+<span class="st">    </span>filter_by_ERCC &amp;
+<span class="st">    </span><span class="co"># remove cells with unusual number of reads in MT genes</span>
+<span class="st">    </span>filter_by_MT
+)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$use)),
+  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
+)</code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-13">Table 6.7: </span>The number of cells removed by manual filter (FALSE)</caption>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">FALSE</td>
+<td align="right">210</td>
+</tr>
+<tr class="even">
+<td align="left">TRUE</td>
+<td align="right">654</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="default-thresholds" class="section level3">
-<h3><span class="header-section-number">6.4.1</span> Default Thresholds</h3>
+<h3><span class="header-section-number">6.4.2</span> Default Thresholds</h3>
 <p>Results from the biological analysis of single-cell RNA-seq data are often strongly influenced by outliers. Thus, it is important to include multiple filters. A robust way of detecting outliers is through the median absolute difference which is defined as <span class="math inline">\(d_i = |r_i - m|\)</span>, where <span class="math inline">\(r_i\)</span> is the number of reads in cell <span class="math inline">\(i\)</span> and <span class="math inline">\(m\)</span> is the median number of reads across the all cells in the sample. By default, scater removes all cells where <span class="math inline">\(d_i&gt;5*\)</span>median(<span class="math inline">\(d_i\)</span>). A similar filter is used for the number of detected genes. Furthermore, scater removes all cells where &gt;80% of counts were assigned to control genes and any cells that have been marked as controls.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use_default &lt;-<span class="st"> </span>(
     <span class="co"># remove cells with unusual numbers of genes</span>
@@ -653,8 +726,14 @@ Figure 6.4: Percentage of counts in ERCCs
 <span class="st">    </span><span class="co"># controls shouldn&#39;t be used in downstream analysis</span>
 <span class="st">    </span>!umi$is_cell_control
 )</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$use_default)),
+  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-13">Table 6.7: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-15">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -674,7 +753,7 @@ Figure 6.4: Percentage of counts in ERCCs
 </table>
 </div>
 <div id="automatic" class="section level3">
-<h3><span class="header-section-number">6.4.2</span> Automatic</h3>
+<h3><span class="header-section-number">6.4.3</span> Automatic</h3>
 <p>Another option available in <strong>scater</strong> is to conduct PCA on a set of QC metrics and then use automatic outlier detection to identify potentially problematic cells.</p>
 <p>By default, the following metrics are used for PCA-based outlier detection:</p>
 <ul>
@@ -689,7 +768,7 @@ Figure 6.4: Percentage of counts in ERCCs
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi &lt;-
 scater::<span class="kw">plotPCA</span>(umi,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>, 
-                <span class="dt">shape_by =</span> <span class="st">&quot;filter_on_total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;use&quot;</span>,
                 <span class="dt">pca_data_input =</span> <span class="st">&quot;pdata&quot;</span>,
                 <span class="dt">detect_outliers =</span> <span class="ot">TRUE</span>,
                 <span class="dt">return_SCESet =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -783,8 +862,14 @@ scater::<span class="kw">plotPCA</span>(umi,
 Figure 6.5: PCA plot used for automatic detection of cell outliers
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+  <span class="kw">as.data.frame</span>(<span class="kw">table</span>(umi$outlier)),
+  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+  <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+  <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-14">Table 6.8: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-16">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -803,39 +888,6 @@ Figure 6.5: PCA plot used for automatic detection of cell outliers
 </tbody>
 </table>
 </div>
-<div id="manual" class="section level3">
-<h3><span class="header-section-number">6.4.3</span> Manual</h3>
-<p>Another option in scater is to use your own filters. We define filters based on our previous analysis:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi$use &lt;-<span class="st"> </span>(
-    <span class="co"># sufficient features (genes)</span>
-    filter_by_expr_features &amp;
-<span class="st">    </span><span class="co"># sufficient molecules counted</span>
-<span class="st">    </span>filter_by_total_counts &amp;
-<span class="st">    </span><span class="co"># sufficient endogenous RNA</span>
-<span class="st">    </span>filter_by_ERCC &amp;
-<span class="st">    </span><span class="co"># remove cells with unusual number of reads in MT genes</span>
-<span class="st">    </span>filter_by_MT
-)</code></pre></div>
-<table>
-<caption><span id="tab:unnamed-chunk-16">Table 6.9: </span>The number of cells removed by manual filter (FALSE)</caption>
-<thead>
-<tr class="header">
-<th align="left">Var1</th>
-<th align="right">Freq</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">FALSE</td>
-<td align="right">210</td>
-</tr>
-<tr class="even">
-<td align="left">TRUE</td>
-<td align="right">654</td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 <div id="compare-filterings" class="section level2">
 <h2><span class="header-section-number">6.5</span> Compare filterings</h2>
@@ -843,13 +895,21 @@ Figure 6.5: PCA plot used for automatic detection of cell outliers
 <p>Compare the default, automatic and manual cell filters. Plot a Venn diagram of the outlier cells from these filterings.</p>
 <p><strong>Hint</strong>: Use <code>limma::vennCounts</code> and <code>limma::vennDiagram</code> functions from the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package to make a Venn diagram.</p>
 <p><strong>Answer</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">def &lt;-<span class="st"> </span><span class="kw">colnames</span>(umi)[!umi$use_default]
+auto &lt;-<span class="st"> </span><span class="kw">colnames</span>(umi)[umi$outlier]
+man &lt;-<span class="st"> </span><span class="kw">colnames</span>(umi)[!umi$use]
+venn.diag &lt;-<span class="st"> </span>limma::<span class="kw">vennCounts</span>(<span class="kw">cbind</span>(<span class="kw">colnames</span>(umi) %in%<span class="st"> </span>def,
+                                     <span class="kw">colnames</span>(umi) %in%<span class="st"> </span>auto,
+                                     <span class="kw">colnames</span>(umi) %in%<span class="st"> </span>man))
+limma::<span class="kw">vennDiagram</span>(venn.diag,
+                   <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;Default&quot;</span>, <span class="st">&quot;Automatic&quot;</span>, <span class="st">&quot;Manual&quot;</span>),
+                   <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;magenta&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>))</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:cell-filt-comp"></span>
 <img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">
 Figure 6.6: Comparison of the default, automatic and manual cell filters
 </p>
 </div>
-<p>If your answer is different please compare your code with <a href="https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd">ours</a> (you need to search for this exercise in the opened file).</p>
 </div>
 <div id="gene-analysis" class="section level2">
 <h2><span class="header-section-number">6.6</span> Gene analysis</h2>
@@ -872,6 +932,12 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(umi[ , <span class="kw">pData</span>(umi)$use]), <span class="dv">1</span>, 
                       function(x) <span class="kw">length</span>(x[x &gt;<span class="st"> </span><span class="dv">1</span>]) &gt;=<span class="st"> </span><span class="dv">2</span>)
 <span class="kw">fData</span>(umi)$use &lt;-<span class="st"> </span>filter_genes</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
+    <span class="kw">as.data.frame</span>(<span class="kw">table</span>(filter_genes)),
+    <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,
+    <span class="dt">row.names =</span> <span class="ot">FALSE</span>,
+    <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
+)</code></pre></div>
 <table>
 <caption><span id="tab:unnamed-chunk-18">Table 6.10: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>

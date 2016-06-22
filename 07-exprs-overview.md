@@ -1,5 +1,5 @@
 ---
-knit: bookdown::preview_chapter
+output: html_document
 ---
 
 # Data visualization
@@ -77,10 +77,30 @@ How do the PCA plots change if when all 14,214 genes are used? Or when only top 
 
 __Our answer__
 
+
+```r
+scater::plotPCA(umi.qc[endog_genes, ],
+                ntop = 14214,
+                colour_by = "batch",
+                size_by = "total_features",
+                shape_by = "individual",
+                exprs_values = "counts")
+```
+
 <div class="figure" style="text-align: center">
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)" width="90%" />
 <p class="caption">(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)</p>
 </div>
+
+
+```r
+scater::plotPCA(umi.qc[endog_genes, ],
+                ntop = 50,
+                colour_by = "batch",
+                size_by = "total_features",
+                shape_by = "individual",
+                exprs_values = "counts")
+```
 
 <div class="figure" style="text-align: center">
 <img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-2)PCA plot of the blischak data (50 genes)" width="90%" />
@@ -140,10 +160,34 @@ How do the tSNE plots change when a perplexity of 10 or 200 is used?
 
 __Our answer__
 
+
+```r
+scater::plotTSNE(umi.qc[endog_genes, ],
+                 ntop = 500,
+                 perplexity = 10,
+                 colour_by = "batch",
+                 size_by = "total_features",
+                 shape_by = "individual",
+                 exprs_values = "counts",
+                 rand_seed = 123456)
+```
+
 <div class="figure" style="text-align: center">
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)" width="90%" />
 <p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)</p>
 </div>
+
+
+```r
+scater::plotTSNE(umi.qc[endog_genes, ],
+                 ntop = 500,
+                 perplexity = 200,
+                 colour_by = "batch",
+                 size_by = "total_features",
+                 shape_by = "individual",
+                 exprs_values = "counts",
+                 rand_seed = 123456)
+```
 
 <div class="figure" style="text-align: center">
 <img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 200)" width="90%" />

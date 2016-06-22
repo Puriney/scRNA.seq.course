@@ -28,6 +28,7 @@ molecular identifiers (UMIs) and ERCC _spike-ins_ were used. The data files are 
 
 ```r
 library(scater, quietly = TRUE)
+library(knitr)
 options(stringsAsFactors = FALSE)
 ```
 
@@ -40,6 +41,15 @@ anno <- read.table("blischak/annotation.txt", sep = "\t", header = TRUE)
 
 Inspect a small portion of the expression matrix
 
+```r
+knitr::kable(
+    head(molecules[ , 1:3]), booktabs = TRUE,
+    caption = 'A table of the first 6 rows and 3 columns of the molecules table.'
+)
+```
+
+
+
 Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.
 
                    NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
@@ -50,6 +60,13 @@ ENSG00000188976                 3                6                1
 ENSG00000187961                 0                0                0
 ENSG00000187583                 0                0                0
 ENSG00000187642                 0                0                0
+
+```r
+knitr::kable(
+    head(anno), booktabs = TRUE,
+    caption = 'A table of the first 6 rows of the anno table.'
+)
+```
 
 
 
@@ -138,14 +155,24 @@ total number of molecules for each cell should follow?
 __Our answer__
 
 
+```r
+filter_by_total_counts <- (umi$total_counts > 25000)
+knitr::kable(
+    as.data.frame(table(filter_by_total_counts)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of cells removed by total counts filter (FALSE)'
+)
+```
+
+
+
 Table: (\#tab:unnamed-chunk-9)The number of cells removed by total counts filter (FALSE)
 
 filter_by_total_counts    Freq
 -----------------------  -----
 FALSE                       46
 TRUE                       818
-
-If your answer is different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd) (you need to search for this exercise in the opened file).
 
 ### Detected genes (1)
 
@@ -180,14 +207,24 @@ How many cells does our filter remove?
 __Our answer__
 
 
+```r
+filter_by_expr_features <- (umi$total_features > 7000)
+knitr::kable(
+    as.data.frame(table(filter_by_expr_features)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of cells removed by total features filter (FALSE)'
+)
+```
+
+
+
 Table: (\#tab:unnamed-chunk-10)The number of cells removed by total features filter (FALSE)
 
 filter_by_expr_features    Freq
 ------------------------  -----
 FALSE                       120
 TRUE                        744
-
-If your answer is different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd) (you need to search for this exercise in the opened file).
 
 ### ERCCs and MTs
 
@@ -236,12 +273,34 @@ Create filters for removing batch NA19098.r2 and cells with high expression of m
 __Our answer__
 
 
+```r
+filter_by_ERCC <- umi$batch != "NA19098.r2"
+knitr::kable(
+  as.data.frame(table(filter_by_ERCC)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by ERCC filter (FALSE)'
+)
+```
+
+
+
 Table: (\#tab:unnamed-chunk-11)The number of cells removed by ERCC filter (FALSE)
 
 filter_by_ERCC    Freq
 ---------------  -----
 FALSE               96
 TRUE               768
+
+```r
+filter_by_MT <- umi$pct_counts_feature_controls_MT < 10
+knitr::kable(
+  as.data.frame(table(filter_by_MT)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by MT filter (FALSE)'
+)
+```
 
 
 
@@ -252,8 +311,6 @@ filter_by_MT    Freq
 FALSE             31
 TRUE             833
 
-If your answer is different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd) (you need to search for this exercise in the opened file).
-
 __Exercise 4__
 
 What would you expect to see in the ERCC vs counts plot if you were examining a dataset containing cells of different sizes (eg. normal & senescent cells)?
@@ -263,6 +320,43 @@ __Answer__
 You would expect to see a group corresponding to the smaller cells (normal) with a higher fraction of ERCC reads than a separate group corresponding to the larger cells (senescent).
 
 ## Cell filtering
+
+### Manual
+
+Now we can define a cell filter based on our previous analysis:
+
+
+```r
+umi$use <- (
+    # sufficient features (genes)
+    filter_by_expr_features &
+    # sufficient molecules counted
+    filter_by_total_counts &
+    # sufficient endogenous RNA
+    filter_by_ERCC &
+    # remove cells with unusual number of reads in MT genes
+    filter_by_MT
+)
+```
+
+
+```r
+knitr::kable(
+  as.data.frame(table(umi$use)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by manual filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-13)The number of cells removed by manual filter (FALSE)
+
+Var1     Freq
+------  -----
+FALSE     210
+TRUE      654
 
 ### Default Thresholds
 
@@ -285,7 +379,18 @@ umi$use_default <- (
 ```
 
 
-Table: (\#tab:unnamed-chunk-13)The number of cells removed by default filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(umi$use_default)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by default filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-15)The number of cells removed by default filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -312,7 +417,7 @@ scater first creates a matrix where the rows represent cells and the columns rep
 umi <-
 scater::plotPCA(umi,
                 size_by = "total_features", 
-                shape_by = "filter_on_total_features",
+                shape_by = "use",
                 pca_data_input = "pdata",
                 detect_outliers = TRUE,
                 return_SCESet = TRUE)
@@ -411,38 +516,23 @@ scater::plotPCA(umi,
 </div>
 
 
-Table: (\#tab:unnamed-chunk-14)The number of cells removed by automatic filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(umi$outlier)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by automatic filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-16)The number of cells removed by automatic filter (FALSE)
 
 Var1     Freq
 ------  -----
 FALSE     791
 TRUE       73
-
-### Manual
-
-Another option in scater is to use your own filters. We define filters based on our previous analysis:
-
-
-```r
-umi$use <- (
-    # sufficient features (genes)
-    filter_by_expr_features &
-    # sufficient molecules counted
-    filter_by_total_counts &
-    # sufficient endogenous RNA
-    filter_by_ERCC &
-    # remove cells with unusual number of reads in MT genes
-    filter_by_MT
-)
-```
-
-
-Table: (\#tab:unnamed-chunk-16)The number of cells removed by manual filter (FALSE)
-
-Var1     Freq
-------  -----
-FALSE     210
-TRUE      654
 
 ## Compare filterings
 
@@ -454,12 +544,23 @@ __Hint__: Use `limma::vennCounts` and `limma::vennDiagram` functions from the [l
 
 __Answer__
 
+
+```r
+def <- colnames(umi)[!umi$use_default]
+auto <- colnames(umi)[umi$outlier]
+man <- colnames(umi)[!umi$use]
+venn.diag <- limma::vennCounts(cbind(colnames(umi) %in% def,
+                                     colnames(umi) %in% auto,
+                                     colnames(umi) %in% man))
+limma::vennDiagram(venn.diag,
+                   names = c("Default", "Automatic", "Manual"),
+                   circle.col = c("magenta", "blue", "green"))
+```
+
 <div class="figure" style="text-align: center">
 <img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters</p>
 </div>
-
-If your answer is different please compare your code with [ours](https://github.com/hemberg-lab/scRNA.seq.course/blob/master/05-exprs-qc.Rmd) (you need to search for this exercise in the opened file).
 
 ## Gene analysis
 
@@ -492,6 +593,17 @@ filter_genes <- apply(counts(umi[ , pData(umi)$use]), 1,
                       function(x) length(x[x > 1]) >= 2)
 fData(umi)$use <- filter_genes
 ```
+
+
+```r
+knitr::kable(
+    as.data.frame(table(filter_genes)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of genes removed by gene filter (FALSE)'
+)
+```
+
 
 
 Table: (\#tab:unnamed-chunk-18)The number of genes removed by gene filter (FALSE)

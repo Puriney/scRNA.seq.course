@@ -171,9 +171,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.3.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#erccs-and-mts"><i class="fa fa-check"></i><b>6.3.3</b> ERCCs and MTs</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#cell-filtering"><i class="fa fa-check"></i><b>6.4</b> Cell filtering</a><ul>
-<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.1</b> Default Thresholds</a></li>
-<li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.2</b> Automatic</a></li>
-<li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.3</b> Manual</a></li>
+<li class="chapter" data-level="6.4.1" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#manual"><i class="fa fa-check"></i><b>6.4.1</b> Manual</a></li>
+<li class="chapter" data-level="6.4.2" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#default-thresholds"><i class="fa fa-check"></i><b>6.4.2</b> Default Thresholds</a></li>
+<li class="chapter" data-level="6.4.3" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#automatic"><i class="fa fa-check"></i><b>6.4.3</b> Automatic</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#compare-filterings"><i class="fa fa-check"></i><b>6.5</b> Compare filterings</a></li>
 <li class="chapter" data-level="6.6" data-path="expression-qc-umi.html"><a href="expression-qc-umi.html#gene-analysis"><i class="fa fa-check"></i><b>6.6</b> Gene analysis</a><ul>
@@ -335,24 +335,57 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="expression-overview-reads" class="section level1">
 <h1><span class="header-section-number">9</span> Expression overview (Reads)</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+reads &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/reads.rds&quot;</span>)
+reads.qc &lt;-<span class="st"> </span>reads[<span class="kw">fData</span>(reads)$use, <span class="kw">pData</span>(reads)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(reads.qc)$is_feature_control</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(reads[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-before-qc-reads"></span>
 <img src="08-exprs-overview-reads_files/figure-html/expr-overview-pca-before-qc-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
 Figure 9.1: PCA plot of the blischak data
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(reads.qc[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-reads"></span>
 <img src="08-exprs-overview-reads_files/figure-html/expr-overview-pca-after-qc-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
 Figure 9.2: PCA plot of the blischak data
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(reads[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-before-qc-reads"></span>
 <img src="08-exprs-overview-reads_files/figure-html/expr-overview-tsne-before-qc-reads-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
 Figure 9.3: tSNE map of the blischak data
 </p>
 </div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(reads.qc[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-reads"></span>
 <img src="08-exprs-overview-reads_files/figure-html/expr-overview-tsne-after-qc-reads-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">

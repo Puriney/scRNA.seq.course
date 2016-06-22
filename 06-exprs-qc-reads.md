@@ -1,5 +1,5 @@
 ---
-knit: bookdown::preview_chapter
+output: html_document
 ---
 
 # Expression QC (Reads)
@@ -7,11 +7,31 @@ knit: bookdown::preview_chapter
 This chapter contains the summary plots and tables for the QC exercise based on the reads for the Bischak data discussed in the previous chapter.
 
 
+```r
+library(scater, quietly = TRUE)
+library(knitr)
+options(stringsAsFactors = FALSE)
+```
 
 
 
 
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows and 3 columns of the molecules table.
+```r
+reads <- read.table("blischak/reads.txt", sep = "\t")
+anno <- read.table("blischak/annotation.txt", sep = "\t", header = TRUE)
+```
+
+
+```r
+knitr::kable(
+    head(reads[ , 1:3]), booktabs = TRUE,
+    caption = 'A table of the first 6 rows and 3 columns of the molecules table.'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows and 3 columns of the molecules table.
 
                    NA19098.r1.A01   NA19098.r1.A02   NA19098.r1.A03
 ----------------  ---------------  ---------------  ---------------
@@ -22,9 +42,16 @@ ENSG00000187961                 0                0                0
 ENSG00000187583                 0                0                0
 ENSG00000187642                 0                0                0
 
+```r
+knitr::kable(
+    head(anno), booktabs = TRUE,
+    caption = 'A table of the first 6 rows of the anno table.'
+)
+```
 
 
-Table: (\#tab:unnamed-chunk-3)A table of the first 6 rows of the anno table.
+
+Table: (\#tab:unnamed-chunk-4)A table of the first 6 rows of the anno table.
 
 individual   replicate   well   batch        sample_id      
 -----------  ----------  -----  -----------  ---------------
@@ -36,12 +63,47 @@ NA19098      r1          A05    NA19098.r1   NA19098.r1.A05
 NA19098      r1          A06    NA19098.r1   NA19098.r1.A06 
 
 
+```r
+pheno_data <- new("AnnotatedDataFrame", anno)
+rownames(pheno_data) <- pheno_data$sample_id
+reads <- scater::newSCESet(
+    countData = reads,
+    phenoData = pheno_data
+)
+```
 
 
+```r
+keep_feature <- rowSums(is_exprs(reads)) > 0
+reads <- reads[keep_feature, ]
+```
 
 
+```r
+ercc <- featureNames(reads)[grepl("ERCC-", featureNames(reads))]
+mt <- c("ENSG00000198899", "ENSG00000198727", "ENSG00000198888",
+        "ENSG00000198886", "ENSG00000212907", "ENSG00000198786",
+        "ENSG00000198695", "ENSG00000198712", "ENSG00000198804",
+        "ENSG00000198763", "ENSG00000228253", "ENSG00000198938",
+        "ENSG00000198840")
+```
 
 
+```r
+reads <- scater::calculateQCMetrics(
+    reads,
+    feature_controls = list(ERCC = ercc, MT = mt)
+)
+```
+
+
+```r
+hist(
+    reads$total_counts,
+    breaks = 100
+)
+abline(v = 1.3e6, col = "red")
+```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells" width="90%" />
@@ -49,14 +111,37 @@ NA19098      r1          A06    NA19098.r1   NA19098.r1.A06
 </div>
 
 
+```r
+filter_by_total_counts <- (reads$total_counts > 1.3e6)
+```
 
 
-Table: (\#tab:unnamed-chunk-9)The number of cells removed by total counts filter (FALSE)
+```r
+knitr::kable(
+    as.data.frame(table(filter_by_total_counts)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of cells removed by total counts filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-10)The number of cells removed by total counts filter (FALSE)
 
 filter_by_total_counts    Freq
 -----------------------  -----
 FALSE                      180
 TRUE                       684
+
+
+```r
+hist(
+    reads$total_features,
+    breaks = 100
+)
+abline(v = 7000, col = "red")
+```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="(\#fig:total-features-hist-reads)Histogram of the number of detected genes in all cells" width="90%" />
@@ -64,24 +149,66 @@ TRUE                       684
 </div>
 
 
+```r
+filter_by_expr_features <- (reads$total_features > 7000)
+```
 
 
-Table: (\#tab:unnamed-chunk-11)The number of cells removed by total features filter (FALSE)
+```r
+knitr::kable(
+    as.data.frame(table(filter_by_expr_features)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of cells removed by total features filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-12)The number of cells removed by total features filter (FALSE)
 
 filter_by_expr_features    Freq
 ------------------------  -----
 FALSE                       120
 TRUE                        744
 
+
+```r
+scater::plotPhenoData(
+    reads,
+    aes(x = total_features, y = log10(total_counts), colour = batch)
+)
+```
+
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes" width="90%" />
 <p class="caption">(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes</p>
 </div>
 
+
+```r
+scater::plotPhenoData(
+    reads,
+    aes_string(x = "total_features",
+               y = "pct_counts_feature_controls_MT",
+               colour = "batch")
+)
+```
+
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes" width="90%" />
 <p class="caption">(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes</p>
 </div>
+
+
+```r
+scater::plotPhenoData(
+    reads,
+    aes_string(x = "total_features",
+               y = "pct_counts_feature_controls_ERCC",
+               colour = "batch")
+)
+```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="(\#fig:ercc-vs-counts-reads)Percentage of counts in ERCCs" width="90%" />
@@ -89,9 +216,24 @@ TRUE                        744
 </div>
 
 
+```r
+filter_by_ERCC <- reads$batch != "NA19098.r2" &
+    reads$pct_counts_feature_controls_ERCC < 25
+```
 
 
-Table: (\#tab:unnamed-chunk-13)The number of cells removed by ERCC filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(filter_by_ERCC)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by ERCC filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-14)The number of cells removed by ERCC filter (FALSE)
 
 filter_by_ERCC    Freq
 ---------------  -----
@@ -99,9 +241,23 @@ FALSE              103
 TRUE               761
 
 
+```r
+filter_by_MT <- reads$pct_counts_feature_controls_MT < 30
+```
 
 
-Table: (\#tab:unnamed-chunk-15)The number of cells removed by MT filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(filter_by_MT)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by MT filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-16)The number of cells removed by MT filter (FALSE)
 
 filter_by_MT    Freq
 -------------  -----
@@ -109,15 +265,83 @@ FALSE             18
 TRUE             846
 
 
+```r
+reads$use <- (
+    # sufficient features (genes)
+    filter_by_expr_features &
+    # sufficient molecules counted
+    filter_by_total_counts &
+    # sufficient endogenous RNA
+    filter_by_ERCC &
+    # remove cells with unusual number of reads in MT genes
+    filter_by_MT
+)
+```
 
 
-Table: (\#tab:unnamed-chunk-17)The number of cells removed by default filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(reads$use)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by manual filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-18)The number of cells removed by manual filter (FALSE)
+
+Var1     Freq
+------  -----
+FALSE     259
+TRUE      605
+
+
+```r
+reads$use_default <- (
+    # remove cells with unusual numbers of genes
+    !reads$filter_on_total_features &
+    # sufficient molecules counted
+    !reads$filter_on_total_counts &
+    # sufficient endogenous RNA
+    !reads$filter_on_pct_counts_feature_controls_ERCC &
+    # remove cells with unusual number of reads in MT genes
+    !reads$filter_on_pct_counts_feature_controls_MT &
+    # controls shouldn't be used in downstream analysis
+    !reads$is_cell_control
+)
+```
+
+
+```r
+knitr::kable(
+  as.data.frame(table(reads$use_default)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by default filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-20)The number of cells removed by default filter (FALSE)
 
 Var1     Freq
 ------  -----
 FALSE      37
 TRUE      827
 
+
+```r
+reads <-
+scater::plotPCA(reads,
+                size_by = "total_features", 
+                shape_by = "use",
+                pca_data_input = "pdata",
+                detect_outliers = TRUE,
+                return_SCESet = TRUE)
+```
 
 ```
 ## The following cells/samples are detected as outliers:
@@ -250,7 +474,18 @@ TRUE      827
 </div>
 
 
-Table: (\#tab:unnamed-chunk-18)The number of cells removed by automatic filter (FALSE)
+```r
+knitr::kable(
+  as.data.frame(table(reads$outlier)),
+  booktabs = TRUE,
+  row.names = FALSE,
+  caption = 'The number of cells removed by automatic filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-21)The number of cells removed by automatic filter (FALSE)
 
 Var1     Freq
 ------  -----
@@ -258,19 +493,27 @@ FALSE     753
 TRUE      111
 
 
-
-
-Table: (\#tab:unnamed-chunk-20)The number of cells removed by manual filter (FALSE)
-
-Var1     Freq
-------  -----
-FALSE     259
-TRUE      605
+```r
+def <- colnames(reads)[!reads$use_default]
+auto <- colnames(reads)[reads$outlier]
+man <- colnames(reads)[!reads$use]
+venn.diag <- limma::vennCounts(cbind(colnames(reads) %in% def,
+                                     colnames(reads) %in% auto,
+                                     colnames(reads) %in% man))
+limma::vennDiagram(venn.diag,
+                   names = c("Default", "Automatic", "Manual"),
+                   circle.col = c("magenta", "blue", "green"))
+```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters</p>
 </div>
+
+
+```r
+scater::plotQC(reads, type = "highest-expression")
+```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
@@ -278,9 +521,25 @@ TRUE      605
 </div>
 
 
+```r
+filter_genes <- apply(counts(reads[, pData(reads)$use]), 1, 
+                      function(x) length(x[x > 1]) >= 2)
+fData(reads)$use <- filter_genes
+```
 
 
-Table: (\#tab:unnamed-chunk-22)The number of genes removed by gene filter (FALSE)
+```r
+knitr::kable(
+    as.data.frame(table(filter_genes)),
+    booktabs = TRUE,
+    row.names = FALSE,
+    caption = 'The number of genes removed by gene filter (FALSE)'
+)
+```
+
+
+
+Table: (\#tab:unnamed-chunk-23)The number of genes removed by gene filter (FALSE)
 
 filter_genes     Freq
 -------------  ------
@@ -288,13 +547,20 @@ FALSE            2665
 TRUE            16061
 
 
+```r
+dim(reads[fData(reads)$use, pData(reads)$use])
+```
+
 ```
 ## Features  Samples 
 ##    16061      605
 ```
 
 
+```r
+saveRDS(reads, file = "blischak/reads.rds")
+```
 
 If you want to further check yourself you can download our [`reads`](http://hemberg-lab.github.io/scRNA.seq.course/blischak/reads.rds) object. If you followed the steps above it should be exactly the same as yours.
 
-By comparing Figure 7.7 and Figure 6.6, it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.
+By comparing Figure \@ref(fig:cell-filt-comp) and Figure \@ref(fig:cell-filt-comp-reads), it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.
