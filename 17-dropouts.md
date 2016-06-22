@@ -108,19 +108,6 @@ will be shifted to the right of the curve. This happens because the MM
 curve is a convex function, whereas averaging dropout rate and
 expression is a linear function.
 
-
-```r
-K = 49.473
-S_sim = 10^seq(from=-3, to=4, by=0.05)
-MM = 1-S_sim/(K+S_sim)
-plot(S_sim, MM, type="l", lwd=3, xlab="Expression", ylab="Dropout Rate", xlim=c(1,1000))
-S1 = 10; P1 = 1-S1/(K+S1) # Expression & dropouts for cells in condition 1
-S2 = 750; P2 = 1-S2/(K+S2) # Expression & dropouts for cells in condition 2
-points(c(S1,S2),c(P1,P2), pch=16, col="grey85", cex=3)
-mix = 0.5; # proportion of population in condition 1
-points(S1*mix+S2*(1-mix), P1*mix+P2*(1-mix), pch=16, col="grey35", cex=3)
-```
-
 <img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="816" style="display: block; margin: auto;" />
 __Note__: add `log="x"` to the `plot` call above to see how this looks on the log scale, which is used in M3Drop figures. 
 

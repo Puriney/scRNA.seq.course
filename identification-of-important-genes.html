@@ -377,15 +377,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="right-outliers" class="section level2">
 <h2><span class="header-section-number">18.3</span> Right outliers</h2>
 <p>There are many outliers to the right of the fitted MM curve. Genes which are expressed at different levels in subpopulations of our cells will be shifted to the right of the curve. This happens because the MM curve is a convex function, whereas averaging dropout rate and expression is a linear function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">K =<span class="st"> </span><span class="fl">49.473</span>
-S_sim =<span class="st"> </span><span class="dv">10</span>^<span class="kw">seq</span>(<span class="dt">from=</span>-<span class="dv">3</span>, <span class="dt">to=</span><span class="dv">4</span>, <span class="dt">by=</span><span class="fl">0.05</span>)
-MM =<span class="st"> </span><span class="dv">1</span>-S_sim/(K+S_sim)
-<span class="kw">plot</span>(S_sim, MM, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">lwd=</span><span class="dv">3</span>, <span class="dt">xlab=</span><span class="st">&quot;Expression&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Dropout Rate&quot;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1000</span>))
-S1 =<span class="st"> </span><span class="dv">10</span>; P1 =<span class="st"> </span><span class="dv">1</span>-S1/(K+S1) <span class="co"># Expression &amp; dropouts for cells in condition 1</span>
-S2 =<span class="st"> </span><span class="dv">750</span>; P2 =<span class="st"> </span><span class="dv">1</span>-S2/(K+S2) <span class="co"># Expression &amp; dropouts for cells in condition 2</span>
-<span class="kw">points</span>(<span class="kw">c</span>(S1,S2),<span class="kw">c</span>(P1,P2), <span class="dt">pch=</span><span class="dv">16</span>, <span class="dt">col=</span><span class="st">&quot;grey85&quot;</span>, <span class="dt">cex=</span><span class="dv">3</span>)
-mix =<span class="st"> </span><span class="fl">0.5</span>; <span class="co"># proportion of population in condition 1</span>
-<span class="kw">points</span>(S1*mix+S2*(<span class="dv">1</span>-mix), P1*mix+P2*(<span class="dv">1</span>-mix), <span class="dt">pch=</span><span class="dv">16</span>, <span class="dt">col=</span><span class="st">&quot;grey35&quot;</span>, <span class="dt">cex=</span><span class="dv">3</span>)</code></pre></div>
 <p><img src="17-dropouts_files/figure-html/unnamed-chunk-6-1.png" width="816" style="display: block; margin: auto;" /> <strong>Note</strong>: add <code>log=&quot;x&quot;</code> to the <code>plot</code> call above to see how this looks on the log scale, which is used in M3Drop figures.</p>
 <p><strong>Exercise 2</strong>: Produce the same plot as above with different expression levels (S1 &amp; S2) and/or mixtures (mix).</p>
 <p>We use M3Drop to identify significant outliers to the right of the MM curve. We also apply 1% FDR multiple testing correction:</p>
