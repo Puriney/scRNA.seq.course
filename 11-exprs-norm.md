@@ -137,7 +137,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-raw-1.png" alt="(\#fig:norm-pca-raw)PCA plot of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-raw-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-pca-raw)PCA plot of the blischak data</p>
 </div>
 
@@ -150,7 +150,7 @@ boxplot(calc_cell_RLE(counts(umi.qc[endog_genes, ])),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-raw-1.png" alt="(\#fig:norm-ours-rle-raw)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-raw-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-raw)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -162,23 +162,23 @@ scater::plotPCA(umi.qc[endog_genes, ],
                 colour_by = "batch",
                 size_by = "total_features",
                 shape_by = "individual",
-                exprs_values = "cpm")
+                exprs_values = "exprs")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-cpm-1.png" alt="(\#fig:norm-pca-cpm)PCA plot of the blischak data after CPM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-cpm-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-cpm)PCA plot of the blischak data after CPM normalisation</p>
 </div>
 
 ```r
-boxplot(calc_cell_RLE(cpm(umi.qc[endog_genes, ])),
+boxplot(calc_cell_RLE(exprs(umi.qc[endog_genes, ])),
         col = "grey50",
         ylab = "RLE",
         main = "", ylim = c(-1,1))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-cpm-1.png" alt="(\#fig:norm-ours-rle-cpm)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-cpm-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-cpm)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -198,7 +198,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-tmm-1.png" alt="(\#fig:norm-pca-tmm)PCA plot of the blischak data after TMM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-tmm-1.png" alt="PCA plot of the blischak data after TMM normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-tmm)PCA plot of the blischak data after TMM normalisation</p>
 </div>
 
@@ -210,7 +210,7 @@ boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-tmm-1.png" alt="(\#fig:norm-ours-rle-tmm)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-tmm-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-tmm)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -228,7 +228,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-lsf-1.png" alt="(\#fig:norm-pca-lsf)PCA plot of the blischak data after LSF normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-lsf-1.png" alt="PCA plot of the blischak data after LSF normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-lsf)PCA plot of the blischak data after LSF normalisation</p>
 </div>
 
@@ -240,7 +240,7 @@ boxplot(calc_cell_RLE(exprs(umi.qc[endog_genes, ])),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-scran-1.png" alt="(\#fig:norm-ours-rle-scran)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-scran-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-scran)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -259,7 +259,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="(\#fig:norm-pca-rle)PCA plot of the blischak data after RLE normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-rle)PCA plot of the blischak data after RLE normalisation</p>
 </div>
 
@@ -271,7 +271,7 @@ boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-rle-1.png" alt="(\#fig:norm-ours-rle-rle)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-rle-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-rle)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -292,7 +292,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="(\#fig:norm-pca-uq)PCA plot of the blischak data after UQ normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-uq-1.png" alt="PCA plot of the blischak data after UQ normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-uq)PCA plot of the blischak data after UQ normalisation</p>
 </div>
 
@@ -304,7 +304,7 @@ boxplot(calc_cell_RLE(norm_counts(umi.qc[endog_genes, ])),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-uq-1.png" alt="(\#fig:norm-ours-rle-uq)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-uq-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-uq)Cell-wise RLE of the blischak data</p>
 </div>
 ## Downsampling 
@@ -340,7 +340,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-downsample-1.png" alt="(\#fig:norm-pca-downsample)PCA plot of the blischak data after downsampling" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-downsample-1.png" alt="PCA plot of the blischak data after downsampling" width="90%" />
 <p class="caption">(\#fig:norm-pca-downsample)PCA plot of the blischak data after downsampling</p>
 </div>
 
@@ -354,7 +354,7 @@ boxplot(calc_cell_RLE(tmp[rowMeans(tmp) > 0, ]),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-ours-rle-downsample-1.png" alt="(\#fig:norm-ours-rle-downsample)Cell-wise RLE of the blischak data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-ours-rle-downsample-1.png" alt="Cell-wise RLE of the blischak data" width="90%" />
 <p class="caption">(\#fig:norm-ours-rle-downsample)Cell-wise RLE of the blischak data</p>
 </div>
 
@@ -428,7 +428,7 @@ plot(eff_length, rowMeans(counts(umi.qc.ann)))
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data" width="90%" />
+<img src="11-exprs-norm_files/figure-html/length-vs-mean-1.png" alt="Gene length vs Mean Expression for the raw data" width="90%" />
 <p class="caption">(\#fig:length-vs-mean)Gene length vs Mean Expression for the raw data</p>
 </div>
 There is no relationship between gene length and mean expression so FPKMs & TPMs are inappropriate for this dataset. 
@@ -460,7 +460,7 @@ scater::plotPCA(umi.qc.ann,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="(\#fig:norm-pca-fpkm)PCA plot of the blischak data after FPKM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-fpkm-1.png" alt="PCA plot of the blischak data after FPKM normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-fpkm)PCA plot of the blischak data after FPKM normalisation</p>
 </div>
 
@@ -474,7 +474,7 @@ scater::plotPCA(umi.qc.ann,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="(\#fig:norm-pca-tpm)PCA plot of the blischak data after TPM normalisation" width="90%" />
+<img src="11-exprs-norm_files/figure-html/norm-pca-tpm-1.png" alt="PCA plot of the blischak data after TPM normalisation" width="90%" />
 <p class="caption">(\#fig:norm-pca-tpm)PCA plot of the blischak data after TPM normalisation</p>
 </div>
 

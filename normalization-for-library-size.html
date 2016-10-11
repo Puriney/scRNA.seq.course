@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -444,14 +445,14 @@ Figure 12.2: Cell-wise RLE of the blischak data
                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
-                <span class="dt">exprs_values =</span> <span class="st">&quot;cpm&quot;</span>)</code></pre></div>
+                <span class="dt">exprs_values =</span> <span class="st">&quot;exprs&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:norm-pca-cpm"></span>
 <img src="11-exprs-norm_files/figure-html/norm-pca-cpm-1.png" alt="PCA plot of the blischak data after CPM normalisation" width="90%" />
 <p class="caption">
 Figure 12.3: PCA plot of the blischak data after CPM normalisation
 </p>
 </div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">cpm</span>(umi.qc[endog_genes, ])),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(<span class="kw">calc_cell_RLE</span>(<span class="kw">exprs</span>(umi.qc[endog_genes, ])),
         <span class="dt">col =</span> <span class="st">&quot;grey50&quot;</span>,
         <span class="dt">ylab =</span> <span class="st">&quot;RLE&quot;</span>,
         <span class="dt">main =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>

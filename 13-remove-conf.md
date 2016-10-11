@@ -42,7 +42,7 @@ method which uses [singular value decomposition](https://en.wikipedia.org/wiki/S
 qclust <- scran::quickCluster(umi.qc, min.size = 30)
 umi.qc <- scran::computeSumFactors(umi.qc, sizes = 15, clusters = qclust)
 umi.qc <- scater::normalize(umi.qc)
-assayData(umi.qc)$ruv_counts <- RUVSeq::RUVg(
+set_exprs(umi.qc, "ruv_counts") <- RUVSeq::RUVg(
     round(exprs(umi.qc)),
     erccs,
     k = 1)$normalizedCounts
@@ -67,7 +67,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation" width="672" />
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-1.png" alt="PCA plot of the blischak data after RLE normalisation" width="672" />
 <p class="caption">(\#fig:rm-conf-pca-rle)PCA plot of the blischak data after RLE normalisation</p>
 </div>
 
@@ -81,7 +81,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations" width="672" />
+<img src="13-remove-conf_files/figure-html/rm-conf-pca-rle-ruv-1.png" alt="PCA plot of the blischak data after RLE and RUV normalisations" width="672" />
 <p class="caption">(\#fig:rm-conf-pca-rle-ruv)PCA plot of the blischak data after RLE and RUV normalisations</p>
 </div>
 
@@ -97,7 +97,7 @@ boxplot(list(scRNA.seq.funcs::calc_cell_RLE(exprs(umi.qc), erccs),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="672" />
+<img src="13-remove-conf_files/figure-html/rm-conf-rle-comp-1.png" alt="Comparison of the relative log expression of the blischak data before and after the RUV normalisation" width="672" />
 <p class="caption">(\#fig:rm-conf-rle-comp)Comparison of the relative log expression of the blischak data before and after the RUV normalisation</p>
 </div>
 

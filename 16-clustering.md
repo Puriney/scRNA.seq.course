@@ -46,7 +46,10 @@ Now we are ready to cluster the data using the methods described in the previous
 
 
 ```r
-SC3::sc3(patient.data, ks = 2:5)
+patient.sceset <- create_sceset(patient.data)
+patient.sceset <- calculateQCMetrics(patient.sceset)
+patient.sceset <- sc3(patient.sceset, ks = 2:5)
+sc3_interactive(patient.sceset)
 ```
 
 This command will open SC3 in a web browser. Once it is opened please perform the following exercises:
@@ -82,11 +85,11 @@ input.log <- log2(input + 1)
 # run pcaReduce 10 times creating hierarchies from 1 to 30 clusters
 pca.red <- pcaReduce::PCAreduce(t(input.log), nbt = 10, q = 30, method = 'S')
 res <- unique(scRNA.seq.funcs::merge_pcaReduce_results(pca.red, 3))
-pheatmap::pheatmap(res)
+pheatmap(res, legend = FALSE, main = "Columns - cells, Rows - clusterings, Colors - clusters")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$" width="672" />
+<img src="16-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$" width="672" />
 <p class="caption">(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$</p>
 </div>
 
@@ -96,17 +99,17 @@ __Hint__: When running pcaReduce for different $k$s you do not need to rerun pca
 
 __Our solutions__:
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-pca-reduce2-1.png" alt="(\#fig:clust-pca-reduce2)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$." width="672" />
+<img src="16-clustering_files/figure-html/clust-pca-reduce2-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$." width="672" />
 <p class="caption">(\#fig:clust-pca-reduce2)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$.</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-pca-reduce4-1.png" alt="(\#fig:clust-pca-reduce4)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$." width="672" />
+<img src="16-clustering_files/figure-html/clust-pca-reduce4-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$." width="672" />
 <p class="caption">(\#fig:clust-pca-reduce4)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$.</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-pca-reduce5-1.png" alt="(\#fig:clust-pca-reduce5)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$." width="672" />
+<img src="16-clustering_files/figure-html/clust-pca-reduce5-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$." width="672" />
 <p class="caption">(\#fig:clust-pca-reduce5)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$.</p>
 </div>
 
@@ -130,7 +133,7 @@ ggplot2::ggplot(df_to_plot, aes_string(x = comps[1], y = comps[2])) +
 ```
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-tsne-1.png" alt="(\#fig:clust-tsne)tSNE map of the patient data" width="672" />
+<img src="16-clustering_files/figure-html/clust-tsne-1.png" alt="tSNE map of the patient data" width="672" />
 <p class="caption">(\#fig:clust-tsne)tSNE map of the patient data</p>
 </div>
 
@@ -156,7 +159,7 @@ ggplot2::ggplot(df_to_plot,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-1.png" alt="(\#fig:clust-tsne-kmeans2)tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm" width="672" />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-1.png" alt="tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm" width="672" />
 <p class="caption">(\#fig:clust-tsne-kmeans2)tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm</p>
 </div>
 
@@ -182,17 +185,17 @@ heatmap. Then run tSNE+kmeans algorithm with $k = 2$ or $k = 4$ and
 see how the clustering looks like in these cases.
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans3-1.png" alt="(\#fig:clust-tsne-kmeans3)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$" width="672" />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans3-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$" width="672" />
 <p class="caption">(\#fig:clust-tsne-kmeans3)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-mult-1.png" alt="(\#fig:clust-tsne-kmeans2-mult)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$" width="672" />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans2-mult-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$" width="672" />
 <p class="caption">(\#fig:clust-tsne-kmeans2-mult)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-tsne-kmeans4-1.png" alt="(\#fig:clust-tsne-kmeans4)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$" width="672" />
+<img src="16-clustering_files/figure-html/clust-tsne-kmeans4-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$" width="672" />
 <p class="caption">(\#fig:clust-tsne-kmeans4)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$</p>
 </div>
 
@@ -283,7 +286,7 @@ results compare to the other methods? What happens if you choose $k = 3$?
 
 __Our answer:__
 <div class="figure" style="text-align: center">
-<img src="16-clustering_files/figure-html/clust-sincera-1.png" alt="(\#fig:clust-sincera)Clustering solutions of SINCERA method using $k=3$" width="672" />
+<img src="16-clustering_files/figure-html/clust-sincera-1.png" alt="Clustering solutions of SINCERA method using $k=3$" width="672" />
 <p class="caption">(\#fig:clust-sincera)Clustering solutions of SINCERA method using $k=3$</p>
 </div>
 
@@ -369,13 +372,13 @@ head(score.df)
 ```
 
 ```
-##    PC     Score
-## 1 PC1 0.4704864
-## 2 PC2 1.0000000
-## 3 PC3 1.0000000
-## 4 PC4 1.0000000
-## 5 PC5 1.0000000
-## 6 PC6 1.0000000
+##    PC Score
+## 1 PC1     1
+## 2 PC2     1
+## 3 PC3     1
+## 4 PC4     1
+## 5 PC5     1
+## 6 PC6     1
 ```
 
 ```r

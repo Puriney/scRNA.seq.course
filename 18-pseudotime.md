@@ -46,7 +46,7 @@ First we will try to use all genes to order the cells.
 deng <- readRDS("deng/deng.rds")
 cellLabels <- colnames(deng)
 procdeng <- TSCAN::preprocess(deng)
-colnames(procdeng) <- 1:268
+colnames(procdeng) <- 1:ncol(deng)
 dengclust <- TSCAN::exprmclust(procdeng, clusternum = 10)
 TSCAN::plotmclust(dengclust)
 ```
@@ -62,20 +62,30 @@ We can also examine which timepoints have been assigned to each state:
 
 
 ```r
-cellLabels[dengclust$clusterid == 1]
+cellLabels[dengclust$clusterid == 10]
 ```
 
 ```
-##  [1] "1" "1" "1" "1" "2" "2" "2" "2" "2" "2" "2" "2"
+##  [1] "late2cell" "late2cell" "late2cell" "late2cell" "late2cell"
+##  [6] "late2cell" "late2cell" "late2cell" "late2cell" "late2cell"
+## [11] "mid2cell"  "mid2cell"  "mid2cell"  "mid2cell"  "mid2cell" 
+## [16] "mid2cell"  "mid2cell"  "mid2cell"  "mid2cell"  "mid2cell" 
+## [21] "mid2cell"  "mid2cell"
 ```
 
 ```r
 colours <- rainbow(n = 10) # red = early, violet = late
+tmp <- 
+    factor(
+        cellLabels[as.numeric(pseudotime_order_tscan)],
+        levels = c("early2cell", "mid2cell", "late2cell", "4cell", "8cell", 
+                   "16cell", "midblast", "earlyblast", "lateblast")
+    )
 plot(
-    cellLabels[as.numeric(pseudotime_order_tscan)], 
+    as.numeric(tmp), 
     xlab="Pseudotime Order", 
     ylab="Timepoint",
-    col = colours[as.numeric(cellLabels[as.numeric(pseudotime_order_tscan)])],
+    col = colours[tmp],
     pch = 16
 )
 ```
@@ -93,25 +103,27 @@ we must carry out feature selection. First, we use M3Drop:
 
 ```r
 m3dGenes <- as.character(
-    M3Drop::M3Drop_Differential_Expression(deng, suppress.plot = T)$Gene
+    M3Drop::M3DropDifferentialExpression(deng)$Gene
 )
-d <- deng[which(m3dGenes %in% rownames(deng)),]
-d <- d[!duplicated(rownames(d)),]
+```
+
+<img src="18-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" />
+
+```r
+d <- deng[which(rownames(deng) %in% m3dGenes), ]
+d <- d[!duplicated(rownames(d)), ]
 ```
 
 Now run monocle:
 
 ```r
-pd <- as.data.frame(as.numeric(as.character(cellLabels)))
-names(pd) <- "timepoint"
+pd <- data.frame(timepoint = cellLabels)
 pd <- new("AnnotatedDataFrame", data=pd)
 fd <- as.data.frame(rownames(d))
 names(fd) <- "gene"
 fd <- new("AnnotatedDataFrame", data=fd)
-colnames(d) <- 1:dim(d)[2]
-rownames(d) <- 1:dim(d)[1]
-rownames(pd) <- colnames(d)
-rownames(fd) <- rownames(d)
+colnames(d) <- 1:ncol(d)
+rownames(d) <- 1:nrow(d)
 dCellData <- monocle::newCellDataSet(d, phenoData = pd, featureData = fd)
 dCellData <- monocle::setOrderingFilter(dCellData, 1:length(m3dGenes))
 dCellDataSet <- monocle::reduceDimension(dCellData, pseudo_expr = 1)
@@ -129,7 +141,7 @@ pseudotime_monocle <-
         pseudotime = phenoData(dCellDataSet)$Pseudotime, 
         State=phenoData(dCellDataSet)$State
     )
-rownames(pseudotime_monocle) <- 1:268
+rownames(pseudotime_monocle) <- 1:ncol(d)
 pseudotime_order_monocle <- 
     rownames(pseudotime_monocle[order(pseudotime_monocle$pseudotime), ])
 ```
@@ -178,7 +190,7 @@ Each package also enables the visualization of expression through pseudotime.
 __TSCAN__
 
 ```r
-colnames(deng) <- 1:268
+colnames(deng) <- 1:ncol(deng)
 TSCAN::singlegeneplot(
     deng[rownames(deng) == "Obox6", ], 
     dengorderTSCAN

@@ -70,7 +70,7 @@ hist(s,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="(\#fig:poisson-beta-plot)Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
 <p class="caption">(\#fig:poisson-beta-plot)Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model</p>
 </div>
 
@@ -113,7 +113,7 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2, .3),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="(\#fig:poisson-beta-shapes)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">(\#fig:poisson-beta-shapes)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
@@ -142,7 +142,7 @@ hist(scRNA.seq.funcs::PoiBeta(10, .6, 1.2, 50),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="(\#fig:poisson-beta-sample-size)Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">(\#fig:poisson-beta-sample-size)Effect of sampling size on the distribution of read counts based on the Poisson-Beta model</p>
 </div>
 
@@ -188,7 +188,7 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2, 3, 100, 100),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="(\#fig:poisson-beta-dropout-example)Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">(\#fig:poisson-beta-dropout-example)Effect of dropouts on the distribution of read counts based on the Poisson-Beta model</p>
 </div>
 
@@ -222,7 +222,7 @@ points(s,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="(\#fig:poisson-beta-dispersion-analytical)The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">(\#fig:poisson-beta-dispersion-analytical)The mean and the variance of the distribution of read counts based on the Poisson-Beta model</p>
 </div>
 
@@ -252,7 +252,7 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2*10, 3*10, 100),
 ```
 
 <div class="figure" style="text-align: center">
-<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="(\#fig:poisson-beta-dispersion-effect)Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<img src="19-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
 <p class="caption">(\#fig:poisson-beta-dispersion-effect)Effect of dispersion on the distribution of read counts based on the Poisson-Beta model</p>
 </div>
 

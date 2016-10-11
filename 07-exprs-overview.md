@@ -30,7 +30,7 @@ The easiest thing to overview the data is to transform it using the principal co
 PCA is defined in such a way that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.
 
 <div class="figure" style="text-align: center">
-<img src="figures/pca.png" alt="(\#fig:clust-pca)Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
+<img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
 <p class="caption">(\#fig:clust-pca)Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))</p>
 </div>
 
@@ -47,7 +47,7 @@ scater::plotPCA(umi[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="(\#fig:expr-overview-pca-before-qc)PCA plot of the blischak data" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-before-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">(\#fig:expr-overview-pca-before-qc)PCA plot of the blischak data</p>
 </div>
 
@@ -64,7 +64,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="(\#fig:expr-overview-pca-after-qc)PCA plot of the blischak data" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">(\#fig:expr-overview-pca-after-qc)PCA plot of the blischak data</p>
 </div>
 
@@ -88,7 +88,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-1-1.png" alt="PCA plot of the blischak data (14214 genes)" width="90%" />
 <p class="caption">(\#fig:expr-overview-pca-after-qc-exercise1-1)PCA plot of the blischak data (14214 genes)</p>
 </div>
 
@@ -103,7 +103,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="(\#fig:expr-overview-pca-after-qc-exercise1-2)PCA plot of the blischak data (50 genes)" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-pca-after-qc-exercise1-2-1.png" alt="PCA plot of the blischak data (50 genes)" width="90%" />
 <p class="caption">(\#fig:expr-overview-pca-after-qc-exercise1-2)PCA plot of the blischak data (50 genes)</p>
 </div>
 
@@ -128,7 +128,7 @@ scater::plotTSNE(umi[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="(\#fig:expr-overview-tsne-before-qc)tSNE map of the blischak data" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-before-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">(\#fig:expr-overview-tsne-before-qc)tSNE map of the blischak data</p>
 </div>
 
@@ -147,7 +147,7 @@ scater::plotTSNE(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="(\#fig:expr-overview-tsne-after-qc)tSNE map of the blischak data" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">(\#fig:expr-overview-tsne-after-qc)tSNE map of the blischak data</p>
 </div>
 
@@ -173,7 +173,7 @@ scater::plotTSNE(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="tSNE map of the blischak data (perplexity = 10)" width="90%" />
 <p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-1)tSNE map of the blischak data (perplexity = 10)</p>
 </div>
 
@@ -190,7 +190,7 @@ scater::plotTSNE(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 200)" width="90%" />
+<img src="07-exprs-overview_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="tSNE map of the blischak data (perplexity = 200)" width="90%" />
 <p class="caption">(\#fig:expr-overview-tsne-after-qc-exercise2-2)tSNE map of the blischak data (perplexity = 200)</p>
 </div>
 

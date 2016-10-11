@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -500,7 +501,7 @@ pValsSCDE &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span clas
 pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSCDE, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</code></pre></div>
 <p><strong>Exercise:</strong> Calculate an AUROC value and compare to the other methods.</p>
 <p><strong>Our answer</strong>: <img src="20-de-synth_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>## [1] 0.7827443</code></pre>
+<pre><code>## [1] 0.7830042</code></pre>
 </div>
 <div id="comparison-of-the-methods-1" class="section level2">
 <h2><span class="header-section-number">21.7</span> Comparison of the methods</h2>
@@ -558,7 +559,7 @@ g2 &lt;-<span class="st"> </span>synData$sample2</code></pre></div>
 <p><img src="20-de-synth_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre><code>## [1] 0.4982175</code></pre>
 <p><img src="20-de-synth_files/figure-html/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre><code>## [1] 0.5011141</code></pre>
+<pre><code>## [1] 0.4993316</code></pre>
 <p>Which method performs the best? Why do some methods perform differently for this scenario? What are the properties of the genes that are identified as DE?</p>
 
 </div>

@@ -63,7 +63,7 @@ undetected genes, and converts raw counts to CPM.
 
 
 ```r
-uso_list <- M3Drop::M3Drop_Clean_Data(
+uso_list <- M3Drop::M3DropCleanData(
     usoskin1,
     labels = colnames(usoskin1),
     min_detected_genes = 2000,
@@ -94,7 +94,7 @@ Other models that have been proposed are:
 Now we will fit all three models to the normalized Usoskin data:
 
 ```r
-models <- M3Drop::M3Drop_Dropout_Models(uso_list$data)
+models <- M3Drop::M3DropDropoutModels(uso_list$data)
 title(main = "Usoskin")
 ```
 
@@ -118,7 +118,7 @@ curve. We also apply 1% FDR multiple testing correction:
 
 
 ```r
-DE_genes <- M3Drop::M3Drop_Differential_Expression(
+DE_genes <- M3Drop::M3DropDifferentialExpression(
     uso_list$data,
     mt_method = "fdr",
     mt_threshold = 0.01
@@ -151,7 +151,7 @@ rbind(uso_markers, uso_markers %in% DE_genes$Gene)
 We can also plot the expression levels of these genes to check they really are DE genes.
 
 ```r
-M3Drop::M3Drop_Expression_Heatmap(
+M3Drop::M3DropExpressionHeatmap(
     DE_genes$Gene,
     uso_list$data,
     cell_labels = uso_list$labels,
@@ -198,7 +198,7 @@ variable.
 
 
 ```r
-Brennecke_HVG <- M3Drop::Brennecke_getVariableGenes(
+Brennecke_HVG <- M3Drop::BrenneckeGetVariableGenes(
     uso_list$data,
     fdr = 0.01,
     minBiolDisp = 0.5

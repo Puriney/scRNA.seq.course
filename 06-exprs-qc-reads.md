@@ -74,7 +74,7 @@ reads <- scater::newSCESet(
 
 
 ```r
-keep_feature <- rowSums(is_exprs(reads)) > 0
+keep_feature <- rowSums(counts(reads) > 0) > 0
 reads <- reads[keep_feature, ]
 ```
 
@@ -106,7 +106,7 @@ abline(v = 1.3e6, col = "red")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-counts-hist-reads-1.png" alt="Histogram of library sizes for all cells" width="90%" />
 <p class="caption">(\#fig:total-counts-hist-reads)Histogram of library sizes for all cells</p>
 </div>
 
@@ -144,7 +144,7 @@ abline(v = 7000, col = "red")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="(\#fig:total-features-hist-reads)Histogram of the number of detected genes in all cells" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-features-hist-reads-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
 <p class="caption">(\#fig:total-features-hist-reads)Histogram of the number of detected genes in all cells</p>
 </div>
 
@@ -181,7 +181,7 @@ scater::plotPhenoData(
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
 <p class="caption">(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes</p>
 </div>
 
@@ -196,7 +196,7 @@ scater::plotPhenoData(
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="Percentage of counts in MT genes" width="90%" />
 <p class="caption">(\#fig:mt-vs-counts-reads)Percentage of counts in MT genes</p>
 </div>
 
@@ -211,7 +211,7 @@ scater::plotPhenoData(
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="(\#fig:ercc-vs-counts-reads)Percentage of counts in ERCCs" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="Percentage of counts in ERCCs" width="90%" />
 <p class="caption">(\#fig:ercc-vs-counts-reads)Percentage of counts in ERCCs</p>
 </div>
 
@@ -469,7 +469,7 @@ scater::plotPCA(reads,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="(\#fig:auto-cell-filt-reads)PCA plot used for automatic detection of cell outliers" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
 <p class="caption">(\#fig:auto-cell-filt-reads)PCA plot used for automatic detection of cell outliers</p>
 </div>
 
@@ -506,7 +506,7 @@ limma::vennDiagram(venn.diag,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">(\#fig:cell-filt-comp-reads)Comparison of the default, automatic and manual cell filters</p>
 </div>
 
@@ -516,7 +516,7 @@ scater::plotQC(reads, type = "highest-expression")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes" width="90%" />
+<img src="06-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">(\#fig:top50-gene-expr-reads)Number of total counts consumed by the top 50 expressed genes</p>
 </div>
 

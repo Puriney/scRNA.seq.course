@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -346,7 +347,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows and 3 columns of the molecules table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-4">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -399,7 +400,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-4">Table 7.2: </span>A table of the first 6 rows of the anno table.</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
 <tr class="header">
 <th align="left">individual</th>
@@ -460,7 +461,7 @@ reads &lt;-<span class="st"> </span>scater::<span class="kw">newSCESet</span>(
     <span class="dt">countData =</span> reads,
     <span class="dt">phenoData =</span> pheno_data
 )</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">is_exprs</span>(reads)) &gt;<span class="st"> </span><span class="dv">0</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">counts</span>(reads) &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">0</span>
 reads &lt;-<span class="st"> </span>reads[keep_feature, ]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ercc &lt;-<span class="st"> </span><span class="kw">featureNames</span>(reads)[<span class="kw">grepl</span>(<span class="st">&quot;ERCC-&quot;</span>, <span class="kw">featureNames</span>(reads))]
 mt &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;ENSG00000198899&quot;</span>, <span class="st">&quot;ENSG00000198727&quot;</span>, <span class="st">&quot;ENSG00000198888&quot;</span>,
@@ -491,7 +492,7 @@ Figure 7.1: Histogram of library sizes for all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total counts filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-10">Table 7.3: </span>The number of cells removed by total counts filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-10">Table 6.3: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_total_counts</th>
@@ -528,7 +529,7 @@ Figure 7.2: Histogram of the number of detected genes in all cells
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total features filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-12">Table 7.4: </span>The number of cells removed by total features filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-12">Table 7.1: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_expr_features</th>
@@ -589,7 +590,7 @@ Figure 7.5: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by ERCC filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-14">Table 7.5: </span>The number of cells removed by ERCC filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-14">Table 7.2: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_ERCC</th>
@@ -615,7 +616,7 @@ Figure 7.5: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by MT filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-16">Table 7.6: </span>The number of cells removed by MT filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-16">Table 6.7: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_MT</th>
@@ -650,7 +651,7 @@ Figure 7.5: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-18">Table 7.7: </span>The number of cells removed by manual filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-18">Table 6.8: </span>The number of cells removed by manual filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -687,7 +688,7 @@ Figure 7.5: Percentage of counts in ERCCs
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-20">Table 7.8: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-20">Table 7.3: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -847,7 +848,7 @@ Figure 7.6: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-21">Table 7.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-21">Table 7.4: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -897,7 +898,7 @@ Figure 7.8: Number of total counts consumed by the top 50 expressed genes
     <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-23">Table 7.10: </span>The number of genes removed by gene filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-23">Table 7.5: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_genes</th>

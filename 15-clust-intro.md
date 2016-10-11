@@ -56,12 +56,12 @@ its own cluster and pairs of clusters are subsequently merged to
 create a hieararchy:
 
 <div class="figure" style="text-align: center">
-<img src="figures/hierarchical_clustering1.png" alt="(\#fig:clust-hierarch-raw)Raw data" width="30%" />
+<img src="figures/hierarchical_clustering1.png" alt="Raw data" width="30%" />
 <p class="caption">(\#fig:clust-hierarch-raw)Raw data</p>
 </div>
 
 <div class="figure" style="text-align: center">
-<img src="figures/hierarchical_clustering2.png" alt="(\#fig:clust-hierarch-dendr)The hierarchical clustering dendrogram" width="50%" />
+<img src="figures/hierarchical_clustering2.png" alt="The hierarchical clustering dendrogram" width="50%" />
 <p class="caption">(\#fig:clust-hierarch-dendr)The hierarchical clustering dendrogram</p>
 </div>
 
@@ -77,7 +77,7 @@ different clusters. In an iterative manner, cluster centers are
 assigned and each cell is assigned to its nearest cluster:
 
 <div class="figure" style="text-align: center">
-<img src="figures/k-means.png" alt="(\#fig:clust-k-means)Schematic representation of the _k_-means clustering" width="100%" />
+<img src="figures/k-means.png" alt="Schematic representation of the _k_-means clustering" width="100%" />
 <p class="caption">(\#fig:clust-k-means)Schematic representation of the _k_-means clustering</p>
 </div>
 
@@ -90,7 +90,7 @@ analyzing networks in various domains. One goal is to identify groups
 or modules of nodes in a network.
 
 <div class="figure" style="text-align: center">
-<img src="figures/graph_network.jpg" alt="(\#fig:clust-graph)Schematic representation of the graph network" width="100%" />
+<img src="figures/graph_network.jpg" alt="Schematic representation of the graph network" width="100%" />
 <p class="caption">(\#fig:clust-graph)Schematic representation of the graph network</p>
 </div>
 
@@ -119,7 +119,7 @@ pcaReduce [@Zurauskiene2016-kg] combines PCA, _k_-means and “iterative” hier
 ### [SC3](http://bioconductor.org/packages/SC3/)
 
 <div class="figure" style="text-align: center">
-<img src="figures/sc3.png" alt="(\#fig:clust-sc3)SC3 pipeline" width="100%" />
+<img src="figures/sc3.png" alt="SC3 pipeline" width="100%" />
 <p class="caption">(\#fig:clust-sc3)SC3 pipeline</p>
 </div>
 

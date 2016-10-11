@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -349,21 +350,31 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
 cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
 procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(deng)
-<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
+<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
 dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum =</span> <span class="dv">10</span>)
 TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly =</span> F)
 pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.character</span>(dengorderTSCAN$sample_name)</code></pre></div>
 <p>We can also examine which timepoints have been assigned to each state:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">1</span>]</code></pre></div>
-<pre><code>##  [1] &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;1&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot; &quot;2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">10</span>]</code></pre></div>
+<pre><code>##  [1] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
+##  [6] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
+## [11] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
+## [16] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
+## [21] &quot;mid2cell&quot;  &quot;mid2cell&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
+tmp &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">factor</span>(
+        cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)],
+        <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;early2cell&quot;</span>, <span class="st">&quot;mid2cell&quot;</span>, <span class="st">&quot;late2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, 
+                   <span class="st">&quot;16cell&quot;</span>, <span class="st">&quot;midblast&quot;</span>, <span class="st">&quot;earlyblast&quot;</span>, <span class="st">&quot;lateblast&quot;</span>)
+    )
 <span class="kw">plot</span>(
-    cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)], 
+    <span class="kw">as.numeric</span>(tmp), 
     <span class="dt">xlab=</span><span class="st">&quot;Pseudotime Order&quot;</span>, 
     <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
-    <span class="dt">col =</span> colours[<span class="kw">as.numeric</span>(cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)])],
+    <span class="dt">col =</span> colours[tmp],
     <span class="dt">pch =</span> <span class="dv">16</span>
 )</code></pre></div>
 <p><img src="18-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -374,21 +385,19 @@ pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.charact
 <p>Monocle skips the clustering stage of TSCAN and directly builds a minimum spanning tree to connect all cells. Monocle then identifies the longest path in this tree to determine pseudotime. If the data contains diverging trajectories (i.e. one cell type differentiates into two different cell-types), monocle can identify alternative long paths in the tree using the argument <code>num_paths</code>. Each of the resulting forked paths is defined as a separate cell state, thus <code>num_paths = 2</code> will identify three different cell states.</p>
 <p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3Drop:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
-    M3Drop::<span class="kw">M3Drop_Differential_Expression</span>(deng, <span class="dt">suppress.plot =</span> T)$Gene
-)
-d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(m3dGenes %in%<span class="st"> </span><span class="kw">rownames</span>(deng)),]
-d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)),]</code></pre></div>
+    M3Drop::<span class="kw">M3DropDifferentialExpression</span>(deng)$Gene
+)</code></pre></div>
+<p><img src="18-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(<span class="kw">rownames</span>(deng) %in%<span class="st"> </span>m3dGenes), ]
+d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)), ]</code></pre></div>
 <p>Now run monocle:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">as.numeric</span>(<span class="kw">as.character</span>(cellLabels)))
-<span class="kw">names</span>(pd) &lt;-<span class="st"> &quot;timepoint&quot;</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">timepoint =</span> cellLabels)
 pd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>pd)
 fd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">rownames</span>(d))
 <span class="kw">names</span>(fd) &lt;-<span class="st"> &quot;gene&quot;</span>
 fd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>fd)
-<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">dim</span>(d)[<span class="dv">2</span>]
-<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">dim</span>(d)[<span class="dv">1</span>]
-<span class="kw">rownames</span>(pd) &lt;-<span class="st"> </span><span class="kw">colnames</span>(d)
-<span class="kw">rownames</span>(fd) &lt;-<span class="st"> </span><span class="kw">rownames</span>(d)
+<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
+<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(d)
 dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet</span>(d, <span class="dt">phenoData =</span> pd, <span class="dt">featureData =</span> fd)
 dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
 dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr =</span> <span class="dv">1</span>)
@@ -402,7 +411,7 @@ pseudotime_monocle &lt;-<span class="st"> </span>
         <span class="dt">pseudotime =</span> <span class="kw">phenoData</span>(dCellDataSet)$Pseudotime, 
         <span class="dt">State=</span><span class="kw">phenoData</span>(dCellDataSet)$State
     )
-<span class="kw">rownames</span>(pseudotime_monocle) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
+<span class="kw">rownames</span>(pseudotime_monocle) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
 pseudotime_order_monocle &lt;-<span class="st"> </span>
 <span class="st">    </span><span class="kw">rownames</span>(pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), ])</code></pre></div>
 <p>We can again compare the inferred pseudotime to the known sampling timepoints.</p>
@@ -439,7 +448,7 @@ timepoint_ordered &lt;-<span class="st"> </span>
 <h2><span class="header-section-number">19.4</span> Expression of genes through time</h2>
 <p>Each package also enables the visualization of expression through pseudotime.</p>
 <p><strong>TSCAN</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="dv">268</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
 TSCAN::<span class="kw">singlegeneplot</span>(
     deng[<span class="kw">rownames</span>(deng) ==<span class="st"> &quot;Obox6&quot;</span>, ], 
     dengorderTSCAN

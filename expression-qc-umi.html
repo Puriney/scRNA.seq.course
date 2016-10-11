@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -408,7 +409,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
     <span class="dt">caption =</span> <span class="st">&#39;A table of the first 6 rows of the anno table.&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-4">Table 6.2: </span>A table of the first 6 rows of the anno table.</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 6.1: </span>A table of the first 6 rows of the anno table.</caption>
 <thead>
 <tr class="header">
 <th align="left">individual</th>
@@ -472,7 +473,7 @@ umi &lt;-<span class="st"> </span>scater::<span class="kw">newSCESet</span>(
     <span class="dt">phenoData =</span> pheno_data
 )</code></pre></div>
 <p>Remove genes that are not expressed in any cell:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">is_exprs</span>(umi)) &gt;<span class="st"> </span><span class="dv">0</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep_feature &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">counts</span>(umi) &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">0</span>
 umi &lt;-<span class="st"> </span>umi[keep_feature, ]</code></pre></div>
 <p>Define control features (genes) - ERCC spike-ins and mitochondrial genes (<a href="http://jdblischak.github.io/singleCellSeq/analysis/qc-filter-ipsc.html">provided</a> by the authors):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ercc &lt;-<span class="st"> </span><span class="kw">featureNames</span>(umi)[<span class="kw">grepl</span>(<span class="st">&quot;ERCC-&quot;</span>, <span class="kw">featureNames</span>(umi))]
@@ -517,7 +518,7 @@ knitr::<span class="kw">kable</span>(
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total counts filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-9">Table 6.3: </span>The number of cells removed by total counts filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 6.2: </span>The number of cells removed by total counts filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_total_counts</th>
@@ -562,7 +563,7 @@ knitr::<span class="kw">kable</span>(
     <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by total features filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-10">Table 6.4: </span>The number of cells removed by total features filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-10">Table 6.3: </span>The number of cells removed by total features filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_expr_features</th>
@@ -620,7 +621,7 @@ knitr::<span class="kw">kable</span>(
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by ERCC filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-11">Table 6.5: </span>The number of cells removed by ERCC filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-11">Table 6.4: </span>The number of cells removed by ERCC filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_ERCC</th>
@@ -646,7 +647,7 @@ knitr::<span class="kw">kable</span>(
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by MT filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-11">Table 6.6: </span>The number of cells removed by MT filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-11">Table 6.4: </span>The number of cells removed by MT filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_by_MT</th>
@@ -692,7 +693,7 @@ knitr::<span class="kw">kable</span>(
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by manual filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-13">Table 6.7: </span>The number of cells removed by manual filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-13">Table 6.5: </span>The number of cells removed by manual filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -733,7 +734,7 @@ knitr::<span class="kw">kable</span>(
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by default filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-15">Table 6.8: </span>The number of cells removed by default filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-15">Table 6.6: </span>The number of cells removed by default filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -869,7 +870,7 @@ Figure 6.5: PCA plot used for automatic detection of cell outliers
   <span class="dt">caption =</span> <span class="st">&#39;The number of cells removed by automatic filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-16">Table 6.9: </span>The number of cells removed by automatic filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-16">Table 6.7: </span>The number of cells removed by automatic filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">Var1</th>
@@ -939,7 +940,7 @@ Figure 6.7: Number of total counts consumed by the top 50 expressed genes
     <span class="dt">caption =</span> <span class="st">&#39;The number of genes removed by gene filter (FALSE)&#39;</span>
 )</code></pre></div>
 <table>
-<caption><span id="tab:unnamed-chunk-18">Table 6.10: </span>The number of genes removed by gene filter (FALSE)</caption>
+<caption><span id="tab:unnamed-chunk-18">Table 6.8: </span>The number of genes removed by gene filter (FALSE)</caption>
 <thead>
 <tr class="header">
 <th align="left">filter_genes</th>

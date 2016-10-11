@@ -8,7 +8,7 @@
   <title>Analysis of single-cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single-cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.0.73 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single-cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-<meta name="date" content="2016-06-22">
+  
+<meta name="date" content="2016-10-11">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -355,7 +356,7 @@ erccs &lt;-<span class="st"> </span><span class="kw">fData</span>(umi.qc)$is_fea
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qclust &lt;-<span class="st"> </span>scran::<span class="kw">quickCluster</span>(umi.qc, <span class="dt">min.size =</span> <span class="dv">30</span>)
 umi.qc &lt;-<span class="st"> </span>scran::<span class="kw">computeSumFactors</span>(umi.qc, <span class="dt">sizes =</span> <span class="dv">15</span>, <span class="dt">clusters =</span> qclust)
 umi.qc &lt;-<span class="st"> </span>scater::<span class="kw">normalize</span>(umi.qc)
-<span class="kw">assayData</span>(umi.qc)$ruv_counts &lt;-<span class="st"> </span>RUVSeq::<span class="kw">RUVg</span>(
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruv_counts&quot;</span>) &lt;-<span class="st"> </span>RUVSeq::<span class="kw">RUVg</span>(
     <span class="kw">round</span>(<span class="kw">exprs</span>(umi.qc)),
     erccs,
     <span class="dt">k =</span> <span class="dv">1</span>)$normalizedCounts</code></pre></div>

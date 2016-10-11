@@ -33,7 +33,7 @@ scater::plotPCA(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="09-confounders_files/figure-html/confound-pca-1.png" alt="(\#fig:confound-pca)PCA plot of the blischak data" width="90%" />
+<img src="09-confounders_files/figure-html/confound-pca-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">(\#fig:confound-pca)PCA plot of the blischak data</p>
 </div>
 
@@ -52,7 +52,7 @@ scater::plotQC(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="09-confounders_files/figure-html/confound-find-pcs-total-features-1.png" alt="(\#fig:confound-find-pcs-total-features)PC correlation with the number of detected genes" width="90%" />
+<img src="09-confounders_files/figure-html/confound-find-pcs-total-features-1.png" alt="PC correlation with the number of detected genes" width="90%" />
 <p class="caption">(\#fig:confound-find-pcs-total-features)PC correlation with the number of detected genes</p>
 </div>
 
@@ -76,7 +76,7 @@ scater::plotQC(umi.qc[endog_genes, ],
 ```
 
 <div class="figure" style="text-align: center">
-<img src="09-confounders_files/figure-html/confound-find-expl-vars-1.png" alt="(\#fig:confound-find-expl-vars)Explanatory variables" width="90%" />
+<img src="09-confounders_files/figure-html/confound-find-expl-vars-1.png" alt="Explanatory variables" width="90%" />
 <p class="caption">(\#fig:confound-find-expl-vars)Explanatory variables</p>
 </div>
 

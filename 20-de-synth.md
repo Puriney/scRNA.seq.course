@@ -168,7 +168,7 @@ ROCR::plot(perf)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="20-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
+<img src="20-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
@@ -230,7 +230,7 @@ ROCR::plot(perfDESeq)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="20-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
+<img src="20-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
 <p class="caption">(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
 </div>
 
@@ -305,7 +305,7 @@ __Our answer__:
 <img src="20-de-synth_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
 
 ```
-## [1] 0.7827443
+## [1] 0.7830042
 ```
 
 ## Comparison of the methods
@@ -403,7 +403,7 @@ __Our answer__:
 <img src="20-de-synth_files/figure-html/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" />
 
 ```
-## [1] 0.5011141
+## [1] 0.4993316
 ```
 
 Which method

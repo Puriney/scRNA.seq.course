@@ -97,7 +97,7 @@ umi <- scater::newSCESet(
 Remove genes that are not expressed in any cell:
 
 ```r
-keep_feature <- rowSums(is_exprs(umi)) > 0
+keep_feature <- rowSums(counts(umi) > 0) > 0
 umi <- umi[keep_feature, ]
 ```
 
@@ -141,7 +141,7 @@ abline(v = 25000, col = "red")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/total-counts-hist-1.png" alt="(\#fig:total-counts-hist)Histogram of library sizes for all cells" width="90%" />
+<img src="05-exprs-qc_files/figure-html/total-counts-hist-1.png" alt="Histogram of library sizes for all cells" width="90%" />
 <p class="caption">(\#fig:total-counts-hist)Histogram of library sizes for all cells</p>
 </div>
 
@@ -188,7 +188,7 @@ abline(v = 7000, col = "red")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/total-features-hist-1.png" alt="(\#fig:total-features-hist)Histogram of the number of detected genes in all cells" width="90%" />
+<img src="05-exprs-qc_files/figure-html/total-features-hist-1.png" alt="Histogram of the number of detected genes in all cells" width="90%" />
 <p class="caption">(\#fig:total-features-hist)Histogram of the number of detected genes in all cells</p>
 </div>
 
@@ -245,7 +245,7 @@ scater::plotPhenoData(
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/mt-vs-counts-1.png" alt="(\#fig:mt-vs-counts)Percentage of counts in MT genes" width="90%" />
+<img src="05-exprs-qc_files/figure-html/mt-vs-counts-1.png" alt="Percentage of counts in MT genes" width="90%" />
 <p class="caption">(\#fig:mt-vs-counts)Percentage of counts in MT genes</p>
 </div>
 
@@ -260,7 +260,7 @@ scater::plotPhenoData(
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/ercc-vs-counts-1.png" alt="(\#fig:ercc-vs-counts)Percentage of counts in ERCCs" width="90%" />
+<img src="05-exprs-qc_files/figure-html/ercc-vs-counts-1.png" alt="Percentage of counts in ERCCs" width="90%" />
 <p class="caption">(\#fig:ercc-vs-counts)Percentage of counts in ERCCs</p>
 </div>
 
@@ -511,7 +511,7 @@ scater::plotPCA(umi,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/auto-cell-filt-1.png" alt="(\#fig:auto-cell-filt)PCA plot used for automatic detection of cell outliers" width="90%" />
+<img src="05-exprs-qc_files/figure-html/auto-cell-filt-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
 <p class="caption">(\#fig:auto-cell-filt)PCA plot used for automatic detection of cell outliers</p>
 </div>
 
@@ -558,7 +558,7 @@ limma::vennDiagram(venn.diag,
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters" width="90%" />
+<img src="05-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">(\#fig:cell-filt-comp)Comparison of the default, automatic and manual cell filters</p>
 </div>
 
@@ -576,7 +576,7 @@ scater::plotQC(umi, type = "highest-expression")
 ```
 
 <div class="figure" style="text-align: center">
-<img src="05-exprs-qc_files/figure-html/top50-gene-expr-1.png" alt="(\#fig:top50-gene-expr)Number of total counts consumed by the top 50 expressed genes" width="90%" />
+<img src="05-exprs-qc_files/figure-html/top50-gene-expr-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">(\#fig:top50-gene-expr)Number of total counts consumed by the top 50 expressed genes</p>
 </div>
 
