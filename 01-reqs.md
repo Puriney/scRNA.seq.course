@@ -148,13 +148,14 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("TSCAN")
 ```
 
-[monocle](https://bioconductor.org/packages/release/bioc/html/monocle.html) for pseudotime analysis:
+[destiny](https://bioconductor.org/packages/release/bioc/html/destiny.html) for pseudotime analysis:
 
 ```r
 ## try http:// if https:// URLs are not supported
 source("https://bioconductor.org/biocLite.R")
-biocLite("monocle")
+biocLite("destiny")
 ```
+
 
 ## Differential Expression
 

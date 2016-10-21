@@ -11,6 +11,7 @@ output: html_document
 library(TSCAN)
 library(M3Drop)
 library(monocle)
+library(destiny)
 set.seed(1)
 ```
 
@@ -161,6 +162,34 @@ plot(
 
 <img src="19-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" />
 
+## Diffusion maps
+
+[Diffusion maps](https://en.wikipedia.org/wiki/Diffusion_map) were introduced by [Ronald Coifman and Stephane Lafon](http://www.sciencedirect.com/science/article/pii/S1063520306000546). Briefly, the underlying idea is to assume that the data are samples from a diffusion process. The method infers the low-dimensional manifold by estimating the eigenvalues and eigenvectors for the diffusion operator related to the data.
+
+[Haghverdi et al](http://biorxiv.org/content/biorxiv/early/2015/08/04/023309.full.pdf) have applied the diffusion maps concept to the analysis of single-cell RNA-seq data to create an R package called [destiny](http://bioconductor.org/packages/destiny).
+
+
+```r
+dm <- DiffusionMap(t(log2(1+deng)))
+tmp <- factor(colnames(deng), levels = c("early2cell", "mid2cell", "late2cell", "4cell", "8cell", "16cell", "midblast", "earlyblast", "lateblast"))
+plot(
+    eigenvectors(dm)[,1], 
+    eigenvectors(dm)[,2],
+    xlab="Diffusion component 1", 
+    ylab="Diffusion component 2",
+    col = colours[tmp],
+    pch = 16
+)
+```
+
+<img src="19-pseudotime_files/figure-html/destiny-deng-1.png" width="672" style="display: block; margin: auto;" />
+
+Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones. 
+
+__Exercise 2__ Do you get a better resolution between the later time points by considering additional eigenvectors?
+
+__Exercise 3__ How does the ordering change if you only use the genes identified by M3Drop?
+
 ## Comparison of the methods
 
 How do the trajectories inferred by TSCAN and Monocle compare?
@@ -183,6 +212,8 @@ plot(
 ```
 
 <img src="19-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" />
+
+__Exercise 4__ Compare destiny to TSCAN and Monocle.
 
 ## Expression of genes through time
 Each package also enables the visualization of expression through pseudotime.
@@ -210,4 +241,4 @@ monocle::plot_genes_in_pseudotime(
 
 <img src="19-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" />
 
-__Exercise 2__: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes
+__Exercise 5__: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes
