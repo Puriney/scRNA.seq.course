@@ -26,7 +26,7 @@
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
   
-<meta name="date" content="2016-10-17">
+<meta name="date" content="2016-10-21">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -40,7 +40,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="de-in-a-synthetic-dataset.html">
-<link rel="next" href="advanced-exercises.html">
+<link rel="next" href="ideal-scrnaseq-pipeline.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -235,10 +235,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>14</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls</a><ul>
 <li class="chapter" data-level="15.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-6"><i class="fa fa-check"></i><b>15.1</b> Introduction</a></li>
-<li class="chapter" data-level="15.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>15.2</b> Remove Unwanted Variation</a></li>
+<li class="chapter" data-level="15.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>15.2</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#ruvg"><i class="fa fa-check"></i><b>15.2.1</b> RUVg</a></li>
+<li class="chapter" data-level="15.2.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#ruvs"><i class="fa fa-check"></i><b>15.2.2</b> RUVs</a></li>
+</ul></li>
 <li class="chapter" data-level="15.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>15.3</b> Effectiveness 1</a></li>
 <li class="chapter" data-level="15.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>15.4</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="15.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-4"><i class="fa fa-check"></i><b>15.5</b> Exercise</a></li>
+<li class="chapter" data-level="15.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-3"><i class="fa fa-check"></i><b>15.5</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-raw-counts"><i class="fa fa-check"></i><b>15.5.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="15.5.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvg-k-2"><i class="fa fa-check"></i><b>15.5.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="15.5.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvs-k-2"><i class="fa fa-check"></i><b>15.5.3</b> DE (RUVs, k = 2)</a></li>
+</ul></li>
+<li class="chapter" data-level="15.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-4"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>16</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="17" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
@@ -317,12 +325,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="23.6.3" data-path="de-in-a-real-dataset.html"><a href="de-in-a-real-dataset.html#heatmap-of-de-genes"><i class="fa fa-check"></i><b>23.6.3</b> Heatmap of DE genes</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="24" data-path="advanced-exercises.html"><a href="advanced-exercises.html"><i class="fa fa-check"></i><b>24</b> Advanced exercises</a></li>
-<li class="chapter" data-level="25" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>25</b> Resources</a><ul>
-<li class="chapter" data-level="25.1" data-path="resources.html"><a href="resources.html#scrna-seq-protocols"><i class="fa fa-check"></i><b>25.1</b> scRNA-seq protocols</a></li>
-<li class="chapter" data-level="25.2" data-path="resources.html"><a href="resources.html#scrna-seq-analysis-tools"><i class="fa fa-check"></i><b>25.2</b> scRNA-seq analysis tools</a></li>
+<li class="chapter" data-level="24" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html"><i class="fa fa-check"></i><b>24</b> “Ideal” scRNAseq pipeline</a><ul>
+<li class="chapter" data-level="24.1" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#experimental-design"><i class="fa fa-check"></i><b>24.1</b> Experimental Design</a></li>
+<li class="chapter" data-level="24.2" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#read-qc-trimming"><i class="fa fa-check"></i><b>24.2</b> Read QC &amp; Trimming</a></li>
+<li class="chapter" data-level="24.3" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#mapping"><i class="fa fa-check"></i><b>24.3</b> Mapping</a></li>
+<li class="chapter" data-level="24.4" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#quantification"><i class="fa fa-check"></i><b>24.4</b> Quantification</a></li>
+<li class="chapter" data-level="24.5" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#cell-qc-1"><i class="fa fa-check"></i><b>24.5</b> Cell QC</a></li>
+<li class="chapter" data-level="24.6" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#library-size-normalization"><i class="fa fa-check"></i><b>24.6</b> Library Size Normalization</a></li>
+<li class="chapter" data-level="24.7" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#batch-correction-if-appropriate-see-below"><i class="fa fa-check"></i><b>24.7</b> Batch correction (if appropriate, see below)</a></li>
+<li class="chapter" data-level="24.8" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#feature-selection"><i class="fa fa-check"></i><b>24.8</b> Feature Selection</a></li>
+<li class="chapter" data-level="24.9" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#clustering-and-marker-genes"><i class="fa fa-check"></i><b>24.9</b> Clustering and Marker genes</a></li>
+<li class="chapter" data-level="24.10" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#pseudotime-1"><i class="fa fa-check"></i><b>24.10</b> Pseudotime</a></li>
+<li class="chapter" data-level="24.11" data-path="ideal-scrnaseq-pipeline.html"><a href="ideal-scrnaseq-pipeline.html#differential-expression-between-groups"><i class="fa fa-check"></i><b>24.11</b> Differential Expression between groups</a></li>
 </ul></li>
-<li class="chapter" data-level="26" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>26</b> References</a></li>
+<li class="chapter" data-level="25" data-path="advanced-exercises.html"><a href="advanced-exercises.html"><i class="fa fa-check"></i><b>25</b> Advanced exercises</a></li>
+<li class="chapter" data-level="26" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>26</b> Resources</a><ul>
+<li class="chapter" data-level="26.1" data-path="resources.html"><a href="resources.html#scrna-seq-protocols"><i class="fa fa-check"></i><b>26.1</b> scRNA-seq protocols</a></li>
+<li class="chapter" data-level="26.2" data-path="resources.html"><a href="resources.html#scrna-seq-analysis-tools"><i class="fa fa-check"></i><b>26.2</b> scRNA-seq analysis tools</a></li>
+</ul></li>
+<li class="chapter" data-level="27" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>27</b> References</a></li>
 <li class="divider"></li>
 <li><a href="http://www.sanger.ac.uk/science/groups/hemberg-group" target="blank">Hemberg Lab, 2016</a></li>
 
@@ -561,7 +582,7 @@ pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span cl
         </div>
       </div>
 <a href="de-in-a-synthetic-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="advanced-exercises.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="ideal-scrnaseq-pipeline.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

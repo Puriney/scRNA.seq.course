@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="identification-of-important-genes.html">
-<link rel="next" href="differential-expression-de-analysis.html">
+<link rel="prev" href="de-in-a-real-dataset.html">
+<link rel="next" href="advanced-exercises.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -364,140 +364,98 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ordering-of-cells-according-to-pseudotime" class="section level1">
-<h1><span class="header-section-number">20</span> Ordering of cells according to pseudotime</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TSCAN)
-<span class="kw">library</span>(M3Drop)
-<span class="kw">library</span>(monocle)
-<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (destroyed) when the RNA is extracted.</p>
-<p>Instead, we must sample at multiple time-points and obtain snapshots of the gene expression profiles. Since some of the cells will proceed faster along the differentiation than others, each snapshot may contain cells at varying points along the developmental progression. We use statistical methods to order the cells along one or more trajectories which represent the underlying developmental trajectories, this ordering is referred to as “pseudotime”.</p>
-<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development <span class="citation">(Deng et al. <a href="#ref-Deng2014-mx">2014</a>)</span>. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
-<div id="tscan" class="section level2">
-<h2><span class="header-section-number">20.1</span> TSCAN</h2>
-<p>TSCAN combines clustering with pseudotime analysis. First it clusters the cells using <code>mclust</code>, which is based on a mixture of normal distributions. Then it builds a minimum spanning tree to connect the clusters together. The branch of this tree that connects the largest number of clusters is the main branch which is used to determine pseudotime.</p>
-<p>First we will try to use all genes to order the cells.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
-cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
-procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(deng)
-<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
-dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum =</span> <span class="dv">10</span>)
-TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly =</span> F)
-pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.character</span>(dengorderTSCAN$sample_name)</code></pre></div>
-<p>We can also examine which timepoints have been assigned to each state:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">10</span>]</code></pre></div>
-<pre><code>##  [1] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
-##  [6] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
-## [11] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
-## [16] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
-## [21] &quot;mid2cell&quot;  &quot;mid2cell&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
-tmp &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">factor</span>(
-        cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)],
-        <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;early2cell&quot;</span>, <span class="st">&quot;mid2cell&quot;</span>, <span class="st">&quot;late2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, 
-                   <span class="st">&quot;16cell&quot;</span>, <span class="st">&quot;midblast&quot;</span>, <span class="st">&quot;earlyblast&quot;</span>, <span class="st">&quot;lateblast&quot;</span>)
-    )
-<span class="kw">plot</span>(
-    <span class="kw">as.numeric</span>(tmp), 
-    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime Order&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
-    <span class="dt">col =</span> colours[tmp],
-    <span class="dt">pch =</span> <span class="dv">16</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 1</strong> Compare results for different numbers of clusters (<code>clusternum</code>).</p>
+<div id="ideal-scrnaseq-pipeline" class="section level1">
+<h1><span class="header-section-number">24</span> “Ideal” scRNAseq pipeline</h1>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">24.1</span> Experimental Design</h2>
+<ul>
+<li>Avoid confounding biological and batch effects (Figure <a href="ideal-scrnaseq-pipeline.html#fig:pipeline-batches">24.1</a>)
+<ul>
+<li>Multiple conditions should be captured on the same chip if possible</li>
+<li>Perform multiple replicates of each condition where replicates of different conditions should performed together if possible</li>
+<li>Statistics cannot correct a completely confounded experiment!</li>
+</ul></li>
+<li>Unique molecular identifiers
+<ul>
+<li>Use longer UMIs (~10bp)</li>
+<li>Greatly reduce noise in data</li>
+<li>May reduce gene detection rates (unclear if it is UMIs or other protocol differences)</li>
+<li>Correct for sequencing errors in umis using UMI-tools</li>
+</ul></li>
+<li>Spike-ins
+<ul>
+<li>Useful for quality control</li>
+<li>Can be used to approximate cell-size/RNA content (if relevant to biological question)</li>
+<li>Often exhibit higher noise than endogenous genes (pipetting errors, mixture quality)</li>
+</ul></li>
+<li>Cell number vs Read depth
+<ul>
+<li>Gene detection plateaus starting from 1 million reads per cell</li>
+<li>Transcription factor detection (regulatory networks) require high read depth and most sensitive protocols (i.e. Fluidigm C1)</li>
+<li>Cell clustering &amp; cell-type identification benefits from large number of cells and doesn’t requireas high sequencing depth (~100,000 reads per cell).</li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span id="fig:pipeline-batches"></span>
+<img src="figures/Pipeline-batches.png" alt="Appropriate approaches to batch effects in scRNASeq. Red arrows indicate batche effects which are (pale) or are not (vibrant) correctable through batch-correction." width="90%" />
+<p class="caption">
+Figure 24.1: Appropriate approaches to batch effects in scRNASeq. Red arrows indicate batche effects which are (pale) or are not (vibrant) correctable through batch-correction.
+</p>
 </div>
-<div id="monocle" class="section level2">
-<h2><span class="header-section-number">20.2</span> monocle</h2>
-<p>Monocle skips the clustering stage of TSCAN and directly builds a minimum spanning tree to connect all cells. Monocle then identifies the longest path in this tree to determine pseudotime. If the data contains diverging trajectories (i.e. one cell type differentiates into two different cell-types), monocle can identify alternative long paths in the tree using the argument <code>num_paths</code>. Each of the resulting forked paths is defined as a separate cell state, thus <code>num_paths = 2</code> will identify three different cell states.</p>
-<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3Drop:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
-    M3Drop::<span class="kw">M3DropDifferentialExpression</span>(deng)$Gene
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(<span class="kw">rownames</span>(deng) %in%<span class="st"> </span>m3dGenes), ]
-d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)), ]</code></pre></div>
-<p>Now run monocle:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">timepoint =</span> cellLabels)
-pd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>pd)
-fd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">rownames</span>(d))
-<span class="kw">names</span>(fd) &lt;-<span class="st"> &quot;gene&quot;</span>
-fd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>fd)
-<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
-<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(d)
-dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet</span>(d, <span class="dt">phenoData =</span> pd, <span class="dt">featureData =</span> fd)
-dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
-dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr =</span> <span class="dv">1</span>)
-dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse =</span> F, <span class="dt">num_paths =</span> <span class="dv">1</span>)
-monocle::<span class="kw">plot_spanning_tree</span>(dCellDataSet)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Store the ordering</span>
-pseudotime_monocle &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">data.frame</span>(
-        <span class="dt">Timepoint =</span> <span class="kw">phenoData</span>(dCellDataSet)$timepoint, 
-        <span class="dt">pseudotime =</span> <span class="kw">phenoData</span>(dCellDataSet)$Pseudotime, 
-        <span class="dt">State=</span><span class="kw">phenoData</span>(dCellDataSet)$State
-    )
-<span class="kw">rownames</span>(pseudotime_monocle) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
-pseudotime_order_monocle &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">rownames</span>(pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), ])</code></pre></div>
-<p>We can again compare the inferred pseudotime to the known sampling timepoints.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
-    pseudotime_monocle$pseudotime, 
-    pseudotime_monocle$Timepoint, 
-    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
-    <span class="dt">col =</span> colours[pseudotime_monocle$Timepoint],
-    <span class="dt">pch =</span> <span class="dv">16</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="comparison-of-the-methods" class="section level2">
-<h2><span class="header-section-number">20.3</span> Comparison of the methods</h2>
-<p>How do the trajectories inferred by TSCAN and Monocle compare?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">matched_ordering &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">match</span>(
-        pseudotime_order_tscan, 
-        pseudotime_order_monocle
-    )
-timepoint_ordered &lt;-<span class="st"> </span>
-<span class="st">    </span>pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), <span class="dv">1</span>]
-<span class="kw">plot</span>(
-    matched_ordering, 
-    <span class="dt">xlab =</span> <span class="st">&quot;Monocle Order&quot;</span>, 
-    <span class="dt">ylab =</span> <span class="st">&quot;TSCAN Order&quot;</span>, 
-    <span class="dt">col =</span> colours[timepoint_ordered], 
-    <span class="dt">pch =</span> <span class="dv">16</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="read-qc-trimming" class="section level2">
+<h2><span class="header-section-number">24.2</span> Read QC &amp; Trimming</h2>
+<p>FASTQC, cutadapt</p>
 </div>
-<div id="expression-of-genes-through-time" class="section level2">
-<h2><span class="header-section-number">20.4</span> Expression of genes through time</h2>
-<p>Each package also enables the visualization of expression through pseudotime.</p>
-<p><strong>TSCAN</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
-TSCAN::<span class="kw">singlegeneplot</span>(
-    deng[<span class="kw">rownames</span>(deng) ==<span class="st"> &quot;Obox6&quot;</span>, ], 
-    dengorderTSCAN
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/Obox6-tscan-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Monocle</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monocle::<span class="kw">plot_genes_in_pseudotime</span>(
-    dCellDataSet[<span class="kw">fData</span>(dCellDataSet)$gene ==<span class="st"> &quot;Obox6&quot;</span>,], 
-    <span class="dt">color_by =</span> <span class="st">&quot;timepoint&quot;</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 2</strong>: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
+<div id="mapping" class="section level2">
+<h2><span class="header-section-number">24.3</span> Mapping</h2>
+<ul>
+<li>Small datasets or UMI datasets: align to genome/transcriptome using STAR</li>
+<li>Large datasets: pseudo-alignment with Salmon</li>
+</ul>
+</div>
+<div id="quantification" class="section level2">
+<h2><span class="header-section-number">24.4</span> Quantification</h2>
+<ul>
+<li>Small dataset, no UMIs : Cufflinks</li>
+<li>Large datasets, no UMIs: Salmon</li>
+<li>UMI dataset : UMI-Tools + featureCounts</li>
+</ul>
+</div>
+<div id="cell-qc-1" class="section level2">
+<h2><span class="header-section-number">24.5</span> Cell QC</h2>
+<p>scater, consider mtRNA, rRNA, spike-ins (if available), number of detected genes per cell, total reads/molecules per cell</p>
+</div>
+<div id="library-size-normalization" class="section level2">
+<h2><span class="header-section-number">24.6</span> Library Size Normalization</h2>
+<p>scran</p>
+</div>
+<div id="batch-correction-if-appropriate-see-below" class="section level2">
+<h2><span class="header-section-number">24.7</span> Batch correction (if appropriate, see below)</h2>
+<p>RUVs</p>
+</div>
+<div id="feature-selection" class="section level2">
+<h2><span class="header-section-number">24.8</span> Feature Selection</h2>
+<p>M3Drop</p>
+</div>
+<div id="clustering-and-marker-genes" class="section level2">
+<h2><span class="header-section-number">24.9</span> Clustering and Marker genes</h2>
+<p>SC3</p>
+</div>
+<div id="pseudotime-1" class="section level2">
+<h2><span class="header-section-number">24.10</span> Pseudotime</h2>
+<ul>
+<li>Few or very distinct timepoints: Tscan</li>
+<li>Very continuous data : dpt</li>
+</ul>
+</div>
+<div id="differential-expression-between-groups" class="section level2">
+<h2><span class="header-section-number">24.11</span> Differential Expression between groups</h2>
+<ul>
+<li>Fewer than 400 cells : SCDE</li>
+<li>Replicates with batch effects : mixture models</li>
+<li>Large datasets : Kruskal-Wallis test (many groups, 1 test), or Kolmogorov-Smirnov (KS)-test (compare 2 groups at a time)</li>
+</ul>
 
-</div>
-</div>
-<h3> References</h3>
-<div id="refs" class="references">
-<div id="ref-Deng2014-mx">
-<p>Deng, Qiaolin, Daniel Ramsköld, Björn Reinius, and Rickard Sandberg. 2014. “Single-Cell RNA-seq Reveals Dynamic, Random Monoallelic Gene Expression in Mammalian Cells.” <em>Science</em> 343 (6167): 193–96.</p>
 </div>
 </div>
             </section>
@@ -505,8 +463,8 @@ TSCAN::<span class="kw">singlegeneplot</span>(
           </div>
         </div>
       </div>
-<a href="identification-of-important-genes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="de-in-a-real-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="advanced-exercises.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -533,7 +491,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-pseudotime.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/23-ideal-scrnaseq-pipeline.Rmd",
 "text": "Edit"
 },
 "download": null,
