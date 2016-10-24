@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="pseudotime-analysis.html">
-<link rel="next" href="de-in-a-synthetic-dataset.html">
+<link rel="prev" href="data-visualization.html">
+<link rel="next" href="confounding-factors.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,184 +366,86 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="differential-expression-de-analysis" class="section level1">
-<h1><span class="header-section-number">21</span> Differential Expression (DE) analysis</h1>
-<div id="bulk-rna-seq-1" class="section level2">
-<h2><span class="header-section-number">21.1</span> Bulk RNA-seq</h2>
-<p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
-<p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
-</div>
-<div id="single-cell-rna-seq" class="section level2">
-<h2><span class="header-section-number">21.2</span> Single cell RNA-seq</h2>
-<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">18</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
-</div>
-<div id="scrna-seq-synthetic-data" class="section level2">
-<h2><span class="header-section-number">21.3</span> scRNA-seq synthetic data</h2>
-<p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
-<p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
-</div>
-<div id="single-gene-expression" class="section level2">
-<h2><span class="header-section-number">21.4</span> Single gene expression</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
-<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
-<p>We then plot the results as a histogram:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(s,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
+<div id="data-visualization-reads" class="section level1">
+<h1><span class="header-section-number">10</span> Data visualization (Reads)</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+reads &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/reads.rds&quot;</span>)
+reads.qc &lt;-<span class="st"> </span>reads[<span class="kw">fData</span>(reads)$use, <span class="kw">pData</span>(reads)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(reads.qc)$is_feature_control</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(reads[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-before-qc-reads"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-pca-before-qc-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 21.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
+Figure 10.1: PCA plot of the blischak data
 </p>
 </div>
-<p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
-<p><span class="math inline">\(\mu = k\cdot a/(a+b)\)</span></p>
-<p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
-</div>
-<div id="poisson-beta-distribution" class="section level2">
-<h2><span class="header-section-number">21.5</span> Poisson-Beta distribution</h2>
-<p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
-<p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, <span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPCA</span>(reads.qc[endog_genes, ],
+                <span class="dt">ntop =</span> <span class="dv">500</span>,
+                <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-pca-after-qc-reads"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-pca-after-qc-reads-1.png" alt="PCA plot of the blischak data" width="90%" />
 <p class="caption">
-Figure 21.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
+Figure 10.2: PCA plot of the blischak data
 </p>
 </div>
-<p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
-</div>
-<div id="sample-size" class="section level2">
-<h2><span class="header-section-number">21.6</span> Sample size</h2>
-<p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">50</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
-     <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(reads[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-before-qc-reads"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-tsne-before-qc-reads-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 21.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
+Figure 10.3: tSNE map of the blischak data
 </p>
 </div>
-<p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
-</div>
-<div id="dropout-noise" class="section level2">
-<h2><span class="header-section-number">21.7</span> Dropout noise</h2>
-<p>The stochastic bursting model only captures the biological variability. In practice there will also be experimental variability. We model the noise as drop-outs, i.e. we assume that there is a small probality that each transcript is lost. For gene <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> it is assumed that the probability of loosing the transcript is given by <span class="math inline">\(p_d = \mu/(d+\mu)\)</span>, where <span class="math inline">\(\mu\)</span> is the mean expression level of the gene and <span class="math inline">\(d\)</span> is a drop-out parameter. Thus, the probability of drop-outs monotonically decreases as the mean expression level increases.</p>
-<p>To visualize the impact of the drop-outs on a sample, we can tune the drop-out parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">1</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(reads.qc[endog_genes, ],
+                 <span class="dt">ntop =</span> <span class="dv">500</span>,
+                 <span class="dt">perplexity =</span> <span class="dv">130</span>,
+                 <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+                 <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+                 <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+                 <span class="dt">exprs_values =</span> <span class="st">&quot;counts&quot;</span>,
+                 <span class="dt">rand_seed =</span> <span class="dv">123456</span>)</code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-reads"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-tsne-after-qc-reads-1.png" alt="tSNE map of the blischak data" width="90%" />
 <p class="caption">
-Figure 21.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
+Figure 10.4: tSNE map of the blischak data
 </p>
 </div>
-<p><strong>Exercise 3</strong>: Explore the different parameter regimes for the same drop-out rate. Do you think that we are more sensitive to drop-outs in any specific regime?</p>
-</div>
-<div id="dispersion-noise" class="section level2">
-<h2><span class="header-section-number">21.8</span> Dispersion noise</h2>
-<p>Another example of noise is under- or over-dispersion. This can be modelled using a single parameter multiplying the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the Poisson-Beta distribution by a scalar <span class="math inline">\(s\)</span>. We can see that the mean is left unchanged while the variance is inversely proportional to <span class="math inline">\(s\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="dv">10</span>^(-<span class="dv">3</span>:<span class="dv">3</span>)
-k &lt;-<span class="st"> </span><span class="dv">100</span>
-a &lt;-<span class="st"> </span><span class="dv">2</span>
-b &lt;-<span class="st"> </span><span class="dv">3</span>
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(s,
-     k*a*s/(a*s +<span class="st"> </span>b*s),
-     <span class="dt">log =</span> <span class="st">&quot;x&quot;</span>,
-     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>),
-     <span class="dt">ylab =</span> <span class="st">&quot;Moments&quot;</span>)
-<span class="kw">points</span>(s,
-       k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-1"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-tsne-after-qc-exercise2-1-1.png" alt="tSNE map of the blischak data (perplexity = 10)" width="90%" />
 <p class="caption">
-Figure 21.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
+Figure 9.8: tSNE map of the blischak data (perplexity = 10)
 </p>
 </div>
-<p>To illustrate the effect of the dispersion parameter on the distribution consider:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>/<span class="dv">10</span>, <span class="dv">3</span>/<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>*<span class="dv">10</span>, <span class="dv">3</span>*<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
+<div class="figure" style="text-align: center"><span id="fig:expr-overview-tsne-after-qc-exercise2-2"></span>
+<img src="09-exprs-overview-reads_files/figure-html/expr-overview-tsne-after-qc-exercise2-2-1.png" alt="tSNE map of the blischak data (perplexity = 200)" width="90%" />
 <p class="caption">
-Figure 21.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
+Figure 9.9: tSNE map of the blischak data (perplexity = 200)
 </p>
 </div>
-<p><strong>Exercise 4</strong>: Explore what happens when you have both drop-outs and under/over-dispersion. Can the effects be deconvoluted?</p>
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="pseudotime-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="data-visualization.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="confounding-factors.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -570,7 +472,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/20-de-intro.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/09-exprs-overview-reads.Rmd",
 "text": "Edit"
 },
 "download": null,

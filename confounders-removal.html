@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="pseudotime-analysis.html">
-<link rel="next" href="de-in-a-synthetic-dataset.html">
+<link rel="prev" href="normalization-for-library-size-reads.html">
+<link rel="next" href="confounders-removal-reads.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,174 +366,223 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="differential-expression-de-analysis" class="section level1">
-<h1><span class="header-section-number">21</span> Differential Expression (DE) analysis</h1>
-<div id="bulk-rna-seq-1" class="section level2">
-<h2><span class="header-section-number">21.1</span> Bulk RNA-seq</h2>
-<p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
-<p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
-</div>
-<div id="single-cell-rna-seq" class="section level2">
-<h2><span class="header-section-number">21.2</span> Single cell RNA-seq</h2>
-<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">18</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
-</div>
-<div id="scrna-seq-synthetic-data" class="section level2">
-<h2><span class="header-section-number">21.3</span> scRNA-seq synthetic data</h2>
-<p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
-<p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
-</div>
-<div id="single-gene-expression" class="section level2">
-<h2><span class="header-section-number">21.4</span> Single gene expression</h2>
+<div id="confounders-removal" class="section level1">
+<h1><span class="header-section-number">15</span> Confounders Removal</h1>
+<div id="introduction-6" class="section level2">
+<h2><span class="header-section-number">15.1</span> Introduction</h2>
+<p>In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data using the ERCC spike-in controls. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed.</p>
+<p>Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and “substracting” this from the endogenous genes. There are several methods available based on this premise (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUV</a>); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Highly variable genes</a>)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
-<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
-<p>We then plot the results as a histogram:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(s,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
-</p>
+<span class="kw">library</span>(RUVSeq)
+<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(scran)
+<span class="kw">library</span>(edgeR)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
+umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control
+erccs &lt;-<span class="st"> </span><span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
 </div>
-<p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
-<p><span class="math inline">\(\mu = k\cdot a/(a+b)\)</span></p>
-<p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
+<div id="remove-unwanted-variation" class="section level2">
+<h2><span class="header-section-number">15.2</span> Remove Unwanted Variation</h2>
+<p>Factors contributing to technical noise frequently appear as “batch effects” where cells processed on different days or by different technicians systematically vary from one another. Removing technical noise and correcting for batch effects can frequently be performed using the same tool or slight variants on it. We will be considering the <a href="http://bioconductor.org/packages/RUVSeq">Remove Unwanted Variation (RUVSeq)</a>. Briefly, RUVSeq works as follows. For <span class="math inline">\(n\)</span> samples and <span class="math inline">\(J\)</span> genes, consider the following generalized linear model (GLM), where the RNA-Seq read counts are regressed on both the known covariates of interest and unknown factors of unwanted variation: <span class="math display">\[\log E[Y|W,X,O] = W\alpha + X\beta + O\]</span> Here, <span class="math inline">\(Y\)</span> is the <span class="math inline">\(n \times J\)</span> matrix of observed gene-level read counts, <span class="math inline">\(W\)</span> is an <span class="math inline">\(n \times k\)</span> matrix corresponding to the factors of “unwanted variation” and <span class="math inline">\(O\)</span> is an <span class="math inline">\(n \times J\)</span> matrix of offsets that can either be set to zero or estimated with some other normalization procedure (such as upper-quartile normalization). The simultaneous estimation of <span class="math inline">\(W\)</span>, <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(k\)</span> is infeasible. For a given <span class="math inline">\(k\)</span>, instead the following three approaches to estimate the factors of unwanted variation <span class="math inline">\(W\)</span> are used:</p>
+<ul>
+<li><em>RUVg</em> uses negative control genes (e.g. ERCCs), assumed to have constant expression across samples;</li>
+<li><em>RUVs</em> uses centered (technical) replicate/negative control samples for which the covariates of interest are constant;</li>
+<li><em>RUVr</em> uses residuals, e.g., from a first-pass GLM regression of the counts on the covariates of interest.</li>
+</ul>
+<p>We will concentrate on the first two approaches.</p>
+<div id="ruvg" class="section level3">
+<h3><span class="header-section-number">15.2.1</span> RUVg</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(umi.qc), erccs, <span class="dt">k =</span> <span class="dv">1</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvg1&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(umi.qc), erccs, <span class="dt">k =</span> <span class="dv">2</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvg2&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts</code></pre></div>
 </div>
-<div id="poisson-beta-distribution" class="section level2">
-<h2><span class="header-section-number">21.5</span> Poisson-Beta distribution</h2>
-<p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
-<p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, <span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">
-Figure 21.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
-</p>
+<div id="ruvs" class="section level3">
+<h3><span class="header-section-number">15.2.2</span> RUVs</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scIdx &lt;-<span class="st"> </span><span class="kw">matrix</span>(-<span class="dv">1</span>, <span class="dt">ncol =</span> <span class="kw">max</span>(<span class="kw">table</span>(umi.qc$individual)), <span class="dt">nrow =</span> <span class="dv">3</span>)
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19098&quot;</span>)
+scIdx[<span class="dv">1</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>)
+scIdx[<span class="dv">2</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19239&quot;</span>)
+scIdx[<span class="dv">3</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+cIdx &lt;-<span class="st"> </span><span class="kw">rownames</span>(umi.qc)
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(umi.qc), cIdx, <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvs1&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(umi.qc), cIdx, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvs2&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts</code></pre></div>
 </div>
-<p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
 </div>
-<div id="sample-size" class="section level2">
-<h2><span class="header-section-number">21.6</span> Sample size</h2>
-<p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">50</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
-     <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
-</p>
+<div id="effectiveness-1" class="section level2">
+<h2><span class="header-section-number">15.3</span> Effectiveness 1</h2>
+<p>We evaluate the effectiveness of the normalization by inspecting the PCA plot where colour corresponds the technical replicates and shape corresponds to different biological samples (individuals). Separation of biological samples and interspersed batches indicates that technical variation has been removed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
+<div id="effectiveness-2" class="section level2">
+<h2><span class="header-section-number">15.4</span> Effectiveness 2</h2>
+<p>We can also examine the effectiveness of correction using the relative log expression (RLE) across cells to confirm technical noise has been removed from the dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(
+    <span class="kw">list</span>(
+        <span class="st">&quot;Raw counts&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(umi.qc), erccs),
+        <span class="st">&quot;RUVg (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvg1, erccs),
+        <span class="st">&quot;RUVg (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvg2, erccs),
+        <span class="st">&quot;RUVs (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvs1, erccs),
+        <span class="st">&quot;RUVs (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvs2, erccs)
+    )
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="dropout-noise" class="section level2">
-<h2><span class="header-section-number">21.7</span> Dropout noise</h2>
-<p>The stochastic bursting model only captures the biological variability. In practice there will also be experimental variability. We model the noise as drop-outs, i.e. we assume that there is a small probality that each transcript is lost. For gene <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> it is assumed that the probability of loosing the transcript is given by <span class="math inline">\(p_d = \mu/(d+\mu)\)</span>, where <span class="math inline">\(\mu\)</span> is the mean expression level of the gene and <span class="math inline">\(d\)</span> is a drop-out parameter. Thus, the probability of drop-outs monotonically decreases as the mean expression level increases.</p>
-<p>To visualize the impact of the drop-outs on a sample, we can tune the drop-out parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">1</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
-</p>
+<div id="effectiveness-3" class="section level2">
+<h2><span class="header-section-number">15.5</span> Effectiveness 3</h2>
+<p>Another way of evaluating the effectiveness of correction is to look at the differentially expressed (DE) genes among the batches of the same individual Theoretically, these batches should not differ from each other. Let’s take the most promising individual (<strong>NA19101</strong>, whose batches are the closest to each other) and check whether it is true.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span>umi.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>
+design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~umi.qc[, keep]$batch)</code></pre></div>
+<p>We will use the <a href="http://bioconductor.org/packages/edgeR">edgeR</a> package to calculate DE genes.</p>
+<div id="de-raw-counts" class="section level3">
+<h3><span class="header-section-number">15.5.1</span> DE (raw counts)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge1 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">counts</span>(umi.qc[, keep]), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> umi.qc[, keep]$batch
+)
+dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge1)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit1 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge1, design)
+res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res1)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
+##                      logFC    logCPM       LR       PValue          FDR
+## ENSG00000145423  1.0437082  8.930360 354.3682 4.741536e-79 6.668021e-75
+## ENSG00000185885 -1.4704261  8.871862 312.6361 5.820571e-70 4.092734e-66
+## ENSG00000104332  0.7942726  9.732365 284.9588 6.237725e-64 2.924037e-60
+## ENSG00000214265 -0.7737881  9.237431 282.8562 1.791432e-63 6.298226e-60
+## ENSG00000106554 -0.6836208  9.262132 241.4285 1.919657e-54 5.399226e-51
+## ENSG00000167283 -0.4769965 10.083626 227.0334 2.644427e-51 6.198096e-48
+## ENSG00000165502 -0.5248241 10.028994 224.9492 7.531484e-51 1.331865e-47
+## ENSG00000087460  0.5510932  9.392753 224.9374 7.576560e-51 1.331865e-47
+## ENSG00000121207  1.9353719  6.736511 211.5649 6.258142e-48 9.778694e-45
+## ENSG00000112695 -0.5505989  9.637643 210.3241 1.167217e-47 1.641458e-44</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res1))</code></pre></div>
+<pre><code>##    [,1]
+## -1 2109
+## 0  9355
+## 1  2599</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res1, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res1, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res1))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<p><strong>Exercise 3</strong>: Explore the different parameter regimes for the same drop-out rate. Do you think that we are more sensitive to drop-outs in any specific regime?</p>
+<div id="de-ruvg-k-2" class="section level3">
+<h3><span class="header-section-number">15.5.2</span> DE (RUVg, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge2 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">get_exprs</span>(umi.qc[, keep], <span class="st">&quot;ruvg2&quot;</span>), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> umi.qc[, keep]$batch
+)
+dge2 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge2, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge2)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge2, design)
+res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res2)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
+##                      logFC    logCPM       LR       PValue          FDR
+## ENSG00000185885 -1.2940992  8.848299 259.3045 2.432853e-58 3.421322e-54
+## ENSG00000112695 -0.5984239  9.654469 242.6075 1.062090e-54 7.468083e-51
+## ENSG00000127922 -0.4599139 10.172643 235.9477 3.008274e-53 1.410179e-49
+## ENSG00000198865  2.0844092  7.464237 235.3096 4.144451e-53 1.457085e-49
+## ENSG00000131969 -1.5918311  7.373035 222.2564 2.912221e-50 8.190913e-47
+## ENSG00000145423  0.8311869  8.944623 205.1051 1.606381e-46 3.765090e-43
+## ENSG00000167283 -0.4236592 10.077512 187.4446 1.148540e-42 2.307416e-39
+## ENSG00000184674 -2.2466016  6.268906 183.6732 7.646216e-42 1.344109e-38
+## ENSG00000014641 -0.5878931  9.230097 168.2078 1.822302e-38 2.847448e-35
+## ENSG00000026025  1.4699885  7.256207 167.1312 3.131671e-38 4.404069e-35</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res2))</code></pre></div>
+<pre><code>##    [,1] 
+## -1  1757
+## 0  10072
+## 1   2234</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res2, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res2, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res2))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="dispersion-noise" class="section level2">
-<h2><span class="header-section-number">21.8</span> Dispersion noise</h2>
-<p>Another example of noise is under- or over-dispersion. This can be modelled using a single parameter multiplying the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the Poisson-Beta distribution by a scalar <span class="math inline">\(s\)</span>. We can see that the mean is left unchanged while the variance is inversely proportional to <span class="math inline">\(s\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="dv">10</span>^(-<span class="dv">3</span>:<span class="dv">3</span>)
-k &lt;-<span class="st"> </span><span class="dv">100</span>
-a &lt;-<span class="st"> </span><span class="dv">2</span>
-b &lt;-<span class="st"> </span><span class="dv">3</span>
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(s,
-     k*a*s/(a*s +<span class="st"> </span>b*s),
-     <span class="dt">log =</span> <span class="st">&quot;x&quot;</span>,
-     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>),
-     <span class="dt">ylab =</span> <span class="st">&quot;Moments&quot;</span>)
-<span class="kw">points</span>(s,
-       k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
-</p>
+<div id="de-ruvs-k-2" class="section level3">
+<h3><span class="header-section-number">15.5.3</span> DE (RUVs, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge3 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">get_exprs</span>(umi.qc[, keep], <span class="st">&quot;ruvs2&quot;</span>), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> umi.qc[, keep]$batch
+)
+dge3 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge3, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge3)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit3 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge3, design)
+res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res3)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
+##                      logFC    logCPM        LR       PValue          FDR
+## ERCC-00096       0.3565316 14.413429 135.99061 2.004766e-31 2.819303e-27
+## ERCC-00130       0.2943996 15.221291 111.41547 4.798340e-26 3.373953e-22
+## ERCC-00002       0.3122361 14.275886  83.78178 5.525179e-20 2.590020e-16
+## ERCC-00113       0.3688776 12.596908  69.48107 7.715159e-17 2.712457e-13
+## ENSG00000108518  0.8294795  9.840062  67.23541 2.409469e-16 6.776873e-13
+## ENSG00000114315 -1.8333183  8.584396  66.12574 4.230542e-16 9.915686e-13
+## ERCC-00074       0.2295402 14.587069  61.07973 5.480964e-15 1.101126e-11
+## ENSG00000240972  0.6549418 10.188124  55.38987 9.884438e-14 1.737561e-10
+## ENSG00000142871 -1.3716646  8.753340  52.06089 5.380592e-13 8.407475e-10
+## ENSG00000125144 -2.3428345  8.845632  50.17383 1.407117e-12 1.978829e-09</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res3))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   328
+## 0  13449
+## 1    286</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res3, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res3, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res3))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<p>To illustrate the effect of the dispersion parameter on the distribution consider:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>/<span class="dv">10</span>, <span class="dv">3</span>/<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>*<span class="dv">10</span>, <span class="dv">3</span>*<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
-</p>
 </div>
-<p><strong>Exercise 4</strong>: Explore what happens when you have both drop-outs and under/over-dispersion. Can the effects be deconvoluted?</p>
+<div id="exercise-2" class="section level2">
+<h2><span class="header-section-number">15.6</span> Exercise</h2>
+<p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter). Additionally, experiment with other combinations of normalizations and compare the results.</p>
 
 </div>
 </div>
@@ -542,8 +591,8 @@ Figure 21.6: Effect of dispersion on the distribution of read counts based on th
           </div>
         </div>
       </div>
-<a href="pseudotime-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="normalization-for-library-size-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="confounders-removal-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -570,7 +619,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/20-de-intro.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/14-remove-conf.Rmd",
 "text": "Edit"
 },
 "download": null,

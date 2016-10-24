@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="pseudotime-analysis.html">
-<link rel="next" href="de-in-a-synthetic-dataset.html">
+<link rel="prev" href="identification-of-important-genes.html">
+<link rel="next" href="differential-expression-de-analysis.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,175 +366,174 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="differential-expression-de-analysis" class="section level1">
-<h1><span class="header-section-number">21</span> Differential Expression (DE) analysis</h1>
-<div id="bulk-rna-seq-1" class="section level2">
-<h2><span class="header-section-number">21.1</span> Bulk RNA-seq</h2>
-<p>One of the most common types of analyses when analyzing bulk RNA-seq data is to identify differentially expressed genes. By comparing the genes that change between two conditions, e.g. mutant and wild-type or stimulated and unstimulated, it is possible to characterize the molecular mechanisms underlying the change.</p>
-<p>Several different methods, e.g. <a href="https://bioconductor.org/packages/DESeq2">DESeq2</a> and <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a>, have been developed for bulk RNA-seq. Moreover, there are also extensive <a href="http://genomebiology.biomedcentral.com/articles/10.1186/gb-2013-14-9-r95">datasets</a> available where the RNA-seq data has been validated using RT-qPCR. These data can be used to benchmark DE finding algorithms.</p>
-</div>
-<div id="single-cell-rna-seq" class="section level2">
-<h2><span class="header-section-number">21.2</span> Single cell RNA-seq</h2>
-<p>In contrast to the bulk RNA-seq in scRNA-seq we usually do not have a defined set of experimental conditions, but instead, as was shown in the previous chapter (<a href="clust-methods.html#clust-methods">18</a>) we can identify the cell groups by using the unsupervised clustering approach. Once the groups have been identified one can find differentially expressed genes by either looking at the differencies in variance between the groups (like the Kruskal-Wallis test implemented in SC3), or by comparing gene expression between clusters in a pairwise manner. In the following chapter we will mainly consider tools developed for the comparison of the two groups of cells.</p>
-</div>
-<div id="scrna-seq-synthetic-data" class="section level2">
-<h2><span class="header-section-number">21.3</span> scRNA-seq synthetic data</h2>
-<p>One advantage of working with single-cell data is that there is a reliable, analytically tractable mathematical model for the expression levels, the Poisson-Beta distribution. Importantly, the Poisson-Beta distribution has strong experimental support, and it provides a good fit to scRNA-seq data.</p>
-<p>In this module, we first discuss the Poisson-Beta distribution. We then use the model to generate synthetic data which we can use to compare different DE finding algorithms. In the final section we investigate a real scRNA-seq dataset.</p>
-</div>
-<div id="single-gene-expression" class="section level2">
-<h2><span class="header-section-number">21.4</span> Single gene expression</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<div id="pseudotime-analysis" class="section level1">
+<h1><span class="header-section-number">20</span> Pseudotime analysis</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TSCAN)
+<span class="kw">library</span>(M3Drop)
+<span class="kw">library</span>(monocle)
+<span class="kw">library</span>(destiny)
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>For single-cell data, the analytically tractable stochastic bursting model provides a good fit. Thus, we can use it to generate realistic data. We start by generating samples from one gene:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span>scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>)</code></pre></div>
-<p>We then plot the results as a histogram:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(s,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">main =</span> <span class="st">&quot;Transcript distribution&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-plot"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.1: Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model
-</p>
+<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (destroyed) when the RNA is extracted.</p>
+<p>Instead, we must sample at multiple time-points and obtain snapshots of the gene expression profiles. Since some of the cells will proceed faster along the differentiation than others, each snapshot may contain cells at varying points along the developmental progression. We use statistical methods to order the cells along one or more trajectories which represent the underlying developmental trajectories, this ordering is referred to as “pseudotime”.</p>
+<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development <span class="citation">(Deng et al. <a href="#ref-Deng2014-mx">2014</a>)</span>. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
+<div id="tscan" class="section level2">
+<h2><span class="header-section-number">20.1</span> TSCAN</h2>
+<p>TSCAN combines clustering with pseudotime analysis. First it clusters the cells using <code>mclust</code>, which is based on a mixture of normal distributions. Then it builds a minimum spanning tree to connect the clusters together. The branch of this tree that connects the largest number of clusters is the main branch which is used to determine pseudotime.</p>
+<p>First we will try to use all genes to order the cells.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
+cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
+procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(deng)
+<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
+dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum =</span> <span class="dv">10</span>)
+TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly =</span> F)
+pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.character</span>(dengorderTSCAN$sample_name)</code></pre></div>
+<p>We can also examine which timepoints have been assigned to each state:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">10</span>]</code></pre></div>
+<pre><code>##  [1] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
+##  [6] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
+## [11] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
+## [16] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
+## [21] &quot;mid2cell&quot;  &quot;mid2cell&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
+tmp &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">factor</span>(
+        cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)],
+        <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;early2cell&quot;</span>, <span class="st">&quot;mid2cell&quot;</span>, <span class="st">&quot;late2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, 
+                   <span class="st">&quot;16cell&quot;</span>, <span class="st">&quot;midblast&quot;</span>, <span class="st">&quot;earlyblast&quot;</span>, <span class="st">&quot;lateblast&quot;</span>)
+    )
+<span class="kw">plot</span>(
+    <span class="kw">as.numeric</span>(tmp), 
+    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime Order&quot;</span>, 
+    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
+    <span class="dt">col =</span> colours[tmp],
+    <span class="dt">pch =</span> <span class="dv">16</span>
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise 1</strong> Compare results for different numbers of clusters (<code>clusternum</code>).</p>
 </div>
-<p>The probability mass function of the Poisson-Beta distribution is challenging to work with since it involves special functions. However, the mean and variance can be calculated as:</p>
-<p><span class="math inline">\(\mu = k\cdot a/(a+b)\)</span></p>
-<p><span class="math inline">\(\sigma^2 = k^2\cdot a\cdot b/((a+b+1)\cdot(a+b)^2)\)</span></p>
+<div id="monocle" class="section level2">
+<h2><span class="header-section-number">20.2</span> monocle</h2>
+<p>Monocle skips the clustering stage of TSCAN and directly builds a minimum spanning tree to connect all cells. Monocle then identifies the longest path in this tree to determine pseudotime. If the data contains diverging trajectories (i.e. one cell type differentiates into two different cell-types), monocle can identify alternative long paths in the tree using the argument <code>num_paths</code>. Each of the resulting forked paths is defined as a separate cell state, thus <code>num_paths = 2</code> will identify three different cell states.</p>
+<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3Drop:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
+    M3Drop::<span class="kw">M3DropDifferentialExpression</span>(deng)$Gene
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(<span class="kw">rownames</span>(deng) %in%<span class="st"> </span>m3dGenes), ]
+d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)), ]</code></pre></div>
+<p>Now run monocle:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">timepoint =</span> cellLabels)
+pd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>pd)
+fd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">rownames</span>(d))
+<span class="kw">names</span>(fd) &lt;-<span class="st"> &quot;gene&quot;</span>
+fd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>fd)
+<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
+<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(d)
+dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet</span>(d, <span class="dt">phenoData =</span> pd, <span class="dt">featureData =</span> fd)
+dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
+dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr =</span> <span class="dv">1</span>)
+dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse =</span> F, <span class="dt">num_paths =</span> <span class="dv">1</span>)
+monocle::<span class="kw">plot_spanning_tree</span>(dCellDataSet)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Store the ordering</span>
+pseudotime_monocle &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">data.frame</span>(
+        <span class="dt">Timepoint =</span> <span class="kw">phenoData</span>(dCellDataSet)$timepoint, 
+        <span class="dt">pseudotime =</span> <span class="kw">phenoData</span>(dCellDataSet)$Pseudotime, 
+        <span class="dt">State=</span><span class="kw">phenoData</span>(dCellDataSet)$State
+    )
+<span class="kw">rownames</span>(pseudotime_monocle) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
+pseudotime_order_monocle &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">rownames</span>(pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), ])</code></pre></div>
+<p>We can again compare the inferred pseudotime to the known sampling timepoints.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
+    pseudotime_monocle$pseudotime, 
+    pseudotime_monocle$Timepoint, 
+    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime&quot;</span>, 
+    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
+    <span class="dt">col =</span> colours[pseudotime_monocle$Timepoint],
+    <span class="dt">pch =</span> <span class="dv">16</span>
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="poisson-beta-distribution" class="section level2">
-<h2><span class="header-section-number">21.5</span> Poisson-Beta distribution</h2>
-<p>There are three regimes of the Poisson-Beta distribution and they are determined by the values of the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>.</p>
-<p>When <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&lt;1\)</span> we have a bimodal distribution with one mode at 0 and the other at <span class="math inline">\(k\)</span>, when <span class="math inline">\(a&lt;1\)</span> and <span class="math inline">\(b&gt;1\)</span> we have a monotonically decreasing distribution and otherwise we have a unimodal distribution with a mode at <span class="math inline">\(ka/(a+b)\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, .<span class="dv">2</span>, <span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, .<span class="dv">3</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">120</span>, <span class="dv">10</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-shapes"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">
-Figure 21.2: Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets
-</p>
+<div id="diffusion-maps" class="section level2">
+<h2><span class="header-section-number">20.3</span> Diffusion maps</h2>
+<p><a href="https://en.wikipedia.org/wiki/Diffusion_map">Diffusion maps</a> were introduced by <a href="http://www.sciencedirect.com/science/article/pii/S1063520306000546">Ronald Coifman and Stephane Lafon</a>. Briefly, the underlying idea is to assume that the data are samples from a diffusion process. The method infers the low-dimensional manifold by estimating the eigenvalues and eigenvectors for the diffusion operator related to the data.</p>
+<p><a href="http://biorxiv.org/content/biorxiv/early/2015/08/04/023309.full.pdf">Haghverdi et al</a> have applied the diffusion maps concept to the analysis of single-cell RNA-seq data to create an R package called <a href="http://bioconductor.org/packages/destiny">destiny</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dm &lt;-<span class="st"> </span><span class="kw">DiffusionMap</span>(<span class="kw">t</span>(<span class="kw">log2</span>(<span class="dv">1</span>+deng)))
+tmp &lt;-<span class="st"> </span><span class="kw">factor</span>(
+    <span class="kw">colnames</span>(deng), 
+    <span class="dt">levels =</span> <span class="kw">c</span>(
+        <span class="st">&quot;early2cell&quot;</span>, 
+        <span class="st">&quot;mid2cell&quot;</span>, 
+        <span class="st">&quot;late2cell&quot;</span>, 
+        <span class="st">&quot;4cell&quot;</span>, 
+        <span class="st">&quot;8cell&quot;</span>, 
+        <span class="st">&quot;16cell&quot;</span>, 
+        <span class="st">&quot;midblast&quot;</span>, 
+        <span class="st">&quot;earlyblast&quot;</span>, 
+        <span class="st">&quot;lateblast&quot;</span>
+    )
+)
+<span class="kw">plot</span>(
+    <span class="kw">eigenvectors</span>(dm)[,<span class="dv">1</span>], 
+    <span class="kw">eigenvectors</span>(dm)[,<span class="dv">2</span>],
+    <span class="dt">xlab=</span><span class="st">&quot;Diffusion component 1&quot;</span>, 
+    <span class="dt">ylab=</span><span class="st">&quot;Diffusion component 2&quot;</span>,
+    <span class="dt">col =</span> colours[tmp],
+    <span class="dt">pch =</span> <span class="dv">16</span>
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/destiny-deng-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones.</p>
+<p><strong>Exercise 2</strong> Do you get a better resolution between the later time points by considering additional eigenvectors?</p>
+<p><strong>Exercise 3</strong> How does the ordering change if you only use the genes identified by M3Drop?</p>
 </div>
-<p><strong>Exercise 1</strong>: Vary the parameters <em>a</em>, <em>b</em> and <em>k</em> to explore how the location and shape of the distribution changes.</p>
+<div id="comparison-of-the-methods" class="section level2">
+<h2><span class="header-section-number">20.4</span> Comparison of the methods</h2>
+<p>How do the trajectories inferred by TSCAN and Monocle compare?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">matched_ordering &lt;-<span class="st"> </span>
+<span class="st">    </span><span class="kw">match</span>(
+        pseudotime_order_tscan, 
+        pseudotime_order_monocle
+    )
+timepoint_ordered &lt;-<span class="st"> </span>
+<span class="st">    </span>pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), <span class="dv">1</span>]
+<span class="kw">plot</span>(
+    matched_ordering, 
+    <span class="dt">xlab =</span> <span class="st">&quot;Monocle Order&quot;</span>, 
+    <span class="dt">ylab =</span> <span class="st">&quot;TSCAN Order&quot;</span>, 
+    <span class="dt">col =</span> colours[timepoint_ordered], 
+    <span class="dt">pch =</span> <span class="dv">16</span>
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise 4</strong> Compare destiny to TSCAN and Monocle.</p>
 </div>
-<div id="sample-size" class="section level2">
-<h2><span class="header-section-number">21.6</span> Sample size</h2>
-<p>The difficulty in determining the parameters of the distribution also depends on the sample size. In the example below, it is not clear if the distribution is bimodal when only 10 samples are drawn.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">10</span>, .<span class="dv">6</span>, <span class="fl">1.2</span>, <span class="dv">50</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>),
-     <span class="dt">add =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-sample-size"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.3: Effect of sampling size on the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p><strong>Exercise 2</strong>: Modify the number of samples (i.e. cells) drawn to explore how difficult it is to correctly infer the correct shape.</p>
-</div>
-<div id="dropout-noise" class="section level2">
-<h2><span class="header-section-number">21.7</span> Dropout noise</h2>
-<p>The stochastic bursting model only captures the biological variability. In practice there will also be experimental variability. We model the noise as drop-outs, i.e. we assume that there is a small probality that each transcript is lost. For gene <span class="math inline">\(i\)</span> and cell <span class="math inline">\(j\)</span> it is assumed that the probability of loosing the transcript is given by <span class="math inline">\(p_d = \mu/(d+\mu)\)</span>, where <span class="math inline">\(\mu\)</span> is the mean expression level of the gene and <span class="math inline">\(d\)</span> is a drop-out parameter. Thus, the probability of drop-outs monotonically decreases as the mean expression level increases.</p>
-<p>To visualize the impact of the drop-outs on a sample, we can tune the drop-out parameter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">1</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">10</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">08</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dropout-example"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.4: Effect of dropouts on the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p><strong>Exercise 3</strong>: Explore the different parameter regimes for the same drop-out rate. Do you think that we are more sensitive to drop-outs in any specific regime?</p>
-</div>
-<div id="dispersion-noise" class="section level2">
-<h2><span class="header-section-number">21.8</span> Dispersion noise</h2>
-<p>Another example of noise is under- or over-dispersion. This can be modelled using a single parameter multiplying the parameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> in the Poisson-Beta distribution by a scalar <span class="math inline">\(s\)</span>. We can see that the mean is left unchanged while the variance is inversely proportional to <span class="math inline">\(s\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="dv">10</span>^(-<span class="dv">3</span>:<span class="dv">3</span>)
-k &lt;-<span class="st"> </span><span class="dv">100</span>
-a &lt;-<span class="st"> </span><span class="dv">2</span>
-b &lt;-<span class="st"> </span><span class="dv">3</span>
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(s,
-     k*a*s/(a*s +<span class="st"> </span>b*s),
-     <span class="dt">log =</span> <span class="st">&quot;x&quot;</span>,
-     <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>),
-     <span class="dt">ylab =</span> <span class="st">&quot;Moments&quot;</span>)
-<span class="kw">points</span>(s,
-       k*a*s*b*s/((a*s +<span class="st"> </span>b*s)^<span class="dv">2</span>*(a*s +<span class="st"> </span>b*s +<span class="st"> </span><span class="dv">1</span>)),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-analytical"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.5: The mean and the variance of the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p>To illustrate the effect of the dispersion parameter on the distribution consider:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>/<span class="dv">10</span>, <span class="dv">3</span>/<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))
-<span class="kw">hist</span>(scRNA.seq.funcs::<span class="kw">PoiBeta</span>(<span class="dv">100</span>, <span class="dv">2</span>*<span class="dv">10</span>, <span class="dv">3</span>*<span class="dv">10</span>, <span class="dv">100</span>),
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# transcripts&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">05</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">120</span>))</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:poisson-beta-dispersion-effect"></span>
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">
-Figure 21.6: Effect of dispersion on the distribution of read counts based on the Poisson-Beta model
-</p>
-</div>
-<p><strong>Exercise 4</strong>: Explore what happens when you have both drop-outs and under/over-dispersion. Can the effects be deconvoluted?</p>
+<div id="expression-of-genes-through-time" class="section level2">
+<h2><span class="header-section-number">20.5</span> Expression of genes through time</h2>
+<p>Each package also enables the visualization of expression through pseudotime.</p>
+<p><strong>TSCAN</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
+TSCAN::<span class="kw">singlegeneplot</span>(
+    deng[<span class="kw">rownames</span>(deng) ==<span class="st"> &quot;Obox6&quot;</span>, ], 
+    dengorderTSCAN
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/Obox6-tscan-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Monocle</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monocle::<span class="kw">plot_genes_in_pseudotime</span>(
+    dCellDataSet[<span class="kw">fData</span>(dCellDataSet)$gene ==<span class="st"> &quot;Obox6&quot;</span>,], 
+    <span class="dt">color_by =</span> <span class="st">&quot;timepoint&quot;</span>
+)</code></pre></div>
+<p><img src="19-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><strong>Exercise 5</strong>: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
 
+</div>
+</div>
+<h3> References</h3>
+<div id="refs" class="references">
+<div id="ref-Deng2014-mx">
+<p>Deng, Qiaolin, Daniel Ramsköld, Björn Reinius, and Rickard Sandberg. 2014. “Single-Cell RNA-seq Reveals Dynamic, Random Monoallelic Gene Expression in Mammalian Cells.” <em>Science</em> 343 (6167): 193–96.</p>
 </div>
 </div>
             </section>
@@ -542,8 +541,8 @@ Figure 21.6: Effect of dispersion on the distribution of read counts based on th
           </div>
         </div>
       </div>
-<a href="pseudotime-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="identification-of-important-genes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -570,7 +569,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/20-de-intro.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-pseudotime.Rmd",
 "text": "Edit"
 },
 "download": null,

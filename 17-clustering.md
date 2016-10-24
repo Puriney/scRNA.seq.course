@@ -147,7 +147,7 @@ Let's compare the clusterings (with $k$ = 3) provided after running `pcaReduce` 
 
 ```r
 res <- unique(scRNA.seq.funcs::merge_pcaReduce_results(pca.red, 3))
-pheatmap(res, legend = FALSE, main = "Columns - cells, Rows - clusterings, Colors - clusters")
+pheatmap(res, legend = FALSE, show_rownames = FALSE, main = "Columns - cells, Rows - clusterings, Colors - clusters")
 ```
 
 <div class="figure" style="text-align: center">

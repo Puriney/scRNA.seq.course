@@ -155,18 +155,6 @@ total number of molecules for each cell should follow?
 __Our answer__
 
 
-```r
-filter_by_total_counts <- (umi$total_counts > 25000)
-knitr::kable(
-    as.data.frame(table(filter_by_total_counts)),
-    booktabs = TRUE,
-    row.names = FALSE,
-    caption = 'The number of cells removed by total counts filter (FALSE)'
-)
-```
-
-
-
 Table: (\#tab:unnamed-chunk-9)The number of cells removed by total counts filter (FALSE)
 
 filter_by_total_counts    Freq
@@ -205,18 +193,6 @@ __Exercise 2__
 How many cells does our filter remove?
 
 __Our answer__
-
-
-```r
-filter_by_expr_features <- (umi$total_features > 7000)
-knitr::kable(
-    as.data.frame(table(filter_by_expr_features)),
-    booktabs = TRUE,
-    row.names = FALSE,
-    caption = 'The number of cells removed by total features filter (FALSE)'
-)
-```
-
 
 
 Table: (\#tab:unnamed-chunk-10)The number of cells removed by total features filter (FALSE)
@@ -273,34 +249,12 @@ Create filters for removing batch NA19098.r2 and cells with high expression of m
 __Our answer__
 
 
-```r
-filter_by_ERCC <- umi$batch != "NA19098.r2"
-knitr::kable(
-  as.data.frame(table(filter_by_ERCC)),
-  booktabs = TRUE,
-  row.names = FALSE,
-  caption = 'The number of cells removed by ERCC filter (FALSE)'
-)
-```
-
-
-
 Table: (\#tab:unnamed-chunk-11)The number of cells removed by ERCC filter (FALSE)
 
 filter_by_ERCC    Freq
 ---------------  -----
 FALSE               96
 TRUE               768
-
-```r
-filter_by_MT <- umi$pct_counts_feature_controls_MT < 10
-knitr::kable(
-  as.data.frame(table(filter_by_MT)),
-  booktabs = TRUE,
-  row.names = FALSE,
-  caption = 'The number of cells removed by MT filter (FALSE)'
-)
-```
 
 
 
@@ -543,19 +497,6 @@ Compare the default, automatic and manual cell filters. Plot a Venn diagram of t
 __Hint__: Use `limma::vennCounts` and `limma::vennDiagram` functions from the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package to make a Venn diagram.
 
 __Answer__
-
-
-```r
-def <- colnames(umi)[!umi$use_default]
-auto <- colnames(umi)[umi$outlier]
-man <- colnames(umi)[!umi$use]
-venn.diag <- limma::vennCounts(cbind(colnames(umi) %in% def,
-                                     colnames(umi) %in% auto,
-                                     colnames(umi) %in% man))
-limma::vennDiagram(venn.diag,
-                   names = c("Default", "Automatic", "Manual"),
-                   circle.col = c("magenta", "blue", "green"))
-```
 
 <div class="figure" style="text-align: center">
 <img src="06-exprs-qc_files/figure-html/cell-filt-comp-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />

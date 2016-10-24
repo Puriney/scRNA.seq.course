@@ -3,7 +3,7 @@
 output: html_document
 ---
 
-# Ordering of cells according to pseudotime
+# Pseudotime analysis
 
 
 
@@ -171,7 +171,20 @@ plot(
 
 ```r
 dm <- DiffusionMap(t(log2(1+deng)))
-tmp <- factor(colnames(deng), levels = c("early2cell", "mid2cell", "late2cell", "4cell", "8cell", "16cell", "midblast", "earlyblast", "lateblast"))
+tmp <- factor(
+    colnames(deng), 
+    levels = c(
+        "early2cell", 
+        "mid2cell", 
+        "late2cell", 
+        "4cell", 
+        "8cell", 
+        "16cell", 
+        "midblast", 
+        "earlyblast", 
+        "lateblast"
+    )
+)
 plot(
     eigenvectors(dm)[,1], 
     eigenvectors(dm)[,2],

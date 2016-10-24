@@ -78,7 +78,15 @@ in the two conditions.
 
 The KS-test quantifies the distance between the empirical cummulative distributions of the expression of each gene in each of the two populations. It is sensitive to changes in mean experssion and changes in variability. However it assumes data is continuous and may perform poorly when data contains a large number of identical values (eg. zeros).
 
-__INSERT THE FIGURE FROM THE WIKIPEDIA PAGE?__
+
+```r
+knitr::include_graphics("figures/KS2_Example.png")
+```
+
+<div class="figure" style="text-align: center">
+<img src="figures/KS2_Example.png" alt="Illustration of the two-sample Kolmogorov–Smirnov statistic. Red and blue lines each correspond to an empirical distribution function, and the black arrow is the two-sample KS statistic. (taken from [here](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test))" width="90%" />
+<p class="caption">(\#fig:ks-statistic)Illustration of the two-sample Kolmogorov–Smirnov statistic. Red and blue lines each correspond to an empirical distribution function, and the black arrow is the two-sample KS statistic. (taken from [here](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test))</p>
+</div>
 
 
 ```r

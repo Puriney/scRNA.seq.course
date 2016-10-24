@@ -40,7 +40,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="clust-methods.html">
-<link rel="next" href="ordering-of-cells-according-to-pseudotime.html">
+<link rel="next" href="pseudotime-analysis.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -202,7 +202,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="9.4" data-path="data-visualization.html"><a href="data-visualization.html#big-exercise-1"><i class="fa fa-check"></i><b>9.4</b> Big Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="expression-overview-reads.html"><a href="expression-overview-reads.html"><i class="fa fa-check"></i><b>10</b> Expression overview (Reads)</a></li>
+<li class="chapter" data-level="10" data-path="data-visualization-reads.html"><a href="data-visualization-reads.html"><i class="fa fa-check"></i><b>10</b> Data visualization (Reads)</a></li>
 <li class="chapter" data-level="11" data-path="confounding-factors.html"><a href="confounding-factors.html"><i class="fa fa-check"></i><b>11</b> Confounding factors</a><ul>
 <li class="chapter" data-level="11.1" data-path="confounding-factors.html"><a href="confounding-factors.html#introduction-4"><i class="fa fa-check"></i><b>11.1</b> Introduction</a></li>
 <li class="chapter" data-level="11.2" data-path="confounding-factors.html"><a href="confounding-factors.html#correlations-with-pcs"><i class="fa fa-check"></i><b>11.2</b> Correlations with PCs</a><ul>
@@ -229,54 +229,54 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>13.6</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>14</b> Normalization for library size (Reads)</a></li>
-<li class="chapter" data-level="15" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls</a><ul>
-<li class="chapter" data-level="15.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#introduction-6"><i class="fa fa-check"></i><b>15.1</b> Introduction</a></li>
-<li class="chapter" data-level="15.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>15.2</b> Remove Unwanted Variation</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#ruvg"><i class="fa fa-check"></i><b>15.2.1</b> RUVg</a></li>
-<li class="chapter" data-level="15.2.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#ruvs"><i class="fa fa-check"></i><b>15.2.2</b> RUVs</a></li>
+<li class="chapter" data-level="15" data-path="confounders-removal.html"><a href="confounders-removal.html"><i class="fa fa-check"></i><b>15</b> Confounders Removal</a><ul>
+<li class="chapter" data-level="15.1" data-path="confounders-removal.html"><a href="confounders-removal.html#introduction-6"><i class="fa fa-check"></i><b>15.1</b> Introduction</a></li>
+<li class="chapter" data-level="15.2" data-path="confounders-removal.html"><a href="confounders-removal.html#remove-unwanted-variation"><i class="fa fa-check"></i><b>15.2</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="confounders-removal.html"><a href="confounders-removal.html#ruvg"><i class="fa fa-check"></i><b>15.2.1</b> RUVg</a></li>
+<li class="chapter" data-level="15.2.2" data-path="confounders-removal.html"><a href="confounders-removal.html#ruvs"><i class="fa fa-check"></i><b>15.2.2</b> RUVs</a></li>
 </ul></li>
-<li class="chapter" data-level="15.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-1"><i class="fa fa-check"></i><b>15.3</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="15.4" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-2"><i class="fa fa-check"></i><b>15.4</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="15.5" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#effectiveness-3"><i class="fa fa-check"></i><b>15.5</b> Effectiveness 3</a><ul>
-<li class="chapter" data-level="15.5.1" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-raw-counts"><i class="fa fa-check"></i><b>15.5.1</b> DE (raw counts)</a></li>
-<li class="chapter" data-level="15.5.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvg-k-2"><i class="fa fa-check"></i><b>15.5.2</b> DE (RUVg, k = 2)</a></li>
-<li class="chapter" data-level="15.5.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvs-k-2"><i class="fa fa-check"></i><b>15.5.3</b> DE (RUVs, k = 2)</a></li>
+<li class="chapter" data-level="15.3" data-path="confounders-removal.html"><a href="confounders-removal.html#effectiveness-1"><i class="fa fa-check"></i><b>15.3</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="15.4" data-path="confounders-removal.html"><a href="confounders-removal.html#effectiveness-2"><i class="fa fa-check"></i><b>15.4</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="15.5" data-path="confounders-removal.html"><a href="confounders-removal.html#effectiveness-3"><i class="fa fa-check"></i><b>15.5</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="confounders-removal.html"><a href="confounders-removal.html#de-raw-counts"><i class="fa fa-check"></i><b>15.5.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="15.5.2" data-path="confounders-removal.html"><a href="confounders-removal.html#de-ruvg-k-2"><i class="fa fa-check"></i><b>15.5.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="15.5.3" data-path="confounders-removal.html"><a href="confounders-removal.html#de-ruvs-k-2"><i class="fa fa-check"></i><b>15.5.3</b> DE (RUVs, k = 2)</a></li>
 </ul></li>
-<li class="chapter" data-level="15.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
+<li class="chapter" data-level="15.6" data-path="confounders-removal.html"><a href="confounders-removal.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>16</b> Remove confounders using controls (Reads)</a><ul>
-<li class="chapter" data-level="16.1" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
-<li class="chapter" data-level="16.1.1" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
-<li class="chapter" data-level="16.1.2" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
+<li class="chapter" data-level="16" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html"><i class="fa fa-check"></i><b>16</b> Confounders Removal (Reads)</a><ul>
+<li class="chapter" data-level="16.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
+<li class="chapter" data-level="16.1.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
 </ul></li>
-<li class="chapter" data-level="16.2" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="16.3" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="16.4" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
-<li class="chapter" data-level="16.4.1" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
-<li class="chapter" data-level="16.4.2" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
-<li class="chapter" data-level="16.4.3" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
+<li class="chapter" data-level="16.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="16.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="16.4" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="16.4.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="16.4.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
-<li class="chapter" data-level="17.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#introduction-7"><i class="fa fa-check"></i><b>17.1</b> Introduction</a></li>
-<li class="chapter" data-level="17.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#dimensionality-reductions"><i class="fa fa-check"></i><b>17.2</b> Dimensionality reductions</a><ul>
-<li class="chapter" data-level="17.2.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pca"><i class="fa fa-check"></i><b>17.2.1</b> PCA</a></li>
-<li class="chapter" data-level="17.2.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#spectral"><i class="fa fa-check"></i><b>17.2.2</b> Spectral</a></li>
-<li class="chapter" data-level="17.2.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne"><i class="fa fa-check"></i><b>17.2.3</b> tSNE</a></li>
+<li class="chapter" data-level="17" data-path="clustering-introduction.html"><a href="clustering-introduction.html"><i class="fa fa-check"></i><b>17</b> Clustering Introduction</a><ul>
+<li class="chapter" data-level="17.1" data-path="clustering-introduction.html"><a href="clustering-introduction.html#introduction-7"><i class="fa fa-check"></i><b>17.1</b> Introduction</a></li>
+<li class="chapter" data-level="17.2" data-path="clustering-introduction.html"><a href="clustering-introduction.html#dimensionality-reductions"><i class="fa fa-check"></i><b>17.2</b> Dimensionality reductions</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="clustering-introduction.html"><a href="clustering-introduction.html#pca"><i class="fa fa-check"></i><b>17.2.1</b> PCA</a></li>
+<li class="chapter" data-level="17.2.2" data-path="clustering-introduction.html"><a href="clustering-introduction.html#spectral"><i class="fa fa-check"></i><b>17.2.2</b> Spectral</a></li>
+<li class="chapter" data-level="17.2.3" data-path="clustering-introduction.html"><a href="clustering-introduction.html#tsne"><i class="fa fa-check"></i><b>17.2.3</b> tSNE</a></li>
 </ul></li>
-<li class="chapter" data-level="17.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#clustering-methods"><i class="fa fa-check"></i><b>17.3</b> Clustering methods</a><ul>
-<li class="chapter" data-level="17.3.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#hierarchical-clustering"><i class="fa fa-check"></i><b>17.3.1</b> Hierarchical clustering</a></li>
-<li class="chapter" data-level="17.3.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#k-means"><i class="fa fa-check"></i><b>17.3.2</b> k-means</a></li>
-<li class="chapter" data-level="17.3.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#graph-based-methods"><i class="fa fa-check"></i><b>17.3.3</b> Graph-based methods</a></li>
+<li class="chapter" data-level="17.3" data-path="clustering-introduction.html"><a href="clustering-introduction.html#clustering-methods"><i class="fa fa-check"></i><b>17.3</b> Clustering methods</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="clustering-introduction.html"><a href="clustering-introduction.html#hierarchical-clustering"><i class="fa fa-check"></i><b>17.3.1</b> Hierarchical clustering</a></li>
+<li class="chapter" data-level="17.3.2" data-path="clustering-introduction.html"><a href="clustering-introduction.html#k-means"><i class="fa fa-check"></i><b>17.3.2</b> k-means</a></li>
+<li class="chapter" data-level="17.3.3" data-path="clustering-introduction.html"><a href="clustering-introduction.html#graph-based-methods"><i class="fa fa-check"></i><b>17.3.3</b> Graph-based methods</a></li>
 </ul></li>
-<li class="chapter" data-level="17.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#challenges-in-clustering"><i class="fa fa-check"></i><b>17.4</b> Challenges in clustering</a></li>
-<li class="chapter" data-level="17.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tools-for-scrna-seq-data"><i class="fa fa-check"></i><b>17.5</b> Tools for scRNA-seq data</a><ul>
-<li class="chapter" data-level="17.5.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sincera"><i class="fa fa-check"></i><b>17.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
-<li class="chapter" data-level="17.5.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#pcareduce"><i class="fa fa-check"></i><b>17.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
-<li class="chapter" data-level="17.5.3" data-path="clustering-analysis.html"><a href="clustering-analysis.html#sc3"><i class="fa fa-check"></i><b>17.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
-<li class="chapter" data-level="17.5.4" data-path="clustering-analysis.html"><a href="clustering-analysis.html#tsne-k-means"><i class="fa fa-check"></i><b>17.5.4</b> tSNE + k-means</a></li>
-<li class="chapter" data-level="17.5.5" data-path="clustering-analysis.html"><a href="clustering-analysis.html#seurat"><i class="fa fa-check"></i><b>17.5.5</b> <a href="https://github.com/Puriney/seurat">SEURAT</a></a></li>
-<li class="chapter" data-level="17.5.6" data-path="clustering-analysis.html"><a href="clustering-analysis.html#snn-cliq"><i class="fa fa-check"></i><b>17.5.6</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
+<li class="chapter" data-level="17.4" data-path="clustering-introduction.html"><a href="clustering-introduction.html#challenges-in-clustering"><i class="fa fa-check"></i><b>17.4</b> Challenges in clustering</a></li>
+<li class="chapter" data-level="17.5" data-path="clustering-introduction.html"><a href="clustering-introduction.html#tools-for-scrna-seq-data"><i class="fa fa-check"></i><b>17.5</b> Tools for scRNA-seq data</a><ul>
+<li class="chapter" data-level="17.5.1" data-path="clustering-introduction.html"><a href="clustering-introduction.html#sincera"><i class="fa fa-check"></i><b>17.5.1</b> <a href="https://research.cchmc.org/pbge/sincera.html">SINCERA</a></a></li>
+<li class="chapter" data-level="17.5.2" data-path="clustering-introduction.html"><a href="clustering-introduction.html#pcareduce"><i class="fa fa-check"></i><b>17.5.2</b> <a href="https://github.com/JustinaZ/pcaReduce">pcaReduce</a></a></li>
+<li class="chapter" data-level="17.5.3" data-path="clustering-introduction.html"><a href="clustering-introduction.html#sc3"><i class="fa fa-check"></i><b>17.5.3</b> <a href="http://bioconductor.org/packages/SC3/">SC3</a></a></li>
+<li class="chapter" data-level="17.5.4" data-path="clustering-introduction.html"><a href="clustering-introduction.html#tsne-k-means"><i class="fa fa-check"></i><b>17.5.4</b> tSNE + k-means</a></li>
+<li class="chapter" data-level="17.5.5" data-path="clustering-introduction.html"><a href="clustering-introduction.html#seurat"><i class="fa fa-check"></i><b>17.5.5</b> <a href="https://github.com/Puriney/seurat">SEURAT</a></a></li>
+<li class="chapter" data-level="17.5.6" data-path="clustering-introduction.html"><a href="clustering-introduction.html#snn-cliq"><i class="fa fa-check"></i><b>17.5.6</b> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="clust-methods.html"><a href="clust-methods.html"><i class="fa fa-check"></i><b>18</b> Clustering example</a><ul>
@@ -295,12 +295,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="19.4" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html#validation-of-de-results"><i class="fa fa-check"></i><b>19.4</b> Validation of DE results</a></li>
 <li class="chapter" data-level="19.5" data-path="identification-of-important-genes.html"><a href="identification-of-important-genes.html#comparing-m3drop-to-other-methods"><i class="fa fa-check"></i><b>19.5</b> Comparing M3Drop to other methods</a></li>
 </ul></li>
-<li class="chapter" data-level="20" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html"><i class="fa fa-check"></i><b>20</b> Ordering of cells according to pseudotime</a><ul>
-<li class="chapter" data-level="20.1" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html#tscan"><i class="fa fa-check"></i><b>20.1</b> TSCAN</a></li>
-<li class="chapter" data-level="20.2" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html#monocle"><i class="fa fa-check"></i><b>20.2</b> monocle</a></li>
-<li class="chapter" data-level="20.3" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html#diffusion-maps"><i class="fa fa-check"></i><b>20.3</b> Diffusion maps</a></li>
-<li class="chapter" data-level="20.4" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>20.4</b> Comparison of the methods</a></li>
-<li class="chapter" data-level="20.5" data-path="ordering-of-cells-according-to-pseudotime.html"><a href="ordering-of-cells-according-to-pseudotime.html#expression-of-genes-through-time"><i class="fa fa-check"></i><b>20.5</b> Expression of genes through time</a></li>
+<li class="chapter" data-level="20" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html"><i class="fa fa-check"></i><b>20</b> Pseudotime analysis</a><ul>
+<li class="chapter" data-level="20.1" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html#tscan"><i class="fa fa-check"></i><b>20.1</b> TSCAN</a></li>
+<li class="chapter" data-level="20.2" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html#monocle"><i class="fa fa-check"></i><b>20.2</b> monocle</a></li>
+<li class="chapter" data-level="20.3" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html#diffusion-maps"><i class="fa fa-check"></i><b>20.3</b> Diffusion maps</a></li>
+<li class="chapter" data-level="20.4" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html#comparison-of-the-methods"><i class="fa fa-check"></i><b>20.4</b> Comparison of the methods</a></li>
+<li class="chapter" data-level="20.5" data-path="pseudotime-analysis.html"><a href="pseudotime-analysis.html#expression-of-genes-through-time"><i class="fa fa-check"></i><b>20.5</b> Expression of genes through time</a></li>
 </ul></li>
 <li class="chapter" data-level="21" data-path="differential-expression-de-analysis.html"><a href="differential-expression-de-analysis.html"><i class="fa fa-check"></i><b>21</b> Differential Expression (DE) analysis</a><ul>
 <li class="chapter" data-level="21.1" data-path="differential-expression-de-analysis.html"><a href="differential-expression-de-analysis.html#bulk-rna-seq-1"><i class="fa fa-check"></i><b>21.1</b> Bulk RNA-seq</a></li>
@@ -492,7 +492,7 @@ limma::<span class="kw">vennDiagram</span>(
         </div>
       </div>
 <a href="clust-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="ordering-of-cells-according-to-pseudotime.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="pseudotime-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
