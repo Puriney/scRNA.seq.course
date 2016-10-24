@@ -40,7 +40,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="normalization-for-library-size-reads.html">
-<link rel="next" href="remove-confounders-using-controls-reads.html">
+<link rel="next" href="remove-confounders-using-controls-1.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -244,7 +244,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="15.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>16</b> Remove confounders using controls (Reads)</a></li>
+<li class="chapter" data-level="16" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html"><i class="fa fa-check"></i><b>16</b> Remove confounders using controls</a><ul>
+<li class="chapter" data-level="16.1" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
+<li class="chapter" data-level="16.1.2" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="16.3" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="16.4" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="16.4.2" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="16.4.3" data-path="remove-confounders-using-controls-1.html"><a href="remove-confounders-using-controls-1.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="17" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
 <li class="chapter" data-level="17.1" data-path="clustering-analysis.html"><a href="clustering-analysis.html#introduction-7"><i class="fa fa-check"></i><b>17.1</b> Introduction</a></li>
 <li class="chapter" data-level="17.2" data-path="clustering-analysis.html"><a href="clustering-analysis.html#dimensionality-reductions"><i class="fa fa-check"></i><b>17.2</b> Dimensionality reductions</a><ul>
@@ -405,7 +417,7 @@ ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw"
 </div>
 <div id="effectiveness-1" class="section level2">
 <h2><span class="header-section-number">15.3</span> Effectiveness 1</h2>
-<p>We evaluate the effectiveness of the normalization by inspecting the PCA plot where shape corresponds the technical replicate and colour corresponds to different biological samples (individuals from whom the iPSC lines where derived). Separation of biological samples and interspersed batches indicates that technical variation has been removed.</p>
+<p>We evaluate the effectiveness of the normalization by inspecting the PCA plot where colour corresponds the technical replicates and shape corresponds to different biological samples (individuals). Separation of biological samples and interspersed batches indicates that technical variation has been removed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
     umi.qc[endog_genes, ],
     <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
@@ -580,7 +592,7 @@ res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3, <span cl
         </div>
       </div>
 <a href="normalization-for-library-size-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="remove-confounders-using-controls-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="remove-confounders-using-controls-1.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

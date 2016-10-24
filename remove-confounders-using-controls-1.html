@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="identification-of-important-genes.html">
-<link rel="next" href="differential-expression-de-analysis.html">
+<link rel="prev" href="remove-confounders-using-controls.html">
+<link rel="next" href="clustering-analysis.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,161 +366,204 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ordering-of-cells-according-to-pseudotime" class="section level1">
-<h1><span class="header-section-number">20</span> Ordering of cells according to pseudotime</h1>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(TSCAN)
-<span class="kw">library</span>(M3Drop)
-<span class="kw">library</span>(monocle)
-<span class="kw">library</span>(destiny)
-<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<p>In many situations, one is studying a process where cells change continuously. This includes for example many differentiation processes taking place during development, where following a stimulus, cells will change from one cell-type to another. Ideally, we would like to monitor the expression levels of an individual cell over time. Unfortunately, such monitoring is not possible with scRNA-seq since the cell is lysed (destroyed) when the RNA is extracted.</p>
-<p>Instead, we must sample at multiple time-points and obtain snapshots of the gene expression profiles. Since some of the cells will proceed faster along the differentiation than others, each snapshot may contain cells at varying points along the developmental progression. We use statistical methods to order the cells along one or more trajectories which represent the underlying developmental trajectories, this ordering is referred to as “pseudotime”.</p>
-<p>In this chapter we will consider two different tools, Monocle and TSCAN for ordering cells according to their pseudotime development. To illustrate the methods we will be using a dataset on mouse embryonic development <span class="citation">(Deng et al. <a href="#ref-Deng2014-mx">2014</a>)</span>. The dataset consists of 268 cells from 10 different time-points of early mouse development.</p>
-<div id="tscan" class="section level2">
-<h2><span class="header-section-number">20.1</span> TSCAN</h2>
-<p>TSCAN combines clustering with pseudotime analysis. First it clusters the cells using <code>mclust</code>, which is based on a mixture of normal distributions. Then it builds a minimum spanning tree to connect the clusters together. The branch of this tree that connects the largest number of clusters is the main branch which is used to determine pseudotime.</p>
-<p>First we will try to use all genes to order the cells.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng.rds&quot;</span>)
-cellLabels &lt;-<span class="st"> </span><span class="kw">colnames</span>(deng)
-procdeng &lt;-<span class="st"> </span>TSCAN::<span class="kw">preprocess</span>(deng)
-<span class="kw">colnames</span>(procdeng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
-dengclust &lt;-<span class="st"> </span>TSCAN::<span class="kw">exprmclust</span>(procdeng, <span class="dt">clusternum =</span> <span class="dv">10</span>)
-TSCAN::<span class="kw">plotmclust</span>(dengclust)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dengorderTSCAN &lt;-<span class="st"> </span>TSCAN::<span class="kw">TSCANorder</span>(dengclust, <span class="dt">orderonly =</span> F)
-pseudotime_order_tscan &lt;-<span class="st"> </span><span class="kw">as.character</span>(dengorderTSCAN$sample_name)</code></pre></div>
-<p>We can also examine which timepoints have been assigned to each state:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cellLabels[dengclust$clusterid ==<span class="st"> </span><span class="dv">10</span>]</code></pre></div>
-<pre><code>##  [1] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
-##  [6] &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot; &quot;late2cell&quot;
-## [11] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
-## [16] &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot;  &quot;mid2cell&quot; 
-## [21] &quot;mid2cell&quot;  &quot;mid2cell&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colours &lt;-<span class="st"> </span><span class="kw">rainbow</span>(<span class="dt">n =</span> <span class="dv">10</span>) <span class="co"># red = early, violet = late</span>
-tmp &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">factor</span>(
-        cellLabels[<span class="kw">as.numeric</span>(pseudotime_order_tscan)],
-        <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;early2cell&quot;</span>, <span class="st">&quot;mid2cell&quot;</span>, <span class="st">&quot;late2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, 
-                   <span class="st">&quot;16cell&quot;</span>, <span class="st">&quot;midblast&quot;</span>, <span class="st">&quot;earlyblast&quot;</span>, <span class="st">&quot;lateblast&quot;</span>)
+<div id="remove-confounders-using-controls-1" class="section level1">
+<h1><span class="header-section-number">16</span> Remove confounders using controls</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">library</span>(RUVSeq)
+<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(scran)
+<span class="kw">library</span>(edgeR)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+reads &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/reads.rds&quot;</span>)
+reads.qc &lt;-<span class="st"> </span>reads[<span class="kw">fData</span>(reads)$use, <span class="kw">pData</span>(reads)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(reads.qc)$is_feature_control
+erccs &lt;-<span class="st"> </span><span class="kw">fData</span>(reads.qc)$is_feature_control</code></pre></div>
+<div id="remove-unwanted-variation-1" class="section level2">
+<h2><span class="header-section-number">16.1</span> Remove Unwanted Variation</h2>
+<div id="ruvg-1" class="section level3">
+<h3><span class="header-section-number">16.1.1</span> RUVg</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(reads.qc), erccs, <span class="dt">k =</span> <span class="dv">1</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvg1&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(reads.qc), erccs, <span class="dt">k =</span> <span class="dv">2</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvg2&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts</code></pre></div>
+</div>
+<div id="ruvs-1" class="section level3">
+<h3><span class="header-section-number">16.1.2</span> RUVs</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scIdx &lt;-<span class="st"> </span><span class="kw">matrix</span>(-<span class="dv">1</span>, <span class="dt">ncol =</span> <span class="kw">max</span>(<span class="kw">table</span>(reads.qc$individual)), <span class="dt">nrow =</span> <span class="dv">3</span>)
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19098&quot;</span>)
+scIdx[<span class="dv">1</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>)
+scIdx[<span class="dv">2</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19239&quot;</span>)
+scIdx[<span class="dv">3</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+cIdx &lt;-<span class="st"> </span><span class="kw">rownames</span>(reads.qc)
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(reads.qc), cIdx, <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvs1&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(reads.qc), cIdx, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvs2&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts</code></pre></div>
+</div>
+</div>
+<div id="effectiveness-1-1" class="section level2">
+<h2><span class="header-section-number">16.2</span> Effectiveness 1</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="effectiveness-2-1" class="section level2">
+<h2><span class="header-section-number">16.3</span> Effectiveness 2</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(
+    <span class="kw">list</span>(
+        <span class="st">&quot;Raw counts&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(reads.qc), erccs),
+        <span class="st">&quot;RUVg (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvg1, erccs),
+        <span class="st">&quot;RUVg (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvg2, erccs),
+        <span class="st">&quot;RUVs (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvs1, erccs),
+        <span class="st">&quot;RUVs (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvs2, erccs)
     )
-<span class="kw">plot</span>(
-    <span class="kw">as.numeric</span>(tmp), 
-    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime Order&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
-    <span class="dt">col =</span> colours[tmp],
-    <span class="dt">pch =</span> <span class="dv">16</span>
 )</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 1</strong> Compare results for different numbers of clusters (<code>clusternum</code>).</p>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="monocle" class="section level2">
-<h2><span class="header-section-number">20.2</span> monocle</h2>
-<p>Monocle skips the clustering stage of TSCAN and directly builds a minimum spanning tree to connect all cells. Monocle then identifies the longest path in this tree to determine pseudotime. If the data contains diverging trajectories (i.e. one cell type differentiates into two different cell-types), monocle can identify alternative long paths in the tree using the argument <code>num_paths</code>. Each of the resulting forked paths is defined as a separate cell state, thus <code>num_paths = 2</code> will identify three different cell states.</p>
-<p>Unfortunately, Monocle does not work when all the genes are used, so we must carry out feature selection. First, we use M3Drop:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m3dGenes &lt;-<span class="st"> </span><span class="kw">as.character</span>(
-    M3Drop::<span class="kw">M3DropDifferentialExpression</span>(deng)$Gene
+<div id="effectiveness-3-1" class="section level2">
+<h2><span class="header-section-number">16.4</span> Effectiveness 3</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span>reads.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>
+design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~reads.qc[, keep]$batch)</code></pre></div>
+<div id="de-raw-counts-1" class="section level3">
+<h3><span class="header-section-number">16.4.1</span> DE (raw counts)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge1 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">counts</span>(reads.qc[, keep]), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> reads.qc[, keep]$batch
+)
+dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge1)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit1 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge1, design)
+res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res1)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
+##                      logFC     logCPM        LR       PValue          FDR
+## ENSG00000131969 -2.0462361  3.3152995 126.74461 2.112865e-29 3.393473e-25
+## ENSG00000214265 -1.1929359  9.7573801  98.25598 3.676487e-23 2.952403e-19
+## ENSG00000185885 -1.5830185  9.1429849  81.15518 2.086710e-19 1.117155e-15
+## ENSG00000145423  1.1677007  8.7231604  77.54436 1.297749e-18 5.192514e-15
+## ENSG00000163106 -2.6710548  4.5581559  77.11057 1.616498e-18 5.192514e-15
+## ENSG00000068697 -1.0540166  8.3633336  61.65412 4.094104e-15 1.095923e-11
+## ENSG00000009724  5.4392089  0.6053418  49.86491 1.647038e-12 3.779011e-09
+## ENSG00000034510 -0.7014902 10.2408912  48.81733 2.809464e-12 5.640350e-09
+## ENSG00000196139 -6.8039302  2.3181183  45.82142 1.295391e-11 2.311698e-08
+## ENSG00000179218  0.9319769  7.8195229  45.60701 1.445238e-11 2.321197e-08</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res1))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   921
+## 0  14061
+## 1   1079</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res1, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res1, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res1))))$table)
 )</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>deng[<span class="kw">which</span>(<span class="kw">rownames</span>(deng) %in%<span class="st"> </span>m3dGenes), ]
-d &lt;-<span class="st"> </span>d[!<span class="kw">duplicated</span>(<span class="kw">rownames</span>(d)), ]</code></pre></div>
-<p>Now run monocle:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">timepoint =</span> cellLabels)
-pd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>pd)
-fd &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">rownames</span>(d))
-<span class="kw">names</span>(fd) &lt;-<span class="st"> &quot;gene&quot;</span>
-fd &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;AnnotatedDataFrame&quot;</span>, <span class="dt">data=</span>fd)
-<span class="kw">colnames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
-<span class="kw">rownames</span>(d) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(d)
-dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">newCellDataSet</span>(d, <span class="dt">phenoData =</span> pd, <span class="dt">featureData =</span> fd)
-dCellData &lt;-<span class="st"> </span>monocle::<span class="kw">setOrderingFilter</span>(dCellData, <span class="dv">1</span>:<span class="kw">length</span>(m3dGenes))
-dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">reduceDimension</span>(dCellData, <span class="dt">pseudo_expr =</span> <span class="dv">1</span>)
-dCellDataSet &lt;-<span class="st"> </span>monocle::<span class="kw">orderCells</span>(dCellDataSet, <span class="dt">reverse =</span> F, <span class="dt">num_paths =</span> <span class="dv">1</span>)
-monocle::<span class="kw">plot_spanning_tree</span>(dCellDataSet)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Store the ordering</span>
-pseudotime_monocle &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">data.frame</span>(
-        <span class="dt">Timepoint =</span> <span class="kw">phenoData</span>(dCellDataSet)$timepoint, 
-        <span class="dt">pseudotime =</span> <span class="kw">phenoData</span>(dCellDataSet)$Pseudotime, 
-        <span class="dt">State=</span><span class="kw">phenoData</span>(dCellDataSet)$State
-    )
-<span class="kw">rownames</span>(pseudotime_monocle) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(d)
-pseudotime_order_monocle &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">rownames</span>(pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), ])</code></pre></div>
-<p>We can again compare the inferred pseudotime to the known sampling timepoints.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(
-    pseudotime_monocle$pseudotime, 
-    pseudotime_monocle$Timepoint, 
-    <span class="dt">xlab=</span><span class="st">&quot;Pseudotime&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Timepoint&quot;</span>,
-    <span class="dt">col =</span> colours[pseudotime_monocle$Timepoint],
-    <span class="dt">pch =</span> <span class="dv">16</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="diffusion-maps" class="section level2">
-<h2><span class="header-section-number">20.3</span> Diffusion maps</h2>
-<p><a href="https://en.wikipedia.org/wiki/Diffusion_map">Diffusion maps</a> were introduced by <a href="http://www.sciencedirect.com/science/article/pii/S1063520306000546">Ronald Coifman and Stephane Lafon</a>. Briefly, the underlying idea is to assume that the data are samples from a diffusion process. The method infers the low-dimensional manifold by estimating the eigenvalues and eigenvectors for the diffusion operator related to the data.</p>
-<p><a href="http://biorxiv.org/content/biorxiv/early/2015/08/04/023309.full.pdf">Haghverdi et al</a> have applied the diffusion maps concept to the analysis of single-cell RNA-seq data to create an R package called <a href="http://bioconductor.org/packages/destiny">destiny</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dm &lt;-<span class="st"> </span><span class="kw">DiffusionMap</span>(<span class="kw">t</span>(<span class="kw">log2</span>(<span class="dv">1</span>+deng)))
-tmp &lt;-<span class="st"> </span><span class="kw">factor</span>(<span class="kw">colnames</span>(deng), <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;early2cell&quot;</span>, <span class="st">&quot;mid2cell&quot;</span>, <span class="st">&quot;late2cell&quot;</span>, <span class="st">&quot;4cell&quot;</span>, <span class="st">&quot;8cell&quot;</span>, <span class="st">&quot;16cell&quot;</span>, <span class="st">&quot;midblast&quot;</span>, <span class="st">&quot;earlyblast&quot;</span>, <span class="st">&quot;lateblast&quot;</span>))
-<span class="kw">plot</span>(
-    <span class="kw">eigenvectors</span>(dm)[,<span class="dv">1</span>], 
-    <span class="kw">eigenvectors</span>(dm)[,<span class="dv">2</span>],
-    <span class="dt">xlab=</span><span class="st">&quot;Diffusion component 1&quot;</span>, 
-    <span class="dt">ylab=</span><span class="st">&quot;Diffusion component 2&quot;</span>,
-    <span class="dt">col =</span> colours[tmp],
-    <span class="dt">pch =</span> <span class="dv">16</span>
+<div id="de-ruvg-k-2-1" class="section level3">
+<h3><span class="header-section-number">16.4.2</span> DE (RUVg, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge2 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">get_exprs</span>(reads.qc[, keep], <span class="st">&quot;ruvg2&quot;</span>), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> reads.qc[, keep]$batch
+)
+dge2 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge2, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge2)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge2, design)
+res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res2)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
+##                      logFC     logCPM        LR       PValue          FDR
+## ENSG00000131969 -2.2659545  3.3359537 142.70285 6.826561e-33 1.096414e-28
+## ENSG00000214265 -1.1290104  9.7556111  89.32727 3.346148e-21 2.687124e-17
+## ENSG00000034510 -0.8504042 10.2337621  72.01413 2.136618e-17 1.143874e-13
+## ENSG00000163106 -2.4787319  4.5086449  68.57213 1.223206e-16 4.911478e-13
+## ENSG00000124766 -0.8081967 10.5770154  62.05914 3.332959e-15 9.525912e-12
+## ENSG00000185885 -1.3404173  9.1256019  61.93012 3.558650e-15 9.525912e-12
+## ENSG00000068697 -1.0152507  8.3589850  57.44066 3.483310e-14 7.992205e-11
+## ENSG00000170561  5.9385992  1.2069205  52.30620 4.748736e-13 9.533681e-10
+## ENSG00000127184 -0.5832958 10.9312778  49.44570 2.039389e-12 3.639402e-09
+## ENSG00000009724  5.3696791  0.5613772  48.95032 2.625282e-12 4.216465e-09</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res2))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   917
+## 0  14101
+## 1   1043</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res2, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res2, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res2))))$table)
 )</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/destiny-deng-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones.</p>
-<p><strong>Exercise 2</strong> Do you get a better resolution between the later time points by considering additional eigenvectors?</p>
-<p><strong>Exercise 3</strong> How does the ordering change if you only use the genes identified by M3Drop?</p>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="comparison-of-the-methods" class="section level2">
-<h2><span class="header-section-number">20.4</span> Comparison of the methods</h2>
-<p>How do the trajectories inferred by TSCAN and Monocle compare?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">matched_ordering &lt;-<span class="st"> </span>
-<span class="st">    </span><span class="kw">match</span>(
-        pseudotime_order_tscan, 
-        pseudotime_order_monocle
-    )
-timepoint_ordered &lt;-<span class="st"> </span>
-<span class="st">    </span>pseudotime_monocle[<span class="kw">order</span>(pseudotime_monocle$pseudotime), <span class="dv">1</span>]
-<span class="kw">plot</span>(
-    matched_ordering, 
-    <span class="dt">xlab =</span> <span class="st">&quot;Monocle Order&quot;</span>, 
-    <span class="dt">ylab =</span> <span class="st">&quot;TSCAN Order&quot;</span>, 
-    <span class="dt">col =</span> colours[timepoint_ordered], 
-    <span class="dt">pch =</span> <span class="dv">16</span>
+<div id="de-ruvs-k-2-1" class="section level3">
+<h3><span class="header-section-number">16.4.3</span> DE (RUVs, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge3 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">get_exprs</span>(reads.qc[, keep], <span class="st">&quot;ruvs2&quot;</span>), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> reads.qc[, keep]$batch
+)
+dge3 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge3, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge3)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit3 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge3, design)
+res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res3)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
+##                      logFC    logCPM        LR       PValue          FDR
+## ENSG00000214265 -1.3781622  8.435883 160.00508 1.128594e-36 1.812635e-32
+## ENSG00000228253 -0.9477729 13.924467 151.12906 9.821543e-35 7.887190e-31
+## ENSG00000212907 -1.1834265 10.545232 149.34982 2.404782e-34 1.287440e-30
+## ENSG00000134294 -1.2490067  9.338988 134.42726 4.405702e-31 1.768999e-27
+## ENSG00000068697 -1.2504182  7.938624 118.76700 1.177833e-27 3.783436e-24
+## ENSG00000198712 -0.7888317 15.608017 114.27837 1.132412e-26 3.031279e-23
+## ENSG00000131969 -1.8912883  4.029449 112.77846 2.412830e-26 5.536067e-23
+## ERCC-00096       0.5438156 15.377868 103.72967 2.318918e-24 4.655519e-21
+## ENSG00000124766 -0.8271225  9.875554  96.41088 9.335275e-23 1.665932e-19
+## ERCC-00002       0.5835928 15.896390  88.48745 5.115840e-21 8.216551e-18</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res3))</code></pre></div>
+<pre><code>##    [,1] 
+## -1  1533
+## 0  14221
+## 1    307</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res3, 
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res3, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res3))))$table)
 )</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 4</strong> Compare destiny to TSCAN and Monocle.</p>
-</div>
-<div id="expression-of-genes-through-time" class="section level2">
-<h2><span class="header-section-number">20.5</span> Expression of genes through time</h2>
-<p>Each package also enables the visualization of expression through pseudotime.</p>
-<p><strong>TSCAN</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
-TSCAN::<span class="kw">singlegeneplot</span>(
-    deng[<span class="kw">rownames</span>(deng) ==<span class="st"> &quot;Obox6&quot;</span>, ], 
-    dengorderTSCAN
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/Obox6-tscan-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Monocle</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">monocle::<span class="kw">plot_genes_in_pseudotime</span>(
-    dCellDataSet[<span class="kw">fData</span>(dCellDataSet)$gene ==<span class="st"> &quot;Obox6&quot;</span>,], 
-    <span class="dt">color_by =</span> <span class="st">&quot;timepoint&quot;</span>
-)</code></pre></div>
-<p><img src="19-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 5</strong>: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes</p>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
 
 </div>
-</div>
-<h3> References</h3>
-<div id="refs" class="references">
-<div id="ref-Deng2014-mx">
-<p>Deng, Qiaolin, Daniel Ramsköld, Björn Reinius, and Rickard Sandberg. 2014. “Single-Cell RNA-seq Reveals Dynamic, Random Monoallelic Gene Expression in Mammalian Cells.” <em>Science</em> 343 (6167): 193–96.</p>
 </div>
 </div>
             </section>
@@ -528,8 +571,8 @@ TSCAN::<span class="kw">singlegeneplot</span>(
           </div>
         </div>
       </div>
-<a href="identification-of-important-genes.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="differential-expression-de-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="remove-confounders-using-controls.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clustering-analysis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -556,7 +599,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/19-pseudotime.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/15-remove-conf-reads.Rmd",
 "text": "Edit"
 },
 "download": null,
