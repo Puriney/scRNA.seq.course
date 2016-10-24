@@ -361,7 +361,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>The output from a scRNA-seq experiment is a large collection of cDNA reads. The first step is to ensure that the reads are of high quality. The quality control can be performed by using standard tools, such as <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a> or <a href="http://www.ebi.ac.uk/research/enright/software/kraken">Kraken</a>.</p>
 <p>Assuming that our reads are in experiment.bam, we run FastQC as</p>
 <pre><code>$&lt;path_to_fastQC&gt;/fastQC experiment.bam</code></pre>
-<p>Below is an example of the output from FastQC for a dataset of 125 bp reads. The plot reveals a technical error which resulted in a couple bases failing to be read correctly in the centre of the read. However, since the rest of the read was of high quality this error will most likely have a negligible effect on mapping efficiency.</p>
+<p>Below is an example of the output from FastQC for a dataset of 125 bp reads. The plot reveals a technical error which resulted in a couple of bases failing to be read correctly in the centre of the read. However, since the rest of the read was of high quality this error will most likely have a negligible effect on mapping efficiency.</p>
 <div class="figure" style="text-align: center"><span id="fig:exprs-constr-fastqc"></span>
 <img src="figures/per_base_quality.png" alt="Example of FastQC output" width="90%" />
 <p class="caption">
