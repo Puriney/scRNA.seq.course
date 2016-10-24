@@ -160,7 +160,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.2" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#mapping-barcodes"><i class="fa fa-check"></i><b>5.2</b> Mapping Barcodes</a></li>
 <li class="chapter" data-level="5.3" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#counting-barcodes"><i class="fa fa-check"></i><b>5.3</b> Counting Barcodes</a></li>
 <li class="chapter" data-level="5.4" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#correcting-for-errors"><i class="fa fa-check"></i><b>5.4</b> Correcting for Errors</a></li>
-<li class="chapter" data-level="5.5" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#downstream-analysis"><i class="fa fa-check"></i><b>5.5</b> Downstream Analysis</a></li>
+<li class="chapter" data-level="5.5" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#exercise-1"><i class="fa fa-check"></i><b>5.5</b> Exercise 1</a></li>
+<li class="chapter" data-level="5.6" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#downstream-analysis"><i class="fa fa-check"></i><b>5.6</b> Downstream Analysis</a></li>
+<li class="chapter" data-level="5.7" data-path="unique-molecular-identifiers-umis.html"><a href="unique-molecular-identifiers-umis.html#exercise-2"><i class="fa fa-check"></i><b>5.7</b> Exercise 2</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="scater-package.html"><a href="scater-package.html"><i class="fa fa-check"></i><b>6</b> scater package</a><ul>
 <li class="chapter" data-level="6.1" data-path="scater-package.html"><a href="scater-package.html#introduction-1"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
@@ -226,7 +228,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="13.4" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#downsampling"><i class="fa fa-check"></i><b>13.4</b> Downsampling</a></li>
 <li class="chapter" data-level="13.5" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#normalizing-for-genetranscript-length"><i class="fa fa-check"></i><b>13.5</b> Normalizing for gene/transcript length</a></li>
-<li class="chapter" data-level="13.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-1"><i class="fa fa-check"></i><b>13.6</b> Exercise</a></li>
+<li class="chapter" data-level="13.6" data-path="normalization-for-library-size.html"><a href="normalization-for-library-size.html#exercise-3"><i class="fa fa-check"></i><b>13.6</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="normalization-for-library-size-reads.html"><a href="normalization-for-library-size-reads.html"><i class="fa fa-check"></i><b>14</b> Normalization for library size (Reads)</a></li>
 <li class="chapter" data-level="15" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html"><i class="fa fa-check"></i><b>15</b> Remove confounders using controls</a><ul>
@@ -242,7 +244,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="15.5.2" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvg-k-2"><i class="fa fa-check"></i><b>15.5.2</b> DE (RUVg, k = 2)</a></li>
 <li class="chapter" data-level="15.5.3" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#de-ruvs-k-2"><i class="fa fa-check"></i><b>15.5.3</b> DE (RUVs, k = 2)</a></li>
 </ul></li>
-<li class="chapter" data-level="15.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
+<li class="chapter" data-level="15.6" data-path="remove-confounders-using-controls.html"><a href="remove-confounders-using-controls.html#exercise-4"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="remove-confounders-using-controls-reads.html"><a href="remove-confounders-using-controls-reads.html"><i class="fa fa-check"></i><b>16</b> Remove confounders using controls (Reads)</a></li>
 <li class="chapter" data-level="17" data-path="clustering-analysis.html"><a href="clustering-analysis.html"><i class="fa fa-check"></i><b>17</b> Clustering analysis</a><ul>
@@ -370,7 +372,7 @@ endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)
 <h2><span class="header-section-number">9.2</span> PCA plot</h2>
 <p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components.</p>
 <p><a href="https://en.wikipedia.org/wiki/Principal_component_analysis">Principal component analysis (PCA)</a> is a statistical procedure that uses a transformation to convert a set of observations into a set of values of linearly uncorrelated variables called principal components (PCs). The number of principal components is less than or equal to the number of original variables.</p>
-<p>Mathematically, the PCs correspond to the eigenvectors of the covariance matrix. Typically, the eigenvectors are sorted by eigenvalue so that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.</p>
+<p>PCA is defined in such a way that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.</p>
 <div class="figure" style="text-align: center"><span id="fig:clust-pca"></span>
 <img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
 <p class="caption">
@@ -439,7 +441,7 @@ Figure 9.5: PCA plot of the blischak data (50 genes)
 </div>
 <div id="visual-tsne" class="section level2">
 <h2><span class="header-section-number">9.3</span> tSNE map</h2>
-<p>An alternative to PCA for visualizing scRNASeq data is a tSNE plot. <a href="https://lvdmaaten.github.io/tsne/">tSNE</a> (t-Distributed Stochastic Neighbor Embedding) combines dimensionality reduction (e.g. PCA) with random walks on the nearest-neighbour network to map high dimensional data (i.e. our 14,214 dimensional expression matrix) to a 2-dimensional space while preserving local distances between cells. In contrast with PCA, tSNE is a stochastic algorithm which means running the method multiple times on the same dataset will result in different plots. Due to the non-linear and stochastic nature of the algorithm, tSNE is more difficult to intuitively interpret tSNE. To ensure reproducibility, we fix the “seed” of the random-number generator in the code below so that we always get the same plot.</p>
+<p>An alternative to PCA for visualizing scRNASeq data is a tSNE plot. <a href="https://lvdmaaten.github.io/tsne/">tSNE</a> (t-Distributed Stochastic Neighbor Embedding) combines dimensionality reduction (e.g. PCA) with random walks on the nearest-neighbour network to map high dimensional data (i.e. our 14,214 dimensional expression matrix) to a 2-dimensional space while preserving local distances between cells. In contrast with PCA, tSNE is a stochastic algorithm which means running the method multiple times on the same dataset will result in different plots. In the code below we fix the “seed” of the random-number generator so that we always get the same plot.</p>
 <div id="before-qc-1" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Before QC</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotTSNE</span>(umi[endog_genes, ],
@@ -473,7 +475,7 @@ Figure 9.6: tSNE map of the blischak data
 Figure 9.7: tSNE map of the blischak data
 </p>
 </div>
-<p>Interpreting PCA and tSNE plots is often challenging and due to their stochastic and non-linear nature, they are less intuitive. However, in this case it is clear that they provide a similar picture of the data. Comparing Figure <a href="data-visualization.html#fig:expr-overview-tsne-before-qc">9.6</a> and <a href="data-visualization.html#fig:expr-overview-tsne-after-qc">9.7</a>, it is again clear that the samples from NA19098.r2 are no longer outliers after the QC filtering.</p>
+<p>Interpreting PCA and tSNE plots is often challenging. However, in this case it is clear that they provide a similar picture of the data. Comparing Figure <a href="data-visualization.html#fig:expr-overview-tsne-before-qc">9.6</a> and <a href="data-visualization.html#fig:expr-overview-tsne-after-qc">9.7</a>, it is again clear that the samples from NA19098.r2 are no longer outliers after the QC filtering.</p>
 <p>Furthermore tSNE requires you to provide a value of “perplexity” which reflects the number of neighbours used to build the nearest-neighbour network; a high value creates a dense network which clumps cells together while a low value makes the network more sparse allowing groups of cells to separate from each other. <strong>scater</strong> uses a default perplexity of the total number of cells divided by five (rounded down).</p>
 <p>You can read more about the pitfalls of using tSNE <a href="http://distill.pub/2016/misread-tsne/">here</a>.</p>
 <p><strong>Exercise 2</strong> How do the tSNE plots change when a perplexity of 10 or 200 is used?</p>
