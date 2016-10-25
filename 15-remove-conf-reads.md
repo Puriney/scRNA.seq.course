@@ -2,7 +2,7 @@
 output: html_document
 ---
 
-# Confounders Removal (Reads)
+# Dealing with confounders (Reads)
 
 
 
@@ -30,6 +30,8 @@ ruvg <- RUVg(counts(reads.qc), erccs, k = 1)
 set_exprs(reads.qc, "ruvg1") <- ruvg$normalizedCounts
 ruvg <- RUVg(counts(reads.qc), erccs, k = 2)
 set_exprs(reads.qc, "ruvg2") <- ruvg$normalizedCounts
+set_exprs(reads.qc, "ruvg2_logcpm") <- log2(t(t(ruvg$normalizedCounts) / 
+                                           colSums(ruvg$normalizedCounts)) + 1)
 ```
 
 ### RUVs
@@ -48,6 +50,8 @@ ruvs <- RUVs(counts(reads.qc), cIdx, k = 1, scIdx = scIdx, isLog = FALSE)
 set_exprs(reads.qc, "ruvs1") <- ruvs$normalizedCounts
 ruvs <- RUVs(counts(reads.qc), cIdx, k = 2, scIdx = scIdx, isLog = FALSE)
 set_exprs(reads.qc, "ruvs2") <- ruvs$normalizedCounts
+set_exprs(reads.qc, "ruvs2_logcpm") <- log2(t(t(ruvs$normalizedCounts) / 
+                                           colSums(ruvs$normalizedCounts)) + 1)
 ```
 
 ## Effectiveness 1
@@ -101,6 +105,18 @@ plotPCA(
 
 <img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" />
 
+```r
+plotPCA(
+    reads.qc[endog_genes, ],
+    colour_by = "batch",
+    size_by = "total_features",
+    shape_by = "individual",
+    exprs_values = "ruvs2_logcpm") +
+    ggtitle("PCA - RUVs normalisation log2-cpm: k = 2")
+```
+
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" />
+
 ## Effectiveness 2
 
 
@@ -122,7 +138,11 @@ boxplot(
 
 
 ```r
-keep <- reads.qc$individual == "NA19101"
+keep <- c(
+    sample(which(reads.qc$batch == "NA19101.r1"), 20), 
+    sample(which(reads.qc$batch == "NA19101.r2"), 20),
+    sample(which(reads.qc$batch == "NA19101.r3"), 20)
+)
 design <- model.matrix(~reads.qc[, keep]$batch)
 ```
 
@@ -131,7 +151,7 @@ design <- model.matrix(~reads.qc[, keep]$batch)
 ```r
 dge1 <- DGEList(
     counts = counts(reads.qc[, keep]), 
-    norm.factors = rep(1, sum(keep)),
+    norm.factors = rep(1, length(keep)),
     group = reads.qc[, keep]$batch
 )
 dge1 <- estimateDisp(dge1, design = design, trend.method = "none")
@@ -148,17 +168,17 @@ topTags(res1)
 
 ```
 ## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
-##                      logFC     logCPM        LR       PValue          FDR
-## ENSG00000131969 -2.0462361  3.3152995 126.74461 2.112865e-29 3.393473e-25
-## ENSG00000214265 -1.1929359  9.7573801  98.25598 3.676487e-23 2.952403e-19
-## ENSG00000185885 -1.5830185  9.1429849  81.15518 2.086710e-19 1.117155e-15
-## ENSG00000145423  1.1677007  8.7231604  77.54436 1.297749e-18 5.192514e-15
-## ENSG00000163106 -2.6710548  4.5581559  77.11057 1.616498e-18 5.192514e-15
-## ENSG00000068697 -1.0540166  8.3633336  61.65412 4.094104e-15 1.095923e-11
-## ENSG00000009724  5.4392089  0.6053418  49.86491 1.647038e-12 3.779011e-09
-## ENSG00000034510 -0.7014902 10.2408912  48.81733 2.809464e-12 5.640350e-09
-## ENSG00000196139 -6.8039302  2.3181183  45.82142 1.295391e-11 2.311698e-08
-## ENSG00000179218  0.9319769  7.8195229  45.60701 1.445238e-11 2.321197e-08
+##                     logFC   logCPM       LR       PValue          FDR
+## ENSG00000184825 -7.944829 2.404710 34.24659 4.855257e-09 7.798028e-05
+## ENSG00000163406  8.358703 2.774133 31.04471 2.521532e-08 2.024917e-04
+## ENSG00000140538  6.983583 1.743474 28.76242 8.182356e-08 2.858067e-04
+## ENSG00000169851  6.766105 2.977739 28.69408 8.476249e-08 2.858067e-04
+## ENSG00000146530 -7.093080 3.314577 28.60015 8.897538e-08 2.858067e-04
+## ENSG00000085276  6.655724 1.197336 27.85891 1.304915e-07 3.493040e-04
+## ENSG00000234284  7.558534 1.882747 27.25582 1.782381e-07 3.621346e-04
+## ENSG00000168899 -7.878357 2.283407 27.06050 1.971861e-07 3.621346e-04
+## ENSG00000117650  5.315592 4.160481 26.96361 2.073219e-07 3.621346e-04
+## ENSG00000131969 -2.659572 3.219247 26.64797 2.441070e-07 3.621346e-04
 ```
 
 ```r
@@ -167,14 +187,14 @@ summary(decideTestsDGE(res1))
 
 ```
 ##    [,1] 
-## -1   921
-## 0  14061
-## 1   1079
+## -1   681
+## 0  14519
+## 1    861
 ```
 
 ```r
 plotSmear(
-    res1, 
+    res1, lowess = TRUE,
     de.tags = rownames(topTags(res1, n = sum(abs(decideTestsDGE(res1))))$table)
 )
 ```
@@ -184,36 +204,53 @@ plotSmear(
 ### DE (RUVg, k = 2)
 
 ```r
-dge2 <- DGEList(
-    counts = get_exprs(reads.qc[, keep], "ruvg2"), 
-    norm.factors = rep(1, sum(keep)),
-    group = reads.qc[, keep]$batch
-)
-dge2 <- estimateDisp(dge2, design = design, trend.method = "none")
-plotBCV(dge2)
+design_ruvg <- model.matrix(~ruvg$W[keep,] + reads.qc[, keep]$batch)
+head(design_ruvg)
+```
+
+```
+##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
+## 1           1      -0.002228917        0.03877421
+## 2           1      -0.010591129       -0.01936104
+## 3           1      -0.020147219        0.11849664
+## 4           1       0.017436635        0.06878010
+## 5           1       0.005369460        0.04289753
+## 6           1      -0.009896783        0.01987111
+##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
+## 1                                0                                0
+## 2                                0                                0
+## 3                                0                                0
+## 4                                0                                0
+## 5                                0                                0
+## 6                                0                                0
+```
+
+```r
+dge_ruvg <- estimateDisp(dge1, design = design_ruvg, trend.method = "none")
+plotBCV(dge_ruvg)
 ```
 
 <img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
-fit2 <- glmFit(dge2, design)
-res2 <- glmLRT(fit2, coef = 2)
+fit2 <- glmFit(dge_ruvg, design_ruvg)
+res2 <- glmLRT(fit2)
 topTags(res2)
 ```
 
 ```
-## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
-##                      logFC     logCPM        LR       PValue          FDR
-## ENSG00000131969 -2.2659545  3.3359537 142.70285 6.826561e-33 1.096414e-28
-## ENSG00000214265 -1.1290104  9.7556111  89.32727 3.346148e-21 2.687124e-17
-## ENSG00000034510 -0.8504042 10.2337621  72.01413 2.136618e-17 1.143874e-13
-## ENSG00000163106 -2.4787319  4.5086449  68.57213 1.223206e-16 4.911478e-13
-## ENSG00000124766 -0.8081967 10.5770154  62.05914 3.332959e-15 9.525912e-12
-## ENSG00000185885 -1.3404173  9.1256019  61.93012 3.558650e-15 9.525912e-12
-## ENSG00000068697 -1.0152507  8.3589850  57.44066 3.483310e-14 7.992205e-11
-## ENSG00000170561  5.9385992  1.2069205  52.30620 4.748736e-13 9.533681e-10
-## ENSG00000127184 -0.5832958 10.9312778  49.44570 2.039389e-12 3.639402e-09
-## ENSG00000009724  5.3696791  0.5613772  48.95032 2.625282e-12 4.216465e-09
+## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000157470 -2.050268 1.1255499 43.74952 3.732089e-11 5.994109e-07
+## ENSG00000117650  6.671480 4.1604907 37.04938 1.151754e-09 6.652888e-06
+## ENSG00000184270 -4.062256 0.1455278 36.90122 1.242679e-09 6.652888e-06
+## ENSG00000166984 -5.354818 0.6518402 33.02844 9.082078e-09 3.646681e-05
+## ENSG00000105974 -8.216682 2.6143652 31.72792 1.773543e-08 5.696975e-05
+## ENSG00000127533 -5.189093 0.5186040 30.14956 3.999779e-08 1.070674e-04
+## ENSG00000183208 -4.670888 0.2965708 29.75834 4.893971e-08 1.122887e-04
+## ENSG00000203780 -4.960189 0.4016417 29.03740 7.099434e-08 1.284577e-04
+## ENSG00000140470 -4.527160 0.2286726 29.01061 7.198305e-08 1.284577e-04
+## ENSG00000111348 -4.334548 0.1353035 28.43823 9.673584e-08 1.553674e-04
 ```
 
 ```r
@@ -222,14 +259,14 @@ summary(decideTestsDGE(res2))
 
 ```
 ##    [,1] 
-## -1   917
-## 0  14101
-## 1   1043
+## -1   448
+## 0  15258
+## 1    355
 ```
 
 ```r
 plotSmear(
-    res2, 
+    res2, lowess = TRUE,
     de.tags = rownames(topTags(res2, n = sum(abs(decideTestsDGE(res2))))$table)
 )
 ```
@@ -239,36 +276,53 @@ plotSmear(
 ### DE (RUVs, k = 2)
 
 ```r
-dge3 <- DGEList(
-    counts = get_exprs(reads.qc[, keep], "ruvs2"), 
-    norm.factors = rep(1, sum(keep)),
-    group = reads.qc[, keep]$batch
-)
-dge3 <- estimateDisp(dge3, design = design, trend.method = "none")
-plotBCV(dge3)
+design_ruvs <- model.matrix(~ruvs$W[keep,] + reads.qc[, keep]$batch)
+head(design_ruvs)
+```
+
+```
+##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
+## 1           1         0.3444123         0.2143000
+## 2           1         0.3176870         0.2029780
+## 3           1         0.2961611         0.1507961
+## 4           1         0.2765502         0.1499696
+## 5           1         0.2630351         0.1353374
+## 6           1         0.3176779         0.2226902
+##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
+## 1                                0                                0
+## 2                                0                                0
+## 3                                0                                0
+## 4                                0                                0
+## 5                                0                                0
+## 6                                0                                0
+```
+
+```r
+dge_ruvs <- estimateDisp(dge1, design = design_ruvs, trend.method = "none")
+plotBCV(dge_ruvs)
 ```
 
 <img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
-fit3 <- glmFit(dge3, design)
-res3 <- glmLRT(fit3, coef = 2)
+fit3 <- glmFit(dge_ruvs, design_ruvs)
+res3 <- glmLRT(fit3)
 topTags(res3)
 ```
 
 ```
-## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
-##                      logFC    logCPM        LR       PValue          FDR
-## ENSG00000214265 -1.3781622  8.435883 160.00508 1.128594e-36 1.812635e-32
-## ENSG00000228253 -0.9477729 13.924467 151.12906 9.821543e-35 7.887190e-31
-## ENSG00000212907 -1.1834265 10.545232 149.34982 2.404782e-34 1.287440e-30
-## ENSG00000134294 -1.2490067  9.338988 134.42726 4.405702e-31 1.768999e-27
-## ENSG00000068697 -1.2504182  7.938624 118.76700 1.177833e-27 3.783436e-24
-## ENSG00000198712 -0.7888317 15.608017 114.27837 1.132412e-26 3.031279e-23
-## ENSG00000131969 -1.8912883  4.029449 112.77846 2.412830e-26 5.536067e-23
-## ERCC-00096       0.5438156 15.377868 103.72967 2.318918e-24 4.655519e-21
-## ENSG00000124766 -0.8271225  9.875554  96.41088 9.335275e-23 1.665932e-19
-## ERCC-00002       0.5835928 15.896390  88.48745 5.115840e-21 8.216551e-18
+## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000127533 -5.844968 0.5186319 49.41601 2.070493e-12 3.325419e-08
+## ENSG00000203780 -5.598915 0.4016686 47.40823 5.764023e-12 4.628798e-08
+## ENSG00000172967 -6.748363 1.0988398 44.39602 2.682315e-11 1.436022e-07
+## ENSG00000214954 -6.809351 1.1902967 43.35983 4.554433e-11 1.828719e-07
+## ENSG00000112195 -6.314707 0.8213654 41.80644 1.007711e-10 3.236969e-07
+## ENSG00000163288 -6.815686 1.1502884 40.66861 1.803614e-10 4.827974e-07
+## ENSG00000088386 -6.325209 0.8856842 39.75080 2.885218e-10 6.619926e-07
+## ENSG00000165309 -6.005630 0.8557965 37.66252 8.410500e-10 1.688513e-06
+## ENSG00000183423 -6.439795 0.9134412 36.63171 1.426917e-09 2.546412e-06
+## ENSG00000159231 -5.234485 0.2720245 35.39878 2.686556e-09 4.314877e-06
 ```
 
 ```r
@@ -277,16 +331,67 @@ summary(decideTestsDGE(res3))
 
 ```
 ##    [,1] 
-## -1  1533
-## 0  14221
-## 1    307
+## -1   394
+## 0  15248
+## 1    419
 ```
 
 ```r
 plotSmear(
-    res3, 
+    res3, lowess = TRUE,
     de.tags = rownames(topTags(res3, n = sum(abs(decideTestsDGE(res3))))$table)
 )
 ```
 
 <img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
+
+
+```r
+reads.qc <- scran::computeSumFactors(reads.qc, sizes = 15)
+dge_ruvs$samples$norm.factors <- sizeFactors(reads.qc)[keep]
+dge_ruvs_sf <- estimateDisp(dge_ruvs, design = design_ruvs, trend.method = "none")
+plotBCV(dge_ruvs_sf)
+```
+
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+
+```r
+fit4 <- glmFit(dge_ruvs_sf, design_ruvs)
+res4 <- glmLRT(fit4)
+topTags(res4)
+```
+
+```
+## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000127533 -5.839587 0.2920503 47.84806 4.605625e-12 7.397094e-08
+## ENSG00000203780 -5.591899 0.1746876 45.85427 1.273854e-11 1.022969e-07
+## ENSG00000214954 -6.759358 0.9753670 41.73329 1.046125e-10 4.611437e-07
+## ENSG00000172967 -6.578098 0.7473525 41.55079 1.148481e-10 4.611437e-07
+## ENSG00000112195 -6.148405 0.4852341 39.21290 3.800209e-10 1.220703e-06
+## ENSG00000163288 -6.652320 0.7976909 38.04182 6.924454e-10 1.829694e-06
+## ENSG00000088386 -6.334388 0.6600850 37.76636 7.974509e-10 1.829694e-06
+## ENSG00000165309 -6.003471 0.6322195 36.24653 1.738696e-09 3.490650e-06
+## ENSG00000183423 -6.278409 0.5733277 34.21156 4.943431e-09 8.821827e-06
+## ENSG00000117650  6.470706 4.0932957 33.36279 7.647304e-09 1.228233e-05
+```
+
+```r
+summary(decideTestsDGE(res4))
+```
+
+```
+##    [,1] 
+## -1   319
+## 0  15344
+## 1    398
+```
+
+```r
+plotSmear(
+    res4, lowess = TRUE,
+    de.tags = rownames(topTags(res4, n = sum(abs(decideTestsDGE(res4))))$table)
+)
+```
+
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />

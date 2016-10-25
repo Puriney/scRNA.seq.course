@@ -40,7 +40,7 @@ MathJax.Hub.Config({
   
   
 <link rel="prev" href="normalization-for-library-size-reads.html">
-<link rel="next" href="confounders-removal-reads.html">
+<link rel="next" href="dealing-with-confounders-reads.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -244,17 +244,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="15.6" data-path="dealing-with-confounders.html"><a href="dealing-with-confounders.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html"><i class="fa fa-check"></i><b>16</b> Confounders Removal (Reads)</a><ul>
-<li class="chapter" data-level="16.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
-<li class="chapter" data-level="16.1.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
-<li class="chapter" data-level="16.1.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
+<li class="chapter" data-level="16" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html"><i class="fa fa-check"></i><b>16</b> Dealing with confounders (Reads)</a><ul>
+<li class="chapter" data-level="16.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
+<li class="chapter" data-level="16.1.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
 </ul></li>
-<li class="chapter" data-level="16.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="16.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="16.4" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
-<li class="chapter" data-level="16.4.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
-<li class="chapter" data-level="16.4.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
-<li class="chapter" data-level="16.4.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
+<li class="chapter" data-level="16.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="16.3" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="16.4" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="16.4.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="16.4.3" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="clustering-introduction.html"><a href="clustering-introduction.html"><i class="fa fa-check"></i><b>17</b> Clustering Introduction</a><ul>
@@ -484,7 +484,12 @@ ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw"
 <div id="effectiveness-3" class="section level2">
 <h2><span class="header-section-number">15.5</span> Effectiveness 3</h2>
 <p>Another way of evaluating the effectiveness of correction is to look at the differentially expressed (DE) genes among the batches of the same individual Theoretically, these batches should not differ from each other. Let’s take the most promising individual (<strong>NA19101</strong>, whose batches are the closest to each other) and check whether it is true.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span>umi.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>
+<p>For demonstration purposes we will only use a subset of cells. You should not do that with your real dataset, though.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span><span class="kw">c</span>(
+    <span class="kw">sample</span>(<span class="kw">which</span>(umi.qc$batch ==<span class="st"> &quot;NA19101.r1&quot;</span>), <span class="dv">20</span>), 
+    <span class="kw">sample</span>(<span class="kw">which</span>(umi.qc$batch ==<span class="st"> &quot;NA19101.r2&quot;</span>), <span class="dv">20</span>),
+    <span class="kw">sample</span>(<span class="kw">which</span>(umi.qc$batch ==<span class="st"> &quot;NA19101.r3&quot;</span>), <span class="dv">20</span>)
+)
 design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~umi.qc[, keep]$batch)</code></pre></div>
 <p>We will use the <a href="http://bioconductor.org/packages/edgeR">edgeR</a> package to calculate DE genes between plates for this particular individual. Recall that the input data for edgeR (and similar methods like DESeq2) must always be raw counts.</p>
 <p>The particular coefficient that we test for DE in each case below tests to for genes that show a difference in expression between replicate plate 3 and replicate plate 1.</p>
@@ -492,7 +497,7 @@ design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~umi.q
 <h3><span class="header-section-number">15.5.1</span> DE (raw counts)</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge1 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
     <span class="dt">counts =</span> <span class="kw">counts</span>(umi.qc[, keep]), 
-    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(keep)),
     <span class="dt">group =</span> umi.qc[, keep]$batch
 )
 dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
@@ -502,22 +507,22 @@ dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <s
 res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span class="dt">coef =</span> <span class="dv">2</span>)
 <span class="kw">topTags</span>(res1)</code></pre></div>
 <pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
-##                      logFC    logCPM       LR       PValue          FDR
-## ENSG00000145423  1.0437082  8.930360 354.3682 4.741536e-79 6.668021e-75
-## ENSG00000185885 -1.4704261  8.871862 312.6361 5.820571e-70 4.092734e-66
-## ENSG00000104332  0.7942726  9.732365 284.9588 6.237725e-64 2.924037e-60
-## ENSG00000214265 -0.7737881  9.237431 282.8562 1.791432e-63 6.298226e-60
-## ENSG00000106554 -0.6836208  9.262132 241.4285 1.919657e-54 5.399226e-51
-## ENSG00000167283 -0.4769965 10.083626 227.0334 2.644427e-51 6.198096e-48
-## ENSG00000165502 -0.5248241 10.028994 224.9492 7.531484e-51 1.331865e-47
-## ENSG00000087460  0.5510932  9.392753 224.9374 7.576560e-51 1.331865e-47
-## ENSG00000121207  1.9353719  6.736511 211.5649 6.258142e-48 9.778694e-45
-## ENSG00000112695 -0.5505989  9.637643 210.3241 1.167217e-47 1.641458e-44</code></pre>
+##                      logFC    logCPM        LR       PValue          FDR
+## ENSG00000185885 -1.5896715  8.821054 105.59014 9.067799e-25 1.275205e-20
+## ENSG00000131969 -1.8123419  7.227779  90.10982 2.253005e-21 1.584201e-17
+## ENSG00000099194  0.7819770  9.637997  84.64252 3.574941e-20 1.675813e-16
+## ENSG00000145423  1.0023759  8.961235  83.34688 6.884733e-20 2.420500e-16
+## ENSG00000106554 -0.8060902  9.181098  71.09428 3.405566e-17 9.578496e-14
+## ENSG00000104332  0.8276447  9.737565  69.93508 6.128862e-17 1.436503e-13
+## ENSG00000118418 -0.7215444  9.167104  63.16035 1.905460e-15 3.828070e-12
+## ENSG00000165502 -0.5766796 10.022079  61.96278 3.500114e-15 6.152763e-12
+## ENSG00000179933 -1.2221032  7.669928  60.63887 6.856651e-15 9.637077e-12
+## ENSG00000163106 -1.6132716  7.084031  60.57441 7.084907e-15 9.637077e-12</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res1))</code></pre></div>
-<pre><code>##    [,1]
-## -1 2109
-## 0  9355
-## 1  2599</code></pre>
+<pre><code>##    [,1] 
+## -1   636
+## 0  12647
+## 1    780</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
     res1, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
     <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res1, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res1))))$table)
@@ -529,12 +534,12 @@ res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span cl
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvg &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvg$W[keep,] +<span class="st"> </span>umi.qc[, keep]$batch)
 <span class="kw">head</span>(design_ruvg)</code></pre></div>
 <pre><code>##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
-## 1           1        0.01010943       0.001956012
-## 2           1        0.01777997       0.009123186
-## 3           1        0.01968374       0.006157921
-## 4           1        0.01275973       0.017130060
-## 5           1        0.07081795      -0.005430952
-## 6           1        0.02911818       0.021727805
+## 1           1        0.06273906      0.0461013180
+## 2           1        0.01903537      0.0426503994
+## 3           1        0.04043365      0.0203141904
+## 4           1        0.01856862      0.0170141522
+## 5           1        0.02515881      0.0005494417
+## 6           1        0.04548734     -0.0131816733
 ##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
 ## 1                              0                              0
 ## 2                              0                              0
@@ -549,22 +554,22 @@ res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span cl
 res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2)
 <span class="kw">topTags</span>(res2)</code></pre></div>
 <pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
-##                      logFC   logCPM        LR       PValue          FDR
-## ENSG00000185885 -1.3174364 8.871753 217.14670 3.791218e-49 5.331591e-45
-## ENSG00000163106 -1.3722714 7.130682 128.37173 9.307179e-30 6.544343e-26
-## ENSG00000131969 -1.2168148 7.359236 118.81702 1.148503e-27 5.383799e-24
-## ENSG00000008311 -1.1845327 7.534209 111.42347 4.779029e-26 1.680187e-22
-## ENSG00000187193 -1.4168162 7.660033  86.83180 1.181542e-20 3.323205e-17
-## ENSG00000145423  0.5749357 8.929498  85.46301 2.360764e-20 5.533238e-17
-## ENSG00000110931 -1.2224083 6.553645  80.05106 3.648582e-19 7.330001e-16
-## ENSG00000196683 -0.4017256 9.555568  77.23020 1.521490e-18 2.674589e-15
-## ENSG00000214265 -0.4006635 9.237080  71.71226 2.489812e-17 3.890469e-14
-## ENSG00000150459  0.5101314 8.387922  68.60831 1.200971e-16 1.688925e-13</code></pre>
+##                      logFC   logCPM       LR       PValue          FDR
+## ENSG00000185885 -1.4799079 8.821732 88.60253 4.826719e-21 6.787814e-17
+## ENSG00000131969 -1.4834179 7.227287 59.48764 1.230648e-14 8.653301e-11
+## ENSG00000163106 -1.5958763 7.083722 50.79125 1.027306e-12 4.815670e-09
+## ENSG00000125144 -3.2282954 5.680426 44.47704 2.573574e-11 9.048044e-08
+## ENSG00000008311 -1.3349694 7.455542 40.75574 1.724961e-10 4.851625e-07
+## ENSG00000100997  1.9302154 6.149031 37.40238 9.610499e-10 2.252541e-06
+## ENSG00000164265 -2.3519849 5.648499 33.07267 8.877792e-09 1.783548e-05
+## ENSG00000142089 -0.5457109 9.345548 31.09963 2.451179e-08 3.997302e-05
+## ENSG00000166833  1.2945601 6.879711 30.91945 2.689631e-08 3.997302e-05
+## ENSG00000115875  0.5480095 9.174395 30.81222 2.842425e-08 3.997302e-05</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res2))</code></pre></div>
 <pre><code>##    [,1] 
-## -1  1039
-## 0  12237
-## 1    787</code></pre>
+## -1   105
+## 0  13892
+## 1     66</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
     res2, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
     <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res2, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res2))))$table)
@@ -576,12 +581,12 @@ res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvs &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvs$W[keep,] +<span class="st"> </span>umi.qc[, keep]$batch)
 <span class="kw">head</span>(design_ruvs)</code></pre></div>
 <pre><code>##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
-## 1           1         0.2619953       -0.08220987
-## 2           1         0.2695799       -0.09943721
-## 3           1         0.2152265       -0.09724690
-## 4           1         0.2642097       -0.10269732
-## 5           1         0.2267828       -0.09645385
-## 6           1         0.2910819       -0.09367850
+## 1           1         0.2216114       -0.07681271
+## 2           1         0.2784432       -0.08573278
+## 3           1         0.2458254       -0.09005935
+## 4           1         0.2722106       -0.08568865
+## 5           1         0.2521060       -0.08849787
+## 6           1         0.2516191       -0.08994524
 ##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
 ## 1                              0                              0
 ## 2                              0                              0
@@ -596,53 +601,53 @@ res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2)
 res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3)
 <span class="kw">topTags</span>(res3)</code></pre></div>
 <pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
-##                      logFC    logCPM        LR       PValue          FDR
-## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
-## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
-## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
-## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
-## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
-## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
-## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
-## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
-## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
-## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17</code></pre>
+##                      logFC    logCPM       LR       PValue          FDR
+## ENSG00000185885 -1.6297396  8.823719 55.00987 1.199259e-13 1.686518e-09
+## ENSG00000137818  0.3981067 11.587124 46.24548 1.043269e-11 7.335744e-08
+## ENSG00000174748  0.5325659 10.652161 43.19178 4.962876e-11 2.255188e-07
+## ENSG00000144713  0.4952418 10.548526 42.68982 6.414529e-11 2.255188e-07
+## ENSG00000105372  0.4399976 11.561298 41.73530 1.045051e-10 2.939309e-07
+## ENSG00000231500  0.5011708 11.124748 40.93101 1.576988e-10 3.696197e-07
+## ENSG00000130772  2.8520298  5.912959 32.58857 1.138826e-08 2.287901e-05
+## ENSG00000124766 -0.5259504 10.266575 31.89749 1.625274e-08 2.857028e-05
+## ENSG00000115464 -1.3961215  7.397393 31.26843 2.247038e-08 3.511121e-05
+## ENSG00000137154  0.3649952 11.169888 29.01559 7.179823e-08 9.358981e-05</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res3))</code></pre></div>
 <pre><code>##    [,1] 
-## -1   876
-## 0  12609
-## 1    578</code></pre>
+## -1    92
+## 0  13881
+## 1     90</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
     res3, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
     <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res3, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res3))))$table)
 )</code></pre></div>
 <p><img src="14-remove-conf_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>In the above analyses, we have ignored size factors between cells. A typical edgeR analysis would always include these.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs$samples$norm.factors &lt;-<span class="st"> </span><span class="kw">sizeFactors</span>(umi.qc)[keep]</code></pre></div>
-<pre><code>## Warning in .local(object, ...): &#39;sizeFactors&#39; have not been set</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs_sf &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge_ruvs, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">umi.qc &lt;-<span class="st"> </span>scran::<span class="kw">computeSumFactors</span>(umi.qc, <span class="dt">sizes =</span> <span class="dv">15</span>)
+dge_ruvs$samples$norm.factors &lt;-<span class="st"> </span><span class="kw">sizeFactors</span>(umi.qc)[keep]
+dge_ruvs_sf &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge_ruvs, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
 <span class="kw">plotBCV</span>(dge_ruvs_sf)</code></pre></div>
 <p><img src="14-remove-conf_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit4 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvs_sf, design_ruvs)
 res4 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit4)
 <span class="kw">topTags</span>(res4)</code></pre></div>
 <pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
-##                      logFC    logCPM        LR       PValue          FDR
-## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
-## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
-## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
-## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
-## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
-## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
-## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
-## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
-## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
-## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17</code></pre>
+##                      logFC    logCPM       LR       PValue          FDR
+## ENSG00000185885 -1.7604527  8.822028 58.19538 2.373358e-14 3.337653e-10
+## ENSG00000130772  2.8854216  5.768502 33.86316 5.912764e-09 4.157560e-05
+## ENSG00000115464 -1.4851796  7.328062 32.22504 1.373098e-08 6.436626e-05
+## ENSG00000039560 -1.2741628  7.388737 25.26629 4.993610e-07 1.655393e-03
+## ENSG00000008311 -1.4399838  7.380040 24.94935 5.885634e-07 1.655393e-03
+## ENSG00000143641 -2.0348697  6.055528 23.92694 1.000619e-06 2.125467e-03
+## ENSG00000124766 -0.6075651 10.376868 23.71676 1.116062e-06 2.125467e-03
+## ENSG00000126777 -0.9057295  8.461588 23.19557 1.463343e-06 2.125467e-03
+## ENSG00000110931 -1.6179690  6.487076 23.17365 1.480120e-06 2.125467e-03
+## ENSG00000183287  3.9585974  5.044405 23.13344 1.511389e-06 2.125467e-03</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res4))</code></pre></div>
 <pre><code>##    [,1] 
-## -1   876
-## 0  12609
-## 1    578</code></pre>
+## -1    98
+## 0  13953
+## 1     12</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
     res4, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
     <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res4, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res4))))$table)
@@ -662,7 +667,7 @@ res4 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit4)
         </div>
       </div>
 <a href="normalization-for-library-size-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="confounders-removal-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="dealing-with-confounders-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>

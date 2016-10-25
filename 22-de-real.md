@@ -23,52 +23,50 @@ control over all aspects of the data, and this facilitates the
 interpretation of the results. However, the transcriptional bursting
 model is unable to capture the full complexity of a real scRNA-seq
 dataset. Next, we are going to analyze the difference between the
-transcriptomes of the 2-cell and the 4-cell state of a mouse embryo as
-described by [Biase et al](http://genome.cshlp.org/content/24/11/1787.short). For our purposes you need to download the [`biase`](http://hemberg-lab.github.io/scRNA.seq.course/biase/biase.txt) into the `biase` folder in your working directory. We can then look at the data:
+transcriptomes of the two stages of the mouse embryo development (_mid2cell_ and _16cell_) again from the `deng`. However, this time we need to use the raw counts instead of the normalized counts. This is a major requirement for the DE analysis tools like `DESeq2`, `edgeR`, `scde` etc.
 
 ```r
-biase <- as.matrix(
-    read.table(
-        "biase/biase_et_al_2cell_4cell_fpkm.tsv"
-    )
-)
+deng <- readRDS("deng/deng_raw.rds")
+# select cells at different stages
+deng <- deng[ , c(which(colnames(deng) == "mid2cell"),
+                  which(colnames(deng) == "16cell")[1:12])]
 # keep those genes that are expressed in at least 6 cells
-biase <- biase[rowSums(biase > 0) > 5, ]
+deng <- deng[rowSums(deng > 0) > 5, ]
 pheatmap::pheatmap(
-    log2(biase + 1),
-    scale = "column",
+    log2(deng + 1),
     cutree_cols = 2,
     kmeans_k = 100,
     show_rownames = FALSE
 )
 ```
 
-<img src="22-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" />
+<img src="22-de-real_files/figure-html/de-real-deng-fpkm-1.png" width="672" style="display: block; margin: auto;" />
 
 As you can see, the cells cluster well by their developmental stage.
 
 We can now use the same methods as before to obtain a list of
 differentially expressed genes.
 
-Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:
+Because `scde` is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:
 
 ```r
-biase <- biase[sample(1:nrow(biase), 500), ]
+deng <- deng[sample(1:nrow(deng), 1000), ]
 ```
 
 ## KS-test
 
 
 ```r
-pVals <- rep(1, nrow(biase))
-for (i in 1:nrow(biase)) {
+pVals <- rep(1, nrow(deng))
+for (i in 1:nrow(deng)) {
     res <- ks.test(
-        biase[i, 1:20],
-        biase[i , 21:40]
+        deng[i, 1:12],
+        deng[i, 13:24]
     )
-    # Bonferroni correction
-    pVals[i] <- res$p.value * nrow(biase)
+    pVals[i] <- res$p.value
 }
+# Bonferroni correction
+pVals <- p.adjust(pVals, method = "bonferroni")
 ```
 
 ## DESeq2
@@ -77,12 +75,13 @@ for (i in 1:nrow(biase)) {
 ```r
 cond <- factor(
     c(
-        rep("cell2", 20),
-        rep("cell4", 20)
+        rep("mid2cell", 12),
+        rep("16cell", 12)
     )
 )
+colnames(deng) <- 1:ncol(deng)
 dds <- DESeq2::DESeqDataSetFromMatrix(
-    round(biase) + 1,
+    deng,
     colData = DataFrame(cond),
     design = ~ cond
 )
@@ -96,15 +95,15 @@ pValsDESeq <- resDESeq$padj
 
 ```r
 cnts <- apply(
-    biase,
+    deng,
     2,
     function(x) {
         storage.mode(x) <- 'integer'
         return(x)
     }
 )
-names(cond) <- 1:length(cnts[1, ])
-colnames(cnts) <- 1:length(cnts[1, ]) 
+names(cond) <- 1:length(cond)
+colnames(cnts) <- 1:length(cond) 
 o.ifm <- scde::scde.error.models(
     counts = cnts,
     groups = cond,
@@ -163,35 +162,28 @@ differentially expressed to the ones that were not.
 
 
 ```r
-cell2 <- biase[, 1:20]
-cell4 <- biase[, 21:40]
+group1 <- deng[, 1:12] # mid2cell stage
+group2 <- deng[, 13:24] # 16cell stage
 ksGenesChangedInds <- which(pVals<.05)
 deSeqGenesChangedInds <- which(pValsDESeq<.05)
 scdeGenesChangedInds <- which(pValsSCDE<.05)
 ksGenesNotChangedInds <- which(pVals>=.05)
 deSeqGenesNotChangedInds <- which(pValsDESeq>=.05)
 scdeGenesNotChangedInds <- which(pValsSCDE>=.05)
-meanFoldChange <- rowSums(cell2)/rowSums(cell4)
-nGenes <- nrow(cell2)
+meanFoldChange <- rowSums(group1)/rowSums(group2)
 
 par(mfrow=c(2,1))
 hist(log2(meanFoldChange[ksGenesChangedInds]),
-     breaks = -50:50,
      freq = FALSE,
      xlab = "# fold-change",
-     col = rgb(1, 0, 0, 1/4),
-     ylim = c(0, .4),
-     xlim = c(-8, 8))
+     col = rgb(1, 0, 0, 1/4))
 hist(log2(meanFoldChange[deSeqGenesChangedInds]),
-     breaks = -50:50,
      freq = FALSE,
      xlab = "# fold-change",
-     col = rgb(0, 0, 1, 1/4),
-     ylim = c(0, .4),
-     xlim = c(-8, 8))
+     col = rgb(0, 0, 1, 1/4))
 ```
 
-<img src="22-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" />
+<img src="22-de-real_files/figure-html/de-real-deng-hist-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 2:__ Create the histogram of fold-changes for SCDE. Compare
 the estimated fold-changes between the different methods? What do the
@@ -206,28 +198,24 @@ change and the significance.
 
 ```r
 par(mfrow=c(2,1))
-plot(log2(meanFoldChange[ksGenesNotChangedInds]),
-     -log10(pVals[ksGenesNotChangedInds]/nGenes),
+plot(log2(meanFoldChange),
+     -log10(pVals),
      xlab = "mean expression change",
-     ylab = "-log10(P-value), KS-test",
-     ylim = c(0, 15),
-     xlim = c(-12, 12)) 
+     ylab = "-log10(P-value), KS-test") 
 points(log2(meanFoldChange[ksGenesChangedInds]),
-       -log10(pVals[ksGenesChangedInds]/nGenes),
+       -log10(pVals[ksGenesChangedInds]),
        col = "red")
 
-plot(log2(meanFoldChange[deSeqGenesNotChangedInds]), 
-     -log10(pValsDESeq[deSeqGenesNotChangedInds]),
+plot(log2(meanFoldChange), 
+     -log10(pValsDESeq),
      xlab = "mean expression change",
-     ylab = "-log10(P-value), DESeq2",
-     ylim = c(0, 15),
-     xlim = c(-12, 12))
+     ylab = "-log10(P-value), DESeq2")
 points(log2(meanFoldChange[deSeqGenesChangedInds]),
        -log10(pValsDESeq[deSeqGenesChangedInds]),
        col = "blue")
 ```
 
-<img src="22-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" />
+<img src="22-de-real_files/figure-html/de-real-deng-volcano-1.png" width="672" style="display: block; margin: auto;" />
 
 ### MA-plot
 
@@ -236,26 +224,24 @@ conditions is the MA-plot, in which the data has been transformed onto the M (lo
 
 ```r
 par(mfrow=c(2,1))
-plot(log2(rowMeans(cell2[ksGenesNotChangedInds,])),
-     log2(meanFoldChange[ksGenesNotChangedInds]),
-     ylab = "mean expression change",
-     xlab = "mean expression",
-     ylim = c(-9, 9)) 
-points(log2(rowMeans(cell2[ksGenesChangedInds,])),
+plot(log2(rowMeans(group1)),
+     log2(meanFoldChange),
+     ylab = "mean fold change",
+     xlab = "mean expression") 
+points(log2(rowMeans(group1[ksGenesChangedInds,])),
        log2(meanFoldChange[ksGenesChangedInds]),
        col = "red")
 
-plot(log2(rowMeans(cell2[deSeqGenesNotChangedInds,])),
-     log2(meanFoldChange[deSeqGenesNotChangedInds]),
-     ylab = "mean expression change",
-     xlab = "mean expression",
-     ylim = c(-9, 9))
-points(log2(rowMeans(cell2[deSeqGenesChangedInds,])),
+plot(log2(rowMeans(group1)),
+     log2(meanFoldChange),
+     ylab = "mean fold change",
+     xlab = "mean expression")
+points(log2(rowMeans(group1[deSeqGenesChangedInds,])),
        log2(meanFoldChange[deSeqGenesChangedInds]),
        col = "blue")
 ```
 
-<img src="22-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" />
+<img src="22-de-real_files/figure-html/de-real-deng-ma-plot-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 3:__ The volcano and MA-plots for the SCDE are missing - can
 you generate them? Compare to the synthetic data, what do they tell
@@ -271,12 +257,12 @@ the intersection of the three.
 allChangedInds <- intersect(which(pValsDESeq<.05),
                             intersect(which(pValsSCDE<.05),
                                       which(pVals<.05)))
-pheatmap::pheatmap(log2(1 + cbind(cell2, cell4)[allChangedInds,]),
+pheatmap::pheatmap(log2(1 + deng[allChangedInds,]),
                    cutree_cols = 2,
                    show_rownames = FALSE)
 ```
 
-<img src="22-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" />
+<img src="22-de-real_files/figure-html/de-real-deng-heatmap-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 4:__ Create heatmaps for the genes that were detected by at least 2/3 methods.
 

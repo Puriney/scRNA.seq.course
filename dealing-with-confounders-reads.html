@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="introduction-to-single-cell-rna-seq.html">
-<link rel="next" href="unique-molecular-identifiers-umis.html">
+<link rel="prev" href="dealing-with-confounders.html">
+<link rel="next" href="clustering-introduction.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,66 +366,272 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="construction-of-expression-matrix" class="section level1">
-<h1><span class="header-section-number">4</span> Construction of expression matrix</h1>
-<div id="reads-qc" class="section level2">
-<h2><span class="header-section-number">4.1</span> Reads QC</h2>
-<p>The output from a scRNA-seq experiment is a large collection of cDNA reads. The first step is to ensure that the reads are of high quality. The quality control can be performed by using standard tools, such as <a href="http://www.bioinformatics.babraham.ac.uk/projects/fastqc/">FastQC</a> or <a href="http://www.ebi.ac.uk/research/enright/software/kraken">Kraken</a>.</p>
-<p>Assuming that our reads are in experiment.bam, we run FastQC as</p>
-<pre><code>$&lt;path_to_fastQC&gt;/fastQC experiment.bam</code></pre>
-<p>Below is an example of the output from FastQC for a dataset of 125 bp reads. The plot reveals a technical error which resulted in a couple of bases failing to be read correctly in the centre of the read. However, since the rest of the read was of high quality this error will most likely have a negligible effect on mapping efficiency.</p>
-<div class="figure" style="text-align: center"><span id="fig:exprs-constr-fastqc"></span>
-<img src="figures/per_base_quality.png" alt="Example of FastQC output" width="90%" />
-<p class="caption">
-Figure 4.1: Example of FastQC output
-</p>
+<div id="dealing-with-confounders-reads" class="section level1">
+<h1><span class="header-section-number">16</span> Dealing with confounders (Reads)</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
+<span class="kw">library</span>(RUVSeq)
+<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(scran)
+<span class="kw">library</span>(edgeR)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+reads &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/reads.rds&quot;</span>)
+reads.qc &lt;-<span class="st"> </span>reads[<span class="kw">fData</span>(reads)$use, <span class="kw">pData</span>(reads)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(reads.qc)$is_feature_control
+erccs &lt;-<span class="st"> </span><span class="kw">fData</span>(reads.qc)$is_feature_control</code></pre></div>
+<div id="remove-unwanted-variation-1" class="section level2">
+<h2><span class="header-section-number">16.1</span> Remove Unwanted Variation</h2>
+<div id="ruvg-1" class="section level3">
+<h3><span class="header-section-number">16.1.1</span> RUVg</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(reads.qc), erccs, <span class="dt">k =</span> <span class="dv">1</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvg1&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(reads.qc), erccs, <span class="dt">k =</span> <span class="dv">2</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvg2&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvg2_logcpm&quot;</span>) &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">t</span>(<span class="kw">t</span>(ruvg$normalizedCounts) /<span class="st"> </span>
+<span class="st">                                           </span><span class="kw">colSums</span>(ruvg$normalizedCounts)) +<span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 </div>
-<p>Additionally, it is often helpful to visualize the data using the <a href="https://www.broadinstitute.org/igv/">Integrative Genomics Browser (IGV)</a> or <a href="http://www.bioinformatics.babraham.ac.uk/projects/seqmonk/">SeqMonk</a>.</p>
-</div>
-<div id="reads-alignment" class="section level2">
-<h2><span class="header-section-number">4.2</span> Reads alignment</h2>
-<p>After trimming low quality bases from the reads, the remaining sequences can be mapped to a reference genome. Again, there is no need for a special purpose method for this, so we can use the <a href="https://github.com/alexdobin/STAR">STAR</a> or the <a href="https://ccb.jhu.edu/software/tophat/index.shtml">TopHat</a> aligner. For large full-transcript datasets from well annotated organisms (e.g. mouse, human) pseudo-alignment methods (e.g. <a href="https://pachterlab.github.io/kallisto/">Kallisto</a>, <a href="http://salmon.readthedocs.io/en/latest/salmon.html">Salmon</a>) may out-perform conventional alignment.</p>
-<p>An example of how to map reads.bam to using STAR is</p>
-<pre><code>$&lt;path_to_STAR&gt;/STAR --runThreadN 1 --runMode alignReads
---readFilesIn reads1.fq.gz reads2.fq.gz --readFilesCommand zcat --genomeDir &lt;path&gt;
---parametersFiles FileOfMoreParameters.txt --outFileNamePrefix &lt;outpath&gt;/output</code></pre>
-<p><strong>Note</strong>, if the <em>spike-ins</em> are used, the reference sequence should be augmented with the DNA sequence of the <em>spike-in</em> molecules prior to mapping.</p>
-<p><strong>Note</strong>, when UMIs are used, their barcodes should be removed from the read sequence. A common practice is to add the barcode to the read name.</p>
-<p>Once the reads for each cell have been mapped to the reference genome, we need to make sure that a sufficient number of reads from each cell could be mapped to the reference genome. In our experience, the fraction of mappable reads for mouse or human cells is 60-70%. However, this result may vary depending on protocol, read length and settings for the read alignment. As a general rule, we expect all cells to have a similar fraction of mapped reads, so any outliers should be inspected and possibly removed. A low proportion of mappable reads usually indicates contamination.</p>
-</div>
-<div id="alignment-example" class="section level2">
-<h2><span class="header-section-number">4.3</span> Alignment example</h2>
-<p>The histogram below shows the total number of reads mapped to each cell for an scRNA-seq experiment. Each bar represents one cell, and they have been sorted in ascending order by the total number of reads per cell. The three red arrows indicate cells that are outliers in terms of their coverage and they should be removed from further analysis. The two yellow arrows point to cells with a surprisingly large number of unmapped reads. In this example we kept the cells during the alignment QC step, but they were later removed during cell QC due to a high proportion of ribosomal RNA reads.</p>
-<div class="figure" style="text-align: center"><span id="fig:exprs-constr-total-num-cells"></span>
-<img src="figures/Bergiers_exp1_mapping_by_cell.png" alt="Example of the total number of reads mapped to each cell." width="90%" />
-<p class="caption">
-Figure 4.2: Example of the total number of reads mapped to each cell.
-</p>
-</div>
-</div>
-<div id="mapping-qc" class="section level2">
-<h2><span class="header-section-number">4.4</span> Mapping QC</h2>
-<p>After mapping the raw sequencing to the genome we need to evaluate the quality of the mapping. There are many ways to measure the mapping quality, including: amount of reads mapping to rRNA/tRNAs, proportion of uniquely mapping reads, reads mapping across splice junctions, read depth along the transcripts. Methods developed for bulk RNA-seq, such as <a href="http://rseqc.sourceforge.net/">RSeQC</a>, are applicable to single-cell data:</p>
-<pre><code>python &lt;RSeQCpath&gt;/geneBody_coverage.py -i input.bam -r genome.bed -o output.txt
-python &lt;RSeQCpath&gt;/bam_stat.py -i input.bam -r genome.bed -o output.txt
-python &lt;RSeQCpath&gt;/split_bam.py -i input.bam -r rRNAmask.bed -o output.txt</code></pre>
-<p>However the expected results will depend on the experimental protocol, e.g. many scRNA-seq methods use poly-A selection to avoid sequencing rRNAs which results in a 3’ bias in the read coverage across the genes (aka gene body coverage). The figure below shows this 3’ bias as well as three cells which were outliers and removed from the dataset:</p>
-<div class="figure" style="text-align: center"><span id="fig:exprs-constr-3-bias"></span>
-<img src="figures/Exp1_RSEQC_geneBodyCoverage_plot_Combined.png" alt="Example of the 3' bias in the read coverage." width="90%" />
-<p class="caption">
-Figure 4.3: Example of the 3’ bias in the read coverage.
-</p>
+<div id="ruvs-1" class="section level3">
+<h3><span class="header-section-number">16.1.2</span> RUVs</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scIdx &lt;-<span class="st"> </span><span class="kw">matrix</span>(-<span class="dv">1</span>, <span class="dt">ncol =</span> <span class="kw">max</span>(<span class="kw">table</span>(reads.qc$individual)), <span class="dt">nrow =</span> <span class="dv">3</span>)
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19098&quot;</span>)
+scIdx[<span class="dv">1</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>)
+scIdx[<span class="dv">2</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(reads.qc$individual ==<span class="st"> &quot;NA19239&quot;</span>)
+scIdx[<span class="dv">3</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+cIdx &lt;-<span class="st"> </span><span class="kw">rownames</span>(reads.qc)
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(reads.qc), cIdx, <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvs1&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(reads.qc), cIdx, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvs2&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+<span class="kw">set_exprs</span>(reads.qc, <span class="st">&quot;ruvs2_logcpm&quot;</span>) &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">t</span>(<span class="kw">t</span>(ruvs$normalizedCounts) /<span class="st"> </span>
+<span class="st">                                           </span><span class="kw">colSums</span>(ruvs$normalizedCounts)) +<span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 </div>
 </div>
-<div id="reads-quantification" class="section level2">
-<h2><span class="header-section-number">4.5</span> Reads quantification</h2>
-<p>The next step is to quantify the expression level of each gene for each cell. For mRNA data, we can use one of the tools which has been developed for bulk RNA-seq data, e.g. <a href="http://www-huber.embl.de/users/anders/HTSeq/">HT-seq</a> or <a href="http://subread.sourceforge.net/">FeatureCounts</a></p>
-<pre><code># include multimapping
-&lt;featureCounts_path&gt;/featureCounts -O -M -Q 30 -p -a genome.gtf -o outputfile input.bam
-# exclude multimapping
-&lt;featureCounts_path&gt;/featureCounts -Q 30 -p -a genome.gtf -o outputfile input.bam</code></pre>
-<p><a href="http://www.nature.com/nmeth/journal/v9/n1/full/nmeth.1778.html">Unique molecular identifiers (UMIs)</a> make it possible to count the absolute number of molecules and they have proven popular for <a href="http://www.nature.com/nmeth/journal/v11/n2/full/nmeth.2772.html">scRNA-seq</a>. We will discuss how UMIs can be processed in the next chapter.</p>
+<div id="effectiveness-1-1" class="section level2">
+<h2><span class="header-section-number">16.2</span> Effectiveness 1</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    reads.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2_logcpm&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation log2-cpm: k = 2&quot;</span>)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="effectiveness-2-1" class="section level2">
+<h2><span class="header-section-number">16.3</span> Effectiveness 2</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(
+    <span class="kw">list</span>(
+        <span class="st">&quot;Raw counts&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(reads.qc), erccs),
+        <span class="st">&quot;RUVg (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvg1, erccs),
+        <span class="st">&quot;RUVg (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvg2, erccs),
+        <span class="st">&quot;RUVs (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvs1, erccs),
+        <span class="st">&quot;RUVs (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(reads.qc)$ruvs2, erccs)
+    )
+)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="effectiveness-3-1" class="section level2">
+<h2><span class="header-section-number">16.4</span> Effectiveness 3</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span><span class="kw">c</span>(
+    <span class="kw">sample</span>(<span class="kw">which</span>(reads.qc$batch ==<span class="st"> &quot;NA19101.r1&quot;</span>), <span class="dv">20</span>), 
+    <span class="kw">sample</span>(<span class="kw">which</span>(reads.qc$batch ==<span class="st"> &quot;NA19101.r2&quot;</span>), <span class="dv">20</span>),
+    <span class="kw">sample</span>(<span class="kw">which</span>(reads.qc$batch ==<span class="st"> &quot;NA19101.r3&quot;</span>), <span class="dv">20</span>)
+)
+design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~reads.qc[, keep]$batch)</code></pre></div>
+<div id="de-raw-counts-1" class="section level3">
+<h3><span class="header-section-number">16.4.1</span> DE (raw counts)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge1 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">counts</span>(reads.qc[, keep]), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(keep)),
+    <span class="dt">group =</span> reads.qc[, keep]$batch
+)
+dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge1)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit1 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge1, design)
+res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res1)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r2 
+##                     logFC   logCPM       LR       PValue          FDR
+## ENSG00000184825 -7.944829 2.404710 34.24659 4.855257e-09 7.798028e-05
+## ENSG00000163406  8.358703 2.774133 31.04471 2.521532e-08 2.024917e-04
+## ENSG00000140538  6.983583 1.743474 28.76242 8.182356e-08 2.858067e-04
+## ENSG00000169851  6.766105 2.977739 28.69408 8.476249e-08 2.858067e-04
+## ENSG00000146530 -7.093080 3.314577 28.60015 8.897538e-08 2.858067e-04
+## ENSG00000085276  6.655724 1.197336 27.85891 1.304915e-07 3.493040e-04
+## ENSG00000234284  7.558534 1.882747 27.25582 1.782381e-07 3.621346e-04
+## ENSG00000168899 -7.878357 2.283407 27.06050 1.971861e-07 3.621346e-04
+## ENSG00000117650  5.315592 4.160481 26.96361 2.073219e-07 3.621346e-04
+## ENSG00000131969 -2.659572 3.219247 26.64797 2.441070e-07 3.621346e-04</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res1))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   681
+## 0  14519
+## 1    861</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res1, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res1, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res1))))$table)
+)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="de-ruvg-k-2-1" class="section level3">
+<h3><span class="header-section-number">16.4.2</span> DE (RUVg, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvg &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvg$W[keep,] +<span class="st"> </span>reads.qc[, keep]$batch)
+<span class="kw">head</span>(design_ruvg)</code></pre></div>
+<pre><code>##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
+## 1           1      -0.002228917        0.03877421
+## 2           1      -0.010591129       -0.01936104
+## 3           1      -0.020147219        0.11849664
+## 4           1       0.017436635        0.06878010
+## 5           1       0.005369460        0.04289753
+## 6           1      -0.009896783        0.01987111
+##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
+## 1                                0                                0
+## 2                                0                                0
+## 3                                0                                0
+## 4                                0                                0
+## 5                                0                                0
+## 6                                0                                0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvg &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design_ruvg, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvg)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvg, design_ruvg)
+res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2)
+<span class="kw">topTags</span>(res2)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000157470 -2.050268 1.1255499 43.74952 3.732089e-11 5.994109e-07
+## ENSG00000117650  6.671480 4.1604907 37.04938 1.151754e-09 6.652888e-06
+## ENSG00000184270 -4.062256 0.1455278 36.90122 1.242679e-09 6.652888e-06
+## ENSG00000166984 -5.354818 0.6518402 33.02844 9.082078e-09 3.646681e-05
+## ENSG00000105974 -8.216682 2.6143652 31.72792 1.773543e-08 5.696975e-05
+## ENSG00000127533 -5.189093 0.5186040 30.14956 3.999779e-08 1.070674e-04
+## ENSG00000183208 -4.670888 0.2965708 29.75834 4.893971e-08 1.122887e-04
+## ENSG00000203780 -4.960189 0.4016417 29.03740 7.099434e-08 1.284577e-04
+## ENSG00000140470 -4.527160 0.2286726 29.01061 7.198305e-08 1.284577e-04
+## ENSG00000111348 -4.334548 0.1353035 28.43823 9.673584e-08 1.553674e-04</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res2))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   448
+## 0  15258
+## 1    355</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res2, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res2, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res2))))$table)
+)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="de-ruvs-k-2-1" class="section level3">
+<h3><span class="header-section-number">16.4.3</span> DE (RUVs, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvs &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvs$W[keep,] +<span class="st"> </span>reads.qc[, keep]$batch)
+<span class="kw">head</span>(design_ruvs)</code></pre></div>
+<pre><code>##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
+## 1           1         0.3444123         0.2143000
+## 2           1         0.3176870         0.2029780
+## 3           1         0.2961611         0.1507961
+## 4           1         0.2765502         0.1499696
+## 5           1         0.2630351         0.1353374
+## 6           1         0.3176779         0.2226902
+##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
+## 1                                0                                0
+## 2                                0                                0
+## 3                                0                                0
+## 4                                0                                0
+## 5                                0                                0
+## 6                                0                                0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvs)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit3 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvs, design_ruvs)
+res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3)
+<span class="kw">topTags</span>(res3)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000127533 -5.844968 0.5186319 49.41601 2.070493e-12 3.325419e-08
+## ENSG00000203780 -5.598915 0.4016686 47.40823 5.764023e-12 4.628798e-08
+## ENSG00000172967 -6.748363 1.0988398 44.39602 2.682315e-11 1.436022e-07
+## ENSG00000214954 -6.809351 1.1902967 43.35983 4.554433e-11 1.828719e-07
+## ENSG00000112195 -6.314707 0.8213654 41.80644 1.007711e-10 3.236969e-07
+## ENSG00000163288 -6.815686 1.1502884 40.66861 1.803614e-10 4.827974e-07
+## ENSG00000088386 -6.325209 0.8856842 39.75080 2.885218e-10 6.619926e-07
+## ENSG00000165309 -6.005630 0.8557965 37.66252 8.410500e-10 1.688513e-06
+## ENSG00000183423 -6.439795 0.9134412 36.63171 1.426917e-09 2.546412e-06
+## ENSG00000159231 -5.234485 0.2720245 35.39878 2.686556e-09 4.314877e-06</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res3))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   394
+## 0  15248
+## 1    419</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res3, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res3, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res3))))$table)
+)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reads.qc &lt;-<span class="st"> </span>scran::<span class="kw">computeSumFactors</span>(reads.qc, <span class="dt">sizes =</span> <span class="dv">15</span>)
+dge_ruvs$samples$norm.factors &lt;-<span class="st"> </span><span class="kw">sizeFactors</span>(reads.qc)[keep]
+dge_ruvs_sf &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge_ruvs, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvs_sf)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit4 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvs_sf, design_ruvs)
+res4 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit4)
+<span class="kw">topTags</span>(res4)</code></pre></div>
+<pre><code>## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
+##                     logFC    logCPM       LR       PValue          FDR
+## ENSG00000127533 -5.839587 0.2920503 47.84806 4.605625e-12 7.397094e-08
+## ENSG00000203780 -5.591899 0.1746876 45.85427 1.273854e-11 1.022969e-07
+## ENSG00000214954 -6.759358 0.9753670 41.73329 1.046125e-10 4.611437e-07
+## ENSG00000172967 -6.578098 0.7473525 41.55079 1.148481e-10 4.611437e-07
+## ENSG00000112195 -6.148405 0.4852341 39.21290 3.800209e-10 1.220703e-06
+## ENSG00000163288 -6.652320 0.7976909 38.04182 6.924454e-10 1.829694e-06
+## ENSG00000088386 -6.334388 0.6600850 37.76636 7.974509e-10 1.829694e-06
+## ENSG00000165309 -6.003471 0.6322195 36.24653 1.738696e-09 3.490650e-06
+## ENSG00000183423 -6.278409 0.5733277 34.21156 4.943431e-09 8.821827e-06
+## ENSG00000117650  6.470706 4.0932957 33.36279 7.647304e-09 1.228233e-05</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res4))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   319
+## 0  15344
+## 1    398</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res4, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res4, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res4))))$table)
+)</code></pre></div>
+<p><img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
 
+</div>
 </div>
 </div>
             </section>
@@ -433,8 +639,8 @@ Figure 4.3: Example of the 3’ bias in the read coverage.
           </div>
         </div>
       </div>
-<a href="introduction-to-single-cell-rna-seq.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="unique-molecular-identifiers-umis.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="dealing-with-confounders.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clustering-introduction.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -461,7 +667,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/03-exprs-constr.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/15-remove-conf-reads.Rmd",
 "text": "Edit"
 },
 "download": null,

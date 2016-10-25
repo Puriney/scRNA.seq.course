@@ -17,7 +17,7 @@ output: html_document
     * Greatly reduce noise in data
     * May reduce gene detection rates (unclear if it is UMIs or other protocol differences)
     * Use longer UMIs (~10bp)
-    * Correct for sequencing errors in UMIs using [UMI-tools'](https://github.com/CGATOxford/UMI-tools)
+    * Correct for sequencing errors in UMIs using [UMI-tools](https://github.com/CGATOxford/UMI-tools)
 
 * Spike-ins
     * Useful for quality control
@@ -68,8 +68,8 @@ output: html_document
     * [SC3](http://bioconductor.org/packages/SC3)
 
 * Pseudotime
-    * distinct timepoints: Tscan
-    * Continuous data: [density](http://bioconductor.org/packages/density)
+    * distinct timepoints: [TSCAN](http://bioconductor.org/packages/TSCAN)
+    * continuous data: [destiny](http://bioconductor.org/packages/destiny)
 
 * Differential Expression
     * Small number of cells and few groups : [scde](http://hms-dbmi.github.io/scde/)

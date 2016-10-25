@@ -244,17 +244,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="15.6" data-path="dealing-with-confounders.html"><a href="dealing-with-confounders.html#exercise-2"><i class="fa fa-check"></i><b>15.6</b> Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html"><i class="fa fa-check"></i><b>16</b> Confounders Removal (Reads)</a><ul>
-<li class="chapter" data-level="16.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
-<li class="chapter" data-level="16.1.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
-<li class="chapter" data-level="16.1.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
+<li class="chapter" data-level="16" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html"><i class="fa fa-check"></i><b>16</b> Dealing with confounders (Reads)</a><ul>
+<li class="chapter" data-level="16.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#remove-unwanted-variation-1"><i class="fa fa-check"></i><b>16.1</b> Remove Unwanted Variation</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#ruvg-1"><i class="fa fa-check"></i><b>16.1.1</b> RUVg</a></li>
+<li class="chapter" data-level="16.1.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#ruvs-1"><i class="fa fa-check"></i><b>16.1.2</b> RUVs</a></li>
 </ul></li>
-<li class="chapter" data-level="16.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
-<li class="chapter" data-level="16.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
-<li class="chapter" data-level="16.4" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
-<li class="chapter" data-level="16.4.1" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
-<li class="chapter" data-level="16.4.2" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
-<li class="chapter" data-level="16.4.3" data-path="confounders-removal-reads.html"><a href="confounders-removal-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
+<li class="chapter" data-level="16.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-1-1"><i class="fa fa-check"></i><b>16.2</b> Effectiveness 1</a></li>
+<li class="chapter" data-level="16.3" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-2-1"><i class="fa fa-check"></i><b>16.3</b> Effectiveness 2</a></li>
+<li class="chapter" data-level="16.4" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#effectiveness-3-1"><i class="fa fa-check"></i><b>16.4</b> Effectiveness 3</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-raw-counts-1"><i class="fa fa-check"></i><b>16.4.1</b> DE (raw counts)</a></li>
+<li class="chapter" data-level="16.4.2" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-ruvg-k-2-1"><i class="fa fa-check"></i><b>16.4.2</b> DE (RUVg, k = 2)</a></li>
+<li class="chapter" data-level="16.4.3" data-path="dealing-with-confounders-reads.html"><a href="dealing-with-confounders-reads.html#de-ruvs-k-2-1"><i class="fa fa-check"></i><b>16.4.3</b> DE (RUVs, k = 2)</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="clustering-introduction.html"><a href="clustering-introduction.html"><i class="fa fa-check"></i><b>17</b> Clustering Introduction</a><ul>
@@ -376,49 +376,49 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
 <div id="introduction-8" class="section level2">
 <h2><span class="header-section-number">23.1</span> Introduction</h2>
-<p>The main advantage of using synthetic data is that we have full control over all aspects of the data, and this facilitates the interpretation of the results. However, the transcriptional bursting model is unable to capture the full complexity of a real scRNA-seq dataset. Next, we are going to analyze the difference between the transcriptomes of the 2-cell and the 4-cell state of a mouse embryo as described by <a href="http://genome.cshlp.org/content/24/11/1787.short">Biase et al</a>. For our purposes you need to download the <a href="http://hemberg-lab.github.io/scRNA.seq.course/biase/biase.txt"><code>biase</code></a> into the <code>biase</code> folder in your working directory. We can then look at the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(
-    <span class="kw">read.table</span>(
-        <span class="st">&quot;biase/biase_et_al_2cell_4cell_fpkm.tsv&quot;</span>
-    )
-)
+<p>The main advantage of using synthetic data is that we have full control over all aspects of the data, and this facilitates the interpretation of the results. However, the transcriptional bursting model is unable to capture the full complexity of a real scRNA-seq dataset. Next, we are going to analyze the difference between the transcriptomes of the two stages of the mouse embryo development (<em>mid2cell</em> and <em>16cell</em>) again from the <code>deng</code>. However, this time we need to use the raw counts instead of the normalized counts. This is a major requirement for the DE analysis tools like <code>DESeq2</code>, <code>edgeR</code>, <code>scde</code> etc.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;deng/deng_raw.rds&quot;</span>)
+<span class="co"># select cells at different stages</span>
+deng &lt;-<span class="st"> </span>deng[ , <span class="kw">c</span>(<span class="kw">which</span>(<span class="kw">colnames</span>(deng) ==<span class="st"> &quot;mid2cell&quot;</span>),
+                  <span class="kw">which</span>(<span class="kw">colnames</span>(deng) ==<span class="st"> &quot;16cell&quot;</span>)[<span class="dv">1</span>:<span class="dv">12</span>])]
 <span class="co"># keep those genes that are expressed in at least 6 cells</span>
-biase &lt;-<span class="st"> </span>biase[<span class="kw">rowSums</span>(biase &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">5</span>, ]
+deng &lt;-<span class="st"> </span>deng[<span class="kw">rowSums</span>(deng &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">5</span>, ]
 pheatmap::<span class="kw">pheatmap</span>(
-    <span class="kw">log2</span>(biase +<span class="st"> </span><span class="dv">1</span>),
-    <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>,
+    <span class="kw">log2</span>(deng +<span class="st"> </span><span class="dv">1</span>),
     <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
     <span class="dt">kmeans_k =</span> <span class="dv">100</span>,
     <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>
 )</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="22-de-real_files/figure-html/de-real-deng-fpkm-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>As you can see, the cells cluster well by their developmental stage.</p>
 <p>We can now use the same methods as before to obtain a list of differentially expressed genes.</p>
-<p>Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span>biase[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(biase), <span class="dv">500</span>), ]</code></pre></div>
+<p>Because <code>scde</code> is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deng &lt;-<span class="st"> </span>deng[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(deng), <span class="dv">1000</span>), ]</code></pre></div>
 </div>
 <div id="ks-test" class="section level2">
 <h2><span class="header-section-number">23.2</span> KS-test</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(biase))
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(biase)) {
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(deng))
+for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(deng)) {
     res &lt;-<span class="st"> </span><span class="kw">ks.test</span>(
-        biase[i, <span class="dv">1</span>:<span class="dv">20</span>],
-        biase[i , <span class="dv">21</span>:<span class="dv">40</span>]
+        deng[i, <span class="dv">1</span>:<span class="dv">12</span>],
+        deng[i, <span class="dv">13</span>:<span class="dv">24</span>]
     )
-    <span class="co"># Bonferroni correction</span>
-    pVals[i] &lt;-<span class="st"> </span>res$p.value *<span class="st"> </span><span class="kw">nrow</span>(biase)
-}</code></pre></div>
+    pVals[i] &lt;-<span class="st"> </span>res$p.value
+}
+<span class="co"># Bonferroni correction</span>
+pVals &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pVals, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</code></pre></div>
 </div>
 <div id="deseq2-1" class="section level2">
 <h2><span class="header-section-number">23.3</span> DESeq2</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
     <span class="kw">c</span>(
-        <span class="kw">rep</span>(<span class="st">&quot;cell2&quot;</span>, <span class="dv">20</span>),
-        <span class="kw">rep</span>(<span class="st">&quot;cell4&quot;</span>, <span class="dv">20</span>)
+        <span class="kw">rep</span>(<span class="st">&quot;mid2cell&quot;</span>, <span class="dv">12</span>),
+        <span class="kw">rep</span>(<span class="st">&quot;16cell&quot;</span>, <span class="dv">12</span>)
     )
 )
+<span class="kw">colnames</span>(deng) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">ncol</span>(deng)
 dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeqDataSetFromMatrix</span>(
-    <span class="kw">round</span>(biase) +<span class="st"> </span><span class="dv">1</span>,
+    deng,
     <span class="dt">colData =</span> <span class="kw">DataFrame</span>(cond),
     <span class="dt">design =</span> ~<span class="st"> </span>cond
 )
@@ -429,15 +429,15 @@ pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj</code></pre></div>
 <div id="scde-1" class="section level2">
 <h2><span class="header-section-number">23.4</span> SCDE</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
-    biase,
+    deng,
     <span class="dv">2</span>,
     function(x) {
         <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
         <span class="kw">return</span>(x)
     }
 )
-<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ])
-<span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ]) 
+<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cond)
+<span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cond) 
 o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
     <span class="dt">counts =</span> cnts,
     <span class="dt">groups =</span> cond,
@@ -486,81 +486,68 @@ pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSC
 <div id="visualisation" class="section level2">
 <h2><span class="header-section-number">23.6</span> Visualisation</h2>
 <p>To further characterize the list of genes, we can calculate the average fold-changes and compare the ones that were called as differentially expressed to the ones that were not.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cell2 &lt;-<span class="st"> </span>biase[, <span class="dv">1</span>:<span class="dv">20</span>]
-cell4 &lt;-<span class="st"> </span>biase[, <span class="dv">21</span>:<span class="dv">40</span>]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">group1 &lt;-<span class="st"> </span>deng[, <span class="dv">1</span>:<span class="dv">12</span>] <span class="co"># mid2cell stage</span>
+group2 &lt;-<span class="st"> </span>deng[, <span class="dv">13</span>:<span class="dv">24</span>] <span class="co"># 16cell stage</span>
 ksGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)
 deSeqGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>)
 scdeGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>)
 ksGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&gt;=.<span class="dv">05</span>)
 deSeqGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&gt;=.<span class="dv">05</span>)
 scdeGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&gt;=.<span class="dv">05</span>)
-meanFoldChange &lt;-<span class="st"> </span><span class="kw">rowSums</span>(cell2)/<span class="kw">rowSums</span>(cell4)
-nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
+meanFoldChange &lt;-<span class="st"> </span><span class="kw">rowSums</span>(group1)/<span class="kw">rowSums</span>(group2)
 
 <span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
 <span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
-     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
      <span class="dt">freq =</span> <span class="ot">FALSE</span>,
      <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>))
 <span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
-     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
      <span class="dt">freq =</span> <span class="ot">FALSE</span>,
      <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
+     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>))</code></pre></div>
+<p><img src="22-de-real_files/figure-html/de-real-deng-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise 2:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
 <div id="volcano-plots" class="section level3">
 <h3><span class="header-section-number">23.6.1</span> Volcano plots</h3>
 <p>A popular method for illustrating the difference between two conditions is the volcano plot which compares the magnitude of the change and the significance.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
-     -<span class="kw">log10</span>(pVals[ksGenesNotChangedInds]/nGenes),
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange),
+     -<span class="kw">log10</span>(pVals),
      <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), KS-test&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>)) 
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), KS-test&quot;</span>) 
 <span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
-       -<span class="kw">log10</span>(pVals[ksGenesChangedInds]/nGenes),
+       -<span class="kw">log10</span>(pVals[ksGenesChangedInds]),
        <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
 
-<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]), 
-     -<span class="kw">log10</span>(pValsDESeq[deSeqGenesNotChangedInds]),
+<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange), 
+     -<span class="kw">log10</span>(pValsDESeq),
      <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), DESeq2&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>))
+     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), DESeq2&quot;</span>)
 <span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
        -<span class="kw">log10</span>(pValsDESeq[deSeqGenesChangedInds]),
        <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="22-de-real_files/figure-html/de-real-deng-volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="ma-plot" class="section level3">
 <h3><span class="header-section-number">23.6.2</span> MA-plot</h3>
 <p>Another popular method for illustrating the difference between two conditions is the MA-plot, in which the data has been transformed onto the M (log ratios) and A (mean average) scale:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesNotChangedInds,])),
-     <span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
-     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>)) 
-<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesChangedInds,])),
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(group1)),
+     <span class="kw">log2</span>(meanFoldChange),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean fold change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>) 
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(group1[ksGenesChangedInds,])),
        <span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
        <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
 
-<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesNotChangedInds,])),
-     <span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]),
-     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>))
-<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesChangedInds,])),
+<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(group1)),
+     <span class="kw">log2</span>(meanFoldChange),
+     <span class="dt">ylab =</span> <span class="st">&quot;mean fold change&quot;</span>,
+     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>)
+<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(group1[deSeqGenesChangedInds,])),
        <span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
        <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="22-de-real_files/figure-html/de-real-deng-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise 3:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
 </div>
 <div id="heatmap-of-de-genes" class="section level3">
@@ -569,10 +556,10 @@ nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>),
                             <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>),
                                       <span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)))
-pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span><span class="kw">cbind</span>(cell2, cell4)[allChangedInds,]),
+pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span>deng[allChangedInds,]),
                    <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
                    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="22-de-real_files/figure-html/de-real-deng-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p><strong>Exercise 4:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
 
 </div>
