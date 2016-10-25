@@ -26,7 +26,7 @@
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
   
-<meta name="date" content="2016-10-24">
+<meta name="date" content="2016-10-25">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -592,7 +592,7 @@ Figure 18.10: Clustering solutions of SINCERA method using <span class="math inl
 <div id="seurat-1" class="section level2">
 <h2><span class="header-section-number">18.7</span> SEURAT</h2>
 <p>Here we follow an <a href="http://satijalab.org/seurat/seurat_clustering_tutorial_part1.html">example</a> created by the authors of SEURAT. We had to introduce some modifications due to the errors produced by the original code:</p>
-<p><strong>Note</strong> In the newest version of SEURAT (v. 1.4) the tSNE is now used exclusively for visualization, and clustering is based on a <em>community detection</em> approach similar to one previously proposed for analyzing CyTOF data <span class="citation">(Levine et al. <a href="#ref-Levine2015-fk">2015</a>)</span>. In this tutorial we are still using an old version (v. 1.3) of <code>SEURAT</code> (this will be updated by the next time this course is run - approximately Spring 2017):</p>
+<p><strong>Note</strong> In the newest versions of SEURAT (v. 1.3-1.4) the tSNE is now used exclusively for visualization, and clustering is based on a <em>community detection</em> approach similar to one previously proposed for analyzing CyTOF data <span class="citation">(Levine et al. <a href="#ref-Levine2015-fk">2015</a>)</span>. In this tutorial we are still using an old version (v. 1.2) of <code>SEURAT</code> (this will be updated by the next time this course is run - approximately Spring 2017):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(Seurat)
 <span class="co"># Create a SEURAT object</span>
 d &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;seurat&quot;</span>, <span class="dt">raw.data =</span> <span class="kw">as.data.frame</span>(<span class="kw">log</span>(patient.data +<span class="st"> </span><span class="dv">1</span>)))

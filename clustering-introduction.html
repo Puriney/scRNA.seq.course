@@ -26,7 +26,7 @@
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
   
-<meta name="date" content="2016-10-24">
+<meta name="date" content="2016-10-25">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -479,7 +479,7 @@ Figure 17.5: SC3 pipeline
 <div id="seurat" class="section level3">
 <h3><span class="header-section-number">17.5.5</span> <a href="https://github.com/Puriney/seurat">SEURAT</a></h3>
 <p>SEURAT <span class="citation">(Macosko et al. <a href="#ref-Macosko2015-ix">2015</a>)</span> first utilises PCA on a set of cells, then a number of statistically significant PCs is defined. Those PCs are further projected to a 2D space using tSNE. The remaining cells are then projected on the same tSNE map. Density clustering algorithm (<a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a>) is then used to identify cell clusters in the 2D space.</p>
-<p><strong>Note</strong> In the newest version of SEURAT (v. 1.4) the tSNE is now used exclusively for visualization, and clustering is based on a <em>community detection</em> approach similar to one previously proposed for analyzing CyTOF data <span class="citation">(Levine et al. <a href="#ref-Levine2015-fk">2015</a>)</span>.</p>
+<p><strong>Note</strong> In the newest versions of SEURAT (v. 1.3-1.4) the tSNE is now used exclusively for visualization, and clustering is based on a <em>community detection</em> approach similar to one previously proposed for analyzing CyTOF data <span class="citation">(Levine et al. <a href="#ref-Levine2015-fk">2015</a>)</span>.</p>
 </div>
 <div id="snn-cliq" class="section level3">
 <h3><span class="header-section-number">17.5.6</span> <a href="http://bioinfo.uncc.edu/SNNCliq/">SNN-Cliq</a></h3>
