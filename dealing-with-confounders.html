@@ -39,8 +39,8 @@ MathJax.Hub.Config({
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="de-in-a-synthetic-dataset.html">
-<link rel="next" href="ideal-scrnaseq-pipeline-as-of-oct-2016.html">
+<link rel="prev" href="normalization-for-library-size-reads.html">
+<link rel="next" href="confounders-removal-reads.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -366,216 +366,294 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="de-in-a-real-dataset" class="section level1">
-<h1><span class="header-section-number">23</span> DE in a real dataset</h1>
+<div id="dealing-with-confounders" class="section level1">
+<h1><span class="header-section-number">15</span> Dealing with confounders</h1>
+<div id="introduction-6" class="section level2">
+<h2><span class="header-section-number">15.1</span> Introduction</h2>
+<p>In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed. Accounting for technical confounders, and batch effects particularly, is a large topic that also involves principles of experimental design. Here we address approaches that can be taken to account for confounders when the experimental design is appropriate.</p>
+<p>Fundamentally, accounting for technical confounders involves identifying and, ideally, removing sources of variation in the expression data that are not related to (i.e. are confounding) the biological signal of interest. Various approaches exist, some of which use spike-in or housekeeping genes, and some of which use endogenous genes.</p>
+<p>The use of spike-ins as control genes is appealing, since the same amount of ERCC (or other) spike-in was added to each cell in our experiment. In principel, all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and “substracting” this from the endogenous genes. There are several methods available based on this premise (eg. <a href="https://github.com/catavallejos/BASiCS">BASiCS</a>, <a href="https://github.com/PMBio/scLVM">scLVM</a>, <a href="http://bioconductor.org/packages/release/bioc/html/RUVSeq.html">RUVg</a>); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, <a href="http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html">Highly variable genes</a>). However, there are issues with the use of spike-ins for normalisation (particularly ERCCs, derived from bacterial sequences), including that their variability can, for various reasons, actually be <em>higher</em> than that of endogenous genes.</p>
+<p>Given the issues with using spike-ins, better results can often be obtained by using endogenous genes instead. Where we have a large number of endogenous genes that, on average, do not vary systematically between cells and where we expect technical effects to affect a large number of genes (a very common and reasonable assumption), then such methods (for example, the RUVs method) can perform well.</p>
+<p>We explore both general approaches below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scRNA.seq.funcs)
-<span class="kw">library</span>(DESeq2)
-<span class="kw">library</span>(scde)
-<span class="kw">library</span>(ROCR)
-<span class="kw">library</span>(limma)
-<span class="kw">set.seed</span>(<span class="dv">1</span>)</code></pre></div>
-<div id="introduction-8" class="section level2">
-<h2><span class="header-section-number">23.1</span> Introduction</h2>
-<p>The main advantage of using synthetic data is that we have full control over all aspects of the data, and this facilitates the interpretation of the results. However, the transcriptional bursting model is unable to capture the full complexity of a real scRNA-seq dataset. Next, we are going to analyze the difference between the transcriptomes of the 2-cell and the 4-cell state of a mouse embryo as described by <a href="http://genome.cshlp.org/content/24/11/1787.short">Biase et al</a>. For our purposes you need to download the <a href="http://hemberg-lab.github.io/scRNA.seq.course/biase/biase.txt"><code>biase</code></a> into the <code>biase</code> folder in your working directory. We can then look at the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(
-    <span class="kw">read.table</span>(
-        <span class="st">&quot;biase/biase_et_al_2cell_4cell_fpkm.tsv&quot;</span>
+<span class="kw">library</span>(RUVSeq)
+<span class="kw">library</span>(scater, <span class="dt">quietly =</span> <span class="ot">TRUE</span>)
+<span class="kw">library</span>(scran)
+<span class="kw">library</span>(edgeR)
+<span class="kw">options</span>(<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+umi &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;blischak/umi.rds&quot;</span>)
+umi.qc &lt;-<span class="st"> </span>umi[<span class="kw">fData</span>(umi)$use, <span class="kw">pData</span>(umi)$use]
+endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)$is_feature_control
+erccs &lt;-<span class="st"> </span><span class="kw">fData</span>(umi.qc)$is_feature_control</code></pre></div>
+</div>
+<div id="remove-unwanted-variation" class="section level2">
+<h2><span class="header-section-number">15.2</span> Remove Unwanted Variation</h2>
+<p>Factors contributing to technical noise frequently appear as “batch effects” where cells processed on different days or by different technicians systematically vary from one another. Removing technical noise and correcting for batch effects can frequently be performed using the same tool or slight variants on it. We will be considering the <a href="http://bioconductor.org/packages/RUVSeq">Remove Unwanted Variation (RUVSeq)</a>. Briefly, RUVSeq works as follows. For <span class="math inline">\(n\)</span> samples and <span class="math inline">\(J\)</span> genes, consider the following generalized linear model (GLM), where the RNA-Seq read counts are regressed on both the known covariates of interest and unknown factors of unwanted variation: <span class="math display">\[\log E[Y|W,X,O] = W\alpha + X\beta + O\]</span> Here, <span class="math inline">\(Y\)</span> is the <span class="math inline">\(n \times J\)</span> matrix of observed gene-level read counts, <span class="math inline">\(W\)</span> is an <span class="math inline">\(n \times k\)</span> matrix corresponding to the factors of “unwanted variation” and <span class="math inline">\(O\)</span> is an <span class="math inline">\(n \times J\)</span> matrix of offsets that can either be set to zero or estimated with some other normalization procedure (such as upper-quartile normalization). The simultaneous estimation of <span class="math inline">\(W\)</span>, <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(k\)</span> is infeasible. For a given <span class="math inline">\(k\)</span>, instead the following three approaches to estimate the factors of unwanted variation <span class="math inline">\(W\)</span> are used:</p>
+<ul>
+<li><em>RUVg</em> uses negative control genes (e.g. ERCCs), assumed to have constant expression across samples;</li>
+<li><em>RUVs</em> uses centered (technical) replicate/negative control samples for which the covariates of interest are constant;</li>
+<li><em>RUVr</em> uses residuals, e.g., from a first-pass GLM regression of the counts on the covariates of interest.</li>
+</ul>
+<p>We will concentrate on the first two approaches.</p>
+<div id="ruvg" class="section level3">
+<h3><span class="header-section-number">15.2.1</span> RUVg</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(umi.qc), erccs, <span class="dt">k =</span> <span class="dv">1</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvg1&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+ruvg &lt;-<span class="st"> </span><span class="kw">RUVg</span>(<span class="kw">counts</span>(umi.qc), erccs, <span class="dt">k =</span> <span class="dv">2</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvg2&quot;</span>) &lt;-<span class="st"> </span>ruvg$normalizedCounts
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvg2_logcpm&quot;</span>) &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">t</span>(<span class="kw">t</span>(ruvg$normalizedCounts) /<span class="st"> </span>
+<span class="st">                                           </span><span class="kw">colSums</span>(ruvg$normalizedCounts)) +<span class="st"> </span><span class="dv">1</span>)</code></pre></div>
+</div>
+<div id="ruvs" class="section level3">
+<h3><span class="header-section-number">15.2.2</span> RUVs</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scIdx &lt;-<span class="st"> </span><span class="kw">matrix</span>(-<span class="dv">1</span>, <span class="dt">ncol =</span> <span class="kw">max</span>(<span class="kw">table</span>(umi.qc$individual)), <span class="dt">nrow =</span> <span class="dv">3</span>)
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19098&quot;</span>)
+scIdx[<span class="dv">1</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>)
+scIdx[<span class="dv">2</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+tmp &lt;-<span class="st"> </span><span class="kw">which</span>(umi.qc$individual ==<span class="st"> &quot;NA19239&quot;</span>)
+scIdx[<span class="dv">3</span>, <span class="dv">1</span>:<span class="kw">length</span>(tmp)] &lt;-<span class="st"> </span>tmp
+cIdx &lt;-<span class="st"> </span><span class="kw">rownames</span>(umi.qc)
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(umi.qc), cIdx, <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvs1&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+ruvs &lt;-<span class="st"> </span><span class="kw">RUVs</span>(<span class="kw">counts</span>(umi.qc), cIdx, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">scIdx =</span> scIdx, <span class="dt">isLog =</span> <span class="ot">FALSE</span>)
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvs2&quot;</span>) &lt;-<span class="st"> </span>ruvs$normalizedCounts
+<span class="kw">set_exprs</span>(umi.qc, <span class="st">&quot;ruvs2_logcpm&quot;</span>) &lt;-<span class="st"> </span><span class="kw">log2</span>(<span class="kw">t</span>(<span class="kw">t</span>(ruvs$normalizedCounts) /<span class="st"> </span>
+<span class="st">                                           </span><span class="kw">colSums</span>(ruvs$normalizedCounts)) +<span class="st"> </span><span class="dv">1</span>)</code></pre></div>
+</div>
+</div>
+<div id="effectiveness-1" class="section level2">
+<h2><span class="header-section-number">15.3</span> Effectiveness 1</h2>
+<p>We evaluate the effectiveness of the normalization by inspecting the PCA plot where colour corresponds the technical replicates and shape corresponds to different biological samples (individuals). Separation of biological samples and interspersed batches indicates that technical variation has been removed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvg2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVg normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs1&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 1&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation: k = 2&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotPCA</span>(
+    umi.qc[endog_genes, ],
+    <span class="dt">colour_by =</span> <span class="st">&quot;batch&quot;</span>,
+    <span class="dt">size_by =</span> <span class="st">&quot;total_features&quot;</span>,
+    <span class="dt">shape_by =</span> <span class="st">&quot;individual&quot;</span>,
+    <span class="dt">exprs_values =</span> <span class="st">&quot;ruvs2_logcpm&quot;</span>) +
+<span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;PCA - RUVs normalisation log2-cpm: k = 2&quot;</span>)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Plotting log2-normalized CPM from RUVs with k = 2 looks to give the best separation of cells by individual.</p>
+</div>
+<div id="effectiveness-2" class="section level2">
+<h2><span class="header-section-number">15.4</span> Effectiveness 2</h2>
+<p>We can also examine the effectiveness of correction using the relative log expression (RLE) across cells to confirm technical noise has been removed from the dataset.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(
+    <span class="kw">list</span>(
+        <span class="st">&quot;Raw counts&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">counts</span>(umi.qc), erccs),
+        <span class="st">&quot;RUVg (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvg1, erccs),
+        <span class="st">&quot;RUVg (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvg2, erccs),
+        <span class="st">&quot;RUVs (k = 1)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvs1, erccs),
+        <span class="st">&quot;RUVs (k = 2)&quot;</span> =<span class="st"> </span><span class="kw">calc_cell_RLE</span>(<span class="kw">assayData</span>(umi.qc)$ruvs2, erccs)
     )
-)
-<span class="co"># keep those genes that are expressed in at least 6 cells</span>
-biase &lt;-<span class="st"> </span>biase[<span class="kw">rowSums</span>(biase &gt;<span class="st"> </span><span class="dv">0</span>) &gt;<span class="st"> </span><span class="dv">5</span>, ]
-pheatmap::<span class="kw">pheatmap</span>(
-    <span class="kw">log2</span>(biase +<span class="st"> </span><span class="dv">1</span>),
-    <span class="dt">scale =</span> <span class="st">&quot;column&quot;</span>,
-    <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
-    <span class="dt">kmeans_k =</span> <span class="dv">100</span>,
-    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>
 )</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-fpkm-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>As you can see, the cells cluster well by their developmental stage.</p>
-<p>We can now use the same methods as before to obtain a list of differentially expressed genes.</p>
-<p>Because SCDE is very slow here we will only use a subset of genes. You should not do that with your real dataset, though. Here we do it just for demostration purposes:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">biase &lt;-<span class="st"> </span>biase[<span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(biase), <span class="dv">500</span>), ]</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="ks-test" class="section level2">
-<h2><span class="header-section-number">23.2</span> KS-test</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pVals &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(biase))
-for (i in <span class="dv">1</span>:<span class="kw">nrow</span>(biase)) {
-    res &lt;-<span class="st"> </span><span class="kw">ks.test</span>(
-        biase[i, <span class="dv">1</span>:<span class="dv">20</span>],
-        biase[i , <span class="dv">21</span>:<span class="dv">40</span>]
-    )
-    <span class="co"># Bonferroni correction</span>
-    pVals[i] &lt;-<span class="st"> </span>res$p.value *<span class="st"> </span><span class="kw">nrow</span>(biase)
-}</code></pre></div>
-</div>
-<div id="deseq2-1" class="section level2">
-<h2><span class="header-section-number">23.3</span> DESeq2</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cond &lt;-<span class="st"> </span><span class="kw">factor</span>(
-    <span class="kw">c</span>(
-        <span class="kw">rep</span>(<span class="st">&quot;cell2&quot;</span>, <span class="dv">20</span>),
-        <span class="kw">rep</span>(<span class="st">&quot;cell4&quot;</span>, <span class="dv">20</span>)
-    )
+<div id="effectiveness-3" class="section level2">
+<h2><span class="header-section-number">15.5</span> Effectiveness 3</h2>
+<p>Another way of evaluating the effectiveness of correction is to look at the differentially expressed (DE) genes among the batches of the same individual Theoretically, these batches should not differ from each other. Let’s take the most promising individual (<strong>NA19101</strong>, whose batches are the closest to each other) and check whether it is true.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">keep &lt;-<span class="st"> </span>umi.qc$individual ==<span class="st"> &quot;NA19101&quot;</span>
+design &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~umi.qc[, keep]$batch)</code></pre></div>
+<p>We will use the <a href="http://bioconductor.org/packages/edgeR">edgeR</a> package to calculate DE genes between plates for this particular individual. Recall that the input data for edgeR (and similar methods like DESeq2) must always be raw counts.</p>
+<p>The particular coefficient that we test for DE in each case below tests to for genes that show a difference in expression between replicate plate 3 and replicate plate 1.</p>
+<div id="de-raw-counts" class="section level3">
+<h3><span class="header-section-number">15.5.1</span> DE (raw counts)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge1 &lt;-<span class="st"> </span><span class="kw">DGEList</span>(
+    <span class="dt">counts =</span> <span class="kw">counts</span>(umi.qc[, keep]), 
+    <span class="dt">norm.factors =</span> <span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">sum</span>(keep)),
+    <span class="dt">group =</span> umi.qc[, keep]$batch
 )
-dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeqDataSetFromMatrix</span>(
-    <span class="kw">round</span>(biase) +<span class="st"> </span><span class="dv">1</span>,
-    <span class="dt">colData =</span> <span class="kw">DataFrame</span>(cond),
-    <span class="dt">design =</span> ~<span class="st"> </span>cond
-)
-dds &lt;-<span class="st"> </span>DESeq2::<span class="kw">DESeq</span>(dds)
-resDESeq &lt;-<span class="st"> </span>DESeq2::<span class="kw">results</span>(dds)
-pValsDESeq &lt;-<span class="st"> </span>resDESeq$padj</code></pre></div>
-</div>
-<div id="scde-1" class="section level2">
-<h2><span class="header-section-number">23.4</span> SCDE</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cnts &lt;-<span class="st"> </span><span class="kw">apply</span>(
-    biase,
-    <span class="dv">2</span>,
-    function(x) {
-        <span class="kw">storage.mode</span>(x) &lt;-<span class="st"> &#39;integer&#39;</span>
-        <span class="kw">return</span>(x)
-    }
-)
-<span class="kw">names</span>(cond) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ])
-<span class="kw">colnames</span>(cnts) &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">length</span>(cnts[<span class="dv">1</span>, ]) 
-o.ifm &lt;-<span class="st"> </span>scde::<span class="kw">scde.error.models</span>(
-    <span class="dt">counts =</span> cnts,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">threshold.segmentation =</span> <span class="ot">TRUE</span>,
-    <span class="dt">save.crossfit.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">save.model.plots =</span> <span class="ot">FALSE</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>,
-    <span class="dt">min.size.entries =</span> <span class="dv">2</span>
-)
-priors &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.prior</span>(
-    <span class="dt">models =</span> o.ifm,
-    <span class="dt">counts =</span> cnts,
-    <span class="dt">length.out =</span> <span class="dv">400</span>,
-    <span class="dt">show.plot =</span> <span class="ot">FALSE</span>
-)
-resSCDE &lt;-<span class="st"> </span>scde::<span class="kw">scde.expression.difference</span>(
-    o.ifm,
-    cnts,
-    priors,
-    <span class="dt">groups =</span> cond,
-    <span class="dt">n.randomizations =</span> <span class="dv">100</span>,
-    <span class="dt">n.cores =</span> <span class="dv">1</span>,
-    <span class="dt">verbose =</span> <span class="dv">0</span>
-)
-<span class="co"># Convert Z-scores into 2-tailed p-values</span>
-pValsSCDE &lt;-<span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(resSCDE$cZ), <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>) *<span class="st"> </span><span class="dv">2</span> 
-pValsSCDE &lt;-<span class="st"> </span><span class="kw">p.adjust</span>(pValsSCDE, <span class="dt">method =</span> <span class="st">&quot;bonferroni&quot;</span>)</code></pre></div>
-</div>
-<div id="comparison-of-the-methods-2" class="section level2">
-<h2><span class="header-section-number">23.5</span> Comparison of the methods</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vennDiagram</span>(
-    <span class="kw">vennCounts</span>(
-        <span class="kw">cbind</span>(
-            pVals &lt;<span class="st"> </span><span class="fl">0.05</span>,
-            pValsDESeq &lt;<span class="st"> </span><span class="fl">0.05</span>,
-            pValsSCDE &lt;<span class="st"> </span><span class="fl">0.05</span>
-        )
-    ),
-    <span class="dt">names =</span> <span class="kw">c</span>(<span class="st">&quot;KS-test&quot;</span>, <span class="st">&quot;DESeq2&quot;</span>, <span class="st">&quot;SCDE&quot;</span>),
-    <span class="dt">circle.col =</span> <span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>)
+dge1 &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge1)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit1 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge1, design)
+res1 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit1, <span class="dt">coef =</span> <span class="dv">2</span>)
+<span class="kw">topTags</span>(res1)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
+##                      logFC    logCPM       LR       PValue          FDR
+## ENSG00000145423  1.0437082  8.930360 354.3682 4.741536e-79 6.668021e-75
+## ENSG00000185885 -1.4704261  8.871862 312.6361 5.820571e-70 4.092734e-66
+## ENSG00000104332  0.7942726  9.732365 284.9588 6.237725e-64 2.924037e-60
+## ENSG00000214265 -0.7737881  9.237431 282.8562 1.791432e-63 6.298226e-60
+## ENSG00000106554 -0.6836208  9.262132 241.4285 1.919657e-54 5.399226e-51
+## ENSG00000167283 -0.4769965 10.083626 227.0334 2.644427e-51 6.198096e-48
+## ENSG00000165502 -0.5248241 10.028994 224.9492 7.531484e-51 1.331865e-47
+## ENSG00000087460  0.5510932  9.392753 224.9374 7.576560e-51 1.331865e-47
+## ENSG00000121207  1.9353719  6.736511 211.5649 6.258142e-48 9.778694e-45
+## ENSG00000112695 -0.5505989  9.637643 210.3241 1.167217e-47 1.641458e-44</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res1))</code></pre></div>
+<pre><code>##    [,1]
+## -1 2109
+## 0  9355
+## 1  2599</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res1, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res1, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res1))))$table)
 )</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 1:</strong> How does this Venn diagram correspond to what you would expect based on the synthetic data?</p>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="visualisation" class="section level2">
-<h2><span class="header-section-number">23.6</span> Visualisation</h2>
-<p>To further characterize the list of genes, we can calculate the average fold-changes and compare the ones that were called as differentially expressed to the ones that were not.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cell2 &lt;-<span class="st"> </span>biase[, <span class="dv">1</span>:<span class="dv">20</span>]
-cell4 &lt;-<span class="st"> </span>biase[, <span class="dv">21</span>:<span class="dv">40</span>]
-ksGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)
-deSeqGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>)
-scdeGenesChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>)
-ksGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pVals&gt;=.<span class="dv">05</span>)
-deSeqGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsDESeq&gt;=.<span class="dv">05</span>)
-scdeGenesNotChangedInds &lt;-<span class="st"> </span><span class="kw">which</span>(pValsSCDE&gt;=.<span class="dv">05</span>)
-meanFoldChange &lt;-<span class="st"> </span><span class="kw">rowSums</span>(cell2)/<span class="kw">rowSums</span>(cell4)
-nGenes &lt;-<span class="st"> </span><span class="kw">nrow</span>(cell2)
-
-<span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
-<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
-     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))
-<span class="kw">hist</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
-     <span class="dt">breaks =</span> -<span class="dv">50</span>:<span class="dv">50</span>,
-     <span class="dt">freq =</span> <span class="ot">FALSE</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;# fold-change&quot;</span>,
-     <span class="dt">col =</span> <span class="kw">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>/<span class="dv">4</span>),
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, .<span class="dv">4</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">8</span>, <span class="dv">8</span>))</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-hist-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 2:</strong> Create the histogram of fold-changes for SCDE. Compare the estimated fold-changes between the different methods? What do the genes where they differ have in common?</p>
-<div id="volcano-plots" class="section level3">
-<h3><span class="header-section-number">23.6.1</span> Volcano plots</h3>
-<p>A popular method for illustrating the difference between two conditions is the volcano plot which compares the magnitude of the change and the significance.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
-     -<span class="kw">log10</span>(pVals[ksGenesNotChangedInds]/nGenes),
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), KS-test&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>)) 
-<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
-       -<span class="kw">log10</span>(pVals[ksGenesChangedInds]/nGenes),
-       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
-
-<span class="kw">plot</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]), 
-     -<span class="kw">log10</span>(pValsDESeq[deSeqGenesNotChangedInds]),
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">ylab =</span> <span class="st">&quot;-log10(P-value), DESeq2&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>),
-     <span class="dt">xlim =</span> <span class="kw">c</span>(-<span class="dv">12</span>, <span class="dv">12</span>))
-<span class="kw">points</span>(<span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
-       -<span class="kw">log10</span>(pValsDESeq[deSeqGenesChangedInds]),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-volcano-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="de-ruvg-k-2" class="section level3">
+<h3><span class="header-section-number">15.5.2</span> DE (RUVg, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvg &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvg$W[keep,] +<span class="st"> </span>umi.qc[, keep]$batch)
+<span class="kw">head</span>(design_ruvg)</code></pre></div>
+<pre><code>##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
+## 1           1        0.01010943       0.001956012
+## 2           1        0.01777997       0.009123186
+## 3           1        0.01968374       0.006157921
+## 4           1        0.01275973       0.017130060
+## 5           1        0.07081795      -0.005430952
+## 6           1        0.02911818       0.021727805
+##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
+## 1                              0                              0
+## 2                              0                              0
+## 3                              0                              0
+## 4                              0                              0
+## 5                              0                              0
+## 6                              0                              0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvg &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design_ruvg, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvg)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvg, design_ruvg)
+res2 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit2)
+<span class="kw">topTags</span>(res2)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
+##                      logFC   logCPM        LR       PValue          FDR
+## ENSG00000185885 -1.3174364 8.871753 217.14670 3.791218e-49 5.331591e-45
+## ENSG00000163106 -1.3722714 7.130682 128.37173 9.307179e-30 6.544343e-26
+## ENSG00000131969 -1.2168148 7.359236 118.81702 1.148503e-27 5.383799e-24
+## ENSG00000008311 -1.1845327 7.534209 111.42347 4.779029e-26 1.680187e-22
+## ENSG00000187193 -1.4168162 7.660033  86.83180 1.181542e-20 3.323205e-17
+## ENSG00000145423  0.5749357 8.929498  85.46301 2.360764e-20 5.533238e-17
+## ENSG00000110931 -1.2224083 6.553645  80.05106 3.648582e-19 7.330001e-16
+## ENSG00000196683 -0.4017256 9.555568  77.23020 1.521490e-18 2.674589e-15
+## ENSG00000214265 -0.4006635 9.237080  71.71226 2.489812e-17 3.890469e-14
+## ENSG00000150459  0.5101314 8.387922  68.60831 1.200971e-16 1.688925e-13</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res2))</code></pre></div>
+<pre><code>##    [,1] 
+## -1  1039
+## 0  12237
+## 1    787</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res2, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res2, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res2))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="ma-plot" class="section level3">
-<h3><span class="header-section-number">23.6.2</span> MA-plot</h3>
-<p>Another popular method for illustrating the difference between two conditions is the MA-plot, in which the data has been transformed onto the M (log ratios) and A (mean average) scale:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow=</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))
-<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesNotChangedInds,])),
-     <span class="kw">log2</span>(meanFoldChange[ksGenesNotChangedInds]),
-     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>)) 
-<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[ksGenesChangedInds,])),
-       <span class="kw">log2</span>(meanFoldChange[ksGenesChangedInds]),
-       <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>)
-
-<span class="kw">plot</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesNotChangedInds,])),
-     <span class="kw">log2</span>(meanFoldChange[deSeqGenesNotChangedInds]),
-     <span class="dt">ylab =</span> <span class="st">&quot;mean expression change&quot;</span>,
-     <span class="dt">xlab =</span> <span class="st">&quot;mean expression&quot;</span>,
-     <span class="dt">ylim =</span> <span class="kw">c</span>(-<span class="dv">9</span>, <span class="dv">9</span>))
-<span class="kw">points</span>(<span class="kw">log2</span>(<span class="kw">rowMeans</span>(cell2[deSeqGenesChangedInds,])),
-       <span class="kw">log2</span>(meanFoldChange[deSeqGenesChangedInds]),
-       <span class="dt">col =</span> <span class="st">&quot;blue&quot;</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-ma-plot-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 3:</strong> The volcano and MA-plots for the SCDE are missing - can you generate them? Compare to the synthetic data, what do they tell you about the properties of the genes that have changed?</p>
+<div id="de-ruvs-k-2" class="section level3">
+<h3><span class="header-section-number">15.5.3</span> DE (RUVs, k = 2)</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">design_ruvs &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(~ruvs$W[keep,] +<span class="st"> </span>umi.qc[, keep]$batch)
+<span class="kw">head</span>(design_ruvs)</code></pre></div>
+<pre><code>##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
+## 1           1         0.2619953       -0.08220987
+## 2           1         0.2695799       -0.09943721
+## 3           1         0.2152265       -0.09724690
+## 4           1         0.2642097       -0.10269732
+## 5           1         0.2267828       -0.09645385
+## 6           1         0.2910819       -0.09367850
+##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
+## 1                              0                              0
+## 2                              0                              0
+## 3                              0                              0
+## 4                              0                              0
+## 5                              0                              0
+## 6                              0                              0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge1, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvs)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit3 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvs, design_ruvs)
+res3 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit3)
+<span class="kw">topTags</span>(res3)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
+##                      logFC    logCPM        LR       PValue          FDR
+## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
+## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
+## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
+## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
+## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
+## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
+## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
+## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
+## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
+## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res3))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   876
+## 0  12609
+## 1    578</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res3, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res3, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res3))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In the above analyses, we have ignored size factors between cells. A typical edgeR analysis would always include these.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs$samples$norm.factors &lt;-<span class="st"> </span><span class="kw">sizeFactors</span>(umi.qc)[keep]</code></pre></div>
+<pre><code>## Warning in .local(object, ...): &#39;sizeFactors&#39; have not been set</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dge_ruvs_sf &lt;-<span class="st"> </span><span class="kw">estimateDisp</span>(dge_ruvs, <span class="dt">design =</span> design_ruvs, <span class="dt">trend.method =</span> <span class="st">&quot;none&quot;</span>)
+<span class="kw">plotBCV</span>(dge_ruvs_sf)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit4 &lt;-<span class="st"> </span><span class="kw">glmFit</span>(dge_ruvs_sf, design_ruvs)
+res4 &lt;-<span class="st"> </span><span class="kw">glmLRT</span>(fit4)
+<span class="kw">topTags</span>(res4)</code></pre></div>
+<pre><code>## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
+##                      logFC    logCPM        LR       PValue          FDR
+## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
+## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
+## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
+## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
+## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
+## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
+## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
+## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
+## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
+## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">decideTestsDGE</span>(res4))</code></pre></div>
+<pre><code>##    [,1] 
+## -1   876
+## 0  12609
+## 1    578</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotSmear</span>(
+    res4, <span class="dt">lowess =</span> <span class="ot">TRUE</span>,
+    <span class="dt">de.tags =</span> <span class="kw">rownames</span>(<span class="kw">topTags</span>(res4, <span class="dt">n =</span> <span class="kw">sum</span>(<span class="kw">abs</span>(<span class="kw">decideTestsDGE</span>(res4))))$table)
+)</code></pre></div>
+<p><img src="14-remove-conf_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="heatmap-of-de-genes" class="section level3">
-<h3><span class="header-section-number">23.6.3</span> Heatmap of DE genes</h3>
-<p>Finally, we can plot heatmaps of the genes that were called as DE by the intersection of the three.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allChangedInds &lt;-<span class="st"> </span><span class="kw">intersect</span>(<span class="kw">which</span>(pValsDESeq&lt;.<span class="dv">05</span>),
-                            <span class="kw">intersect</span>(<span class="kw">which</span>(pValsSCDE&lt;.<span class="dv">05</span>),
-                                      <span class="kw">which</span>(pVals&lt;.<span class="dv">05</span>)))
-pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span class="dv">1</span> +<span class="st"> </span><span class="kw">cbind</span>(cell2, cell4)[allChangedInds,]),
-                   <span class="dt">cutree_cols =</span> <span class="dv">2</span>,
-                   <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="22-de-real_files/figure-html/de-real-biase-heatmap-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p><strong>Exercise 4:</strong> Create heatmaps for the genes that were detected by at least 2/3 methods.</p>
-
 </div>
+<div id="exercise-2" class="section level2">
+<h2><span class="header-section-number">15.6</span> Exercise</h2>
+<p>Perform the same analysis with read counts of the Blischak data. Use <code>blischak/reads.rds</code> file to load the reads SCESet object. Once you have finished please compare your results to ours (next chapter). Additionally, experiment with other combinations of normalizations and compare the results.</p>
+
 </div>
 </div>
             </section>
@@ -583,8 +661,8 @@ pheatmap::<span class="kw">pheatmap</span>(<span class="kw">log2</span>(<span cl
           </div>
         </div>
       </div>
-<a href="de-in-a-synthetic-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="ideal-scrnaseq-pipeline-as-of-oct-2016.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="normalization-for-library-size-reads.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="confounders-removal-reads.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
@@ -611,7 +689,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/22-de-real.Rmd",
+"link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/14-remove-conf.Rmd",
 "text": "Edit"
 },
 "download": null,

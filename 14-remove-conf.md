@@ -2,13 +2,20 @@
 output: html_document
 ---
 
-# Confounders Removal
+# Dealing with confounders
 
 ## Introduction
 
-In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data using the ERCC spike-in controls. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed. 
+In the previous chapter we normalized for library size, effectively removing it as a confounder. Now we will consider removing other less well defined confounders from our data. Technical confounders (aka batch effects) can arise from difference in reagents, isolation methods, the lab/experimenter who performed the experiment, even which day/time the experiment was performed. Accounting for technical confounders, and batch effects particularly, is a large topic that also involves principles of experimental design. Here we address approaches that can be taken to account for confounders when the experimental design is appropriate.
 
-Since the same amount of ERCC spike-in was added to each cell in our experiment we know that all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and "substracting" this from the endogenous genes. There are several methods available based on this premise (eg. [BASiCS](https://github.com/catavallejos/BASiCS), [scLVM](https://github.com/PMBio/scLVM), [RUV](http://bioconductor.org/packages/release/bioc/html/RUVSeq.html)); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, [Highly variable genes](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html))
+Fundamentally, accounting for technical confounders involves identifying and, ideally, removing sources of variation in the expression data that are not related to (i.e. are confounding) the biological signal of interest. Various approaches exist, some of which use spike-in or housekeeping genes, and some of which use endogenous genes.
+
+The use of spike-ins as control genes is appealing, since the same amount of ERCC (or other) spike-in was added to each cell in our experiment. In principel, all the variablity we observe for these genes is due to technical noise; whereas endogenous genes are affected by both technical noise and biological variability. Technical noise can be removed by fitting a model to the spike-ins and "substracting" this from the endogenous genes. There are several methods available based on this premise (eg. [BASiCS](https://github.com/catavallejos/BASiCS), [scLVM](https://github.com/PMBio/scLVM), [RUVg](http://bioconductor.org/packages/release/bioc/html/RUVSeq.html)); each using different noise models and different fitting procedures. Alternatively, one can identify genes which exhibit significant variation beyond technical noise (eg. Distance to median, [Highly variable genes](http://www.nature.com/nmeth/journal/v10/n11/full/nmeth.2645.html)). However, there are issues with the use of spike-ins for normalisation (particularly ERCCs, derived from bacterial sequences), including that their variability can, for various reasons, actually be *higher* than that of endogenous genes.
+
+Given the issues with using spike-ins, better results can often be obtained by using endogenous genes instead. Where we have a large number of endogenous genes that, on average, do not vary systematically between cells and where we expect technical effects to affect a large number of genes (a very common and reasonable assumption), then such methods (for example, the RUVs method) can perform well. 
+
+We explore both general approaches below.
+
 
 
 
@@ -53,6 +60,8 @@ ruvg <- RUVg(counts(umi.qc), erccs, k = 1)
 set_exprs(umi.qc, "ruvg1") <- ruvg$normalizedCounts
 ruvg <- RUVg(counts(umi.qc), erccs, k = 2)
 set_exprs(umi.qc, "ruvg2") <- ruvg$normalizedCounts
+set_exprs(umi.qc, "ruvg2_logcpm") <- log2(t(t(ruvg$normalizedCounts) / 
+                                           colSums(ruvg$normalizedCounts)) + 1)
 ```
 
 ### RUVs
@@ -71,6 +80,8 @@ ruvs <- RUVs(counts(umi.qc), cIdx, k = 1, scIdx = scIdx, isLog = FALSE)
 set_exprs(umi.qc, "ruvs1") <- ruvs$normalizedCounts
 ruvs <- RUVs(counts(umi.qc), cIdx, k = 2, scIdx = scIdx, isLog = FALSE)
 set_exprs(umi.qc, "ruvs2") <- ruvs$normalizedCounts
+set_exprs(umi.qc, "ruvs2_logcpm") <- log2(t(t(ruvs$normalizedCounts) / 
+                                           colSums(ruvs$normalizedCounts)) + 1)
 ```
 
 ## Effectiveness 1
@@ -130,6 +141,20 @@ plotPCA(
 
 <img src="14-remove-conf_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" />
 
+```r
+plotPCA(
+    umi.qc[endog_genes, ],
+    colour_by = "batch",
+    size_by = "total_features",
+    shape_by = "individual",
+    exprs_values = "ruvs2_logcpm") +
+    ggtitle("PCA - RUVs normalisation log2-cpm: k = 2")
+```
+
+<img src="14-remove-conf_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" />
+
+Plotting log2-normalized CPM from RUVs with k = 2 looks to give the best separation of cells by individual.
+
 ## Effectiveness 2
 
 We can also examine the effectiveness of correction using the relative log expression (RLE) across cells to confirm technical noise has been removed from the dataset.
@@ -159,7 +184,9 @@ keep <- umi.qc$individual == "NA19101"
 design <- model.matrix(~umi.qc[, keep]$batch)
 ```
 
-We will use the [edgeR](http://bioconductor.org/packages/edgeR) package to calculate DE genes.
+We will use the [edgeR](http://bioconductor.org/packages/edgeR) package to calculate DE genes between plates for this particular individual. Recall that the input data for edgeR (and similar methods like DESeq2) must always be raw counts.
+
+The particular coefficient that we test for DE in each case below tests to for genes that show a difference in expression between replicate plate 3 and replicate plate 1.
 
 ### DE (raw counts)
 
@@ -209,7 +236,7 @@ summary(decideTestsDGE(res1))
 
 ```r
 plotSmear(
-    res1, 
+    res1, lowess = TRUE,
     de.tags = rownames(topTags(res1, n = sum(abs(decideTestsDGE(res1))))$table)
 )
 ```
@@ -219,36 +246,53 @@ plotSmear(
 ### DE (RUVg, k = 2)
 
 ```r
-dge2 <- DGEList(
-    counts = get_exprs(umi.qc[, keep], "ruvg2"), 
-    norm.factors = rep(1, sum(keep)),
-    group = umi.qc[, keep]$batch
-)
-dge2 <- estimateDisp(dge2, design = design, trend.method = "none")
-plotBCV(dge2)
+design_ruvg <- model.matrix(~ruvg$W[keep,] + umi.qc[, keep]$batch)
+head(design_ruvg)
+```
+
+```
+##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
+## 1           1        0.01010943       0.001956012
+## 2           1        0.01777997       0.009123186
+## 3           1        0.01968374       0.006157921
+## 4           1        0.01275973       0.017130060
+## 5           1        0.07081795      -0.005430952
+## 6           1        0.02911818       0.021727805
+##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
+## 1                              0                              0
+## 2                              0                              0
+## 3                              0                              0
+## 4                              0                              0
+## 5                              0                              0
+## 6                              0                              0
+```
+
+```r
+dge_ruvg <- estimateDisp(dge1, design = design_ruvg, trend.method = "none")
+plotBCV(dge_ruvg)
 ```
 
 <img src="14-remove-conf_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
-fit2 <- glmFit(dge2, design)
-res2 <- glmLRT(fit2, coef = 2)
+fit2 <- glmFit(dge_ruvg, design_ruvg)
+res2 <- glmLRT(fit2)
 topTags(res2)
 ```
 
 ```
-## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
-##                      logFC    logCPM       LR       PValue          FDR
-## ENSG00000185885 -1.2940992  8.848299 259.3045 2.432853e-58 3.421322e-54
-## ENSG00000112695 -0.5984239  9.654469 242.6075 1.062090e-54 7.468083e-51
-## ENSG00000127922 -0.4599139 10.172643 235.9477 3.008274e-53 1.410179e-49
-## ENSG00000198865  2.0844092  7.464237 235.3096 4.144451e-53 1.457085e-49
-## ENSG00000131969 -1.5918311  7.373035 222.2564 2.912221e-50 8.190913e-47
-## ENSG00000145423  0.8311869  8.944623 205.1051 1.606381e-46 3.765090e-43
-## ENSG00000167283 -0.4236592 10.077512 187.4446 1.148540e-42 2.307416e-39
-## ENSG00000184674 -2.2466016  6.268906 183.6732 7.646216e-42 1.344109e-38
-## ENSG00000014641 -0.5878931  9.230097 168.2078 1.822302e-38 2.847448e-35
-## ENSG00000026025  1.4699885  7.256207 167.1312 3.131671e-38 4.404069e-35
+## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
+##                      logFC   logCPM        LR       PValue          FDR
+## ENSG00000185885 -1.3174364 8.871753 217.14670 3.791218e-49 5.331591e-45
+## ENSG00000163106 -1.3722714 7.130682 128.37173 9.307179e-30 6.544343e-26
+## ENSG00000131969 -1.2168148 7.359236 118.81702 1.148503e-27 5.383799e-24
+## ENSG00000008311 -1.1845327 7.534209 111.42347 4.779029e-26 1.680187e-22
+## ENSG00000187193 -1.4168162 7.660033  86.83180 1.181542e-20 3.323205e-17
+## ENSG00000145423  0.5749357 8.929498  85.46301 2.360764e-20 5.533238e-17
+## ENSG00000110931 -1.2224083 6.553645  80.05106 3.648582e-19 7.330001e-16
+## ENSG00000196683 -0.4017256 9.555568  77.23020 1.521490e-18 2.674589e-15
+## ENSG00000214265 -0.4006635 9.237080  71.71226 2.489812e-17 3.890469e-14
+## ENSG00000150459  0.5101314 8.387922  68.60831 1.200971e-16 1.688925e-13
 ```
 
 ```r
@@ -257,14 +301,14 @@ summary(decideTestsDGE(res2))
 
 ```
 ##    [,1] 
-## -1  1757
-## 0  10072
-## 1   2234
+## -1  1039
+## 0  12237
+## 1    787
 ```
 
 ```r
 plotSmear(
-    res2, 
+    res2, lowess = TRUE,
     de.tags = rownames(topTags(res2, n = sum(abs(decideTestsDGE(res2))))$table)
 )
 ```
@@ -274,36 +318,53 @@ plotSmear(
 ### DE (RUVs, k = 2)
 
 ```r
-dge3 <- DGEList(
-    counts = get_exprs(umi.qc[, keep], "ruvs2"), 
-    norm.factors = rep(1, sum(keep)),
-    group = umi.qc[, keep]$batch
-)
-dge3 <- estimateDisp(dge3, design = design, trend.method = "none")
-plotBCV(dge3)
+design_ruvs <- model.matrix(~ruvs$W[keep,] + umi.qc[, keep]$batch)
+head(design_ruvs)
+```
+
+```
+##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
+## 1           1         0.2619953       -0.08220987
+## 2           1         0.2695799       -0.09943721
+## 3           1         0.2152265       -0.09724690
+## 4           1         0.2642097       -0.10269732
+## 5           1         0.2267828       -0.09645385
+## 6           1         0.2910819       -0.09367850
+##   umi.qc[, keep]$batchNA19101.r2 umi.qc[, keep]$batchNA19101.r3
+## 1                              0                              0
+## 2                              0                              0
+## 3                              0                              0
+## 4                              0                              0
+## 5                              0                              0
+## 6                              0                              0
+```
+
+```r
+dge_ruvs <- estimateDisp(dge1, design = design_ruvs, trend.method = "none")
+plotBCV(dge_ruvs)
 ```
 
 <img src="14-remove-conf_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
-fit3 <- glmFit(dge3, design)
-res3 <- glmLRT(fit3, coef = 2)
+fit3 <- glmFit(dge_ruvs, design_ruvs)
+res3 <- glmLRT(fit3)
 topTags(res3)
 ```
 
 ```
-## Coefficient:  umi.qc[, keep]$batchNA19101.r2 
+## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
 ##                      logFC    logCPM        LR       PValue          FDR
-## ERCC-00096       0.3565316 14.413429 135.99061 2.004766e-31 2.819303e-27
-## ERCC-00130       0.2943996 15.221291 111.41547 4.798340e-26 3.373953e-22
-## ERCC-00002       0.3122361 14.275886  83.78178 5.525179e-20 2.590020e-16
-## ERCC-00113       0.3688776 12.596908  69.48107 7.715159e-17 2.712457e-13
-## ENSG00000108518  0.8294795  9.840062  67.23541 2.409469e-16 6.776873e-13
-## ENSG00000114315 -1.8333183  8.584396  66.12574 4.230542e-16 9.915686e-13
-## ERCC-00074       0.2295402 14.587069  61.07973 5.480964e-15 1.101126e-11
-## ENSG00000240972  0.6549418 10.188124  55.38987 9.884438e-14 1.737561e-10
-## ENSG00000142871 -1.3716646  8.753340  52.06089 5.380592e-13 8.407475e-10
-## ENSG00000125144 -2.3428345  8.845632  50.17383 1.407117e-12 1.978829e-09
+## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
+## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
+## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
+## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
+## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
+## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
+## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
+## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
+## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
+## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17
 ```
 
 ```r
@@ -312,19 +373,79 @@ summary(decideTestsDGE(res3))
 
 ```
 ##    [,1] 
-## -1   328
-## 0  13449
-## 1    286
+## -1   876
+## 0  12609
+## 1    578
 ```
 
 ```r
 plotSmear(
-    res3, 
+    res3, lowess = TRUE,
     de.tags = rownames(topTags(res3, n = sum(abs(decideTestsDGE(res3))))$table)
 )
 ```
 
 <img src="14-remove-conf_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
+
+In the above analyses, we have ignored size factors between cells. A typical edgeR analysis would always include these.
+
+
+```r
+dge_ruvs$samples$norm.factors <- sizeFactors(umi.qc)[keep]
+```
+
+```
+## Warning in .local(object, ...): 'sizeFactors' have not been set
+```
+
+```r
+dge_ruvs_sf <- estimateDisp(dge_ruvs, design = design_ruvs, trend.method = "none")
+plotBCV(dge_ruvs_sf)
+```
+
+<img src="14-remove-conf_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+
+```r
+fit4 <- glmFit(dge_ruvs_sf, design_ruvs)
+res4 <- glmLRT(fit4)
+topTags(res4)
+```
+
+```
+## Coefficient:  umi.qc[, keep]$batchNA19101.r3 
+##                      logFC    logCPM        LR       PValue          FDR
+## ENSG00000144713  0.4128927 10.580211 126.45399 2.446079e-29 3.439921e-25
+## ENSG00000137818  0.2964018 11.606043 122.06746 2.231214e-28 1.568878e-24
+## ENSG00000105372  0.3266439 11.555782 116.13967 4.429746e-27 2.076517e-23
+## ENSG00000185885 -1.0832910  8.871543 107.26639 3.891781e-25 1.368253e-21
+## ENSG00000162244  0.4920933  9.846306  97.28089 6.015816e-23 1.692008e-19
+## ENSG00000181163  0.2865645 11.478855  94.62337 2.302830e-22 5.397449e-19
+## ENSG00000174748  0.3857506 10.667147  89.43624 3.166816e-21 6.362134e-18
+## ENSG00000150459  0.6417026  8.391754  85.37323 2.470423e-20 4.342695e-17
+## ENSG00000240972  0.5080671 10.390759  84.80951 3.285399e-20 5.133619e-17
+## ENSG00000177954  0.4557659 11.015973  84.12838 4.636678e-20 6.520560e-17
+```
+
+```r
+summary(decideTestsDGE(res4))
+```
+
+```
+##    [,1] 
+## -1   876
+## 0  12609
+## 1    578
+```
+
+```r
+plotSmear(
+    res4, lowess = TRUE,
+    de.tags = rownames(topTags(res4, n = sum(abs(decideTestsDGE(res4))))$table)
+)
+```
+
+<img src="14-remove-conf_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+
 
 ## Exercise
 

@@ -142,6 +142,14 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("TSCAN")
 ```
 
+[monocle](https://bioconductor.org/packages/monocle) for pseudotime analysis:
+
+```r
+## try http:// if https:// URLs are not supported
+source("https://bioconductor.org/biocLite.R")
+biocLite("monocle")
+```
+
 [destiny](https://bioconductor.org/packages/destiny) for pseudotime analysis:
 
 ```r

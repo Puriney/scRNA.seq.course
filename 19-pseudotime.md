@@ -80,7 +80,7 @@ tmp <-
     factor(
         cellLabels[as.numeric(pseudotime_order_tscan)],
         levels = c("early2cell", "mid2cell", "late2cell", "4cell", "8cell", 
-                   "16cell", "midblast", "earlyblast", "lateblast")
+                   "16cell", "earlyblast", "midblast", "lateblast")
     )
 plot(
     as.numeric(tmp), 
@@ -150,12 +150,18 @@ pseudotime_order_monocle <-
 We can again compare the inferred pseudotime to the known sampling timepoints.
 
 ```r
+monocle_time_point = factor( 
+     pseudotime_monocle$Timepoint,
+     levels = c("early2cell", "mid2cell", "late2cell", "4cell", "8cell", 
+                   "16cell", "earlyblast", "midblast", "lateblast")
+)
+
 plot(
     pseudotime_monocle$pseudotime, 
-    pseudotime_monocle$Timepoint, 
+    monocle_time_point, 
     xlab="Pseudotime", 
     ylab="Timepoint",
-    col = colours[pseudotime_monocle$Timepoint],
+    col = colours[monocle_time_point],
     pch = 16
 )
 ```
@@ -180,8 +186,8 @@ tmp <- factor(
         "4cell", 
         "8cell", 
         "16cell", 
-        "midblast", 
         "earlyblast", 
+        "midblast", 
         "lateblast"
     )
 )
@@ -197,7 +203,7 @@ plot(
 
 <img src="19-pseudotime_files/figure-html/destiny-deng-1.png" width="672" style="display: block; margin: auto;" />
 
-Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones. 
+Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones.
 
 __Exercise 2__ Do you get a better resolution between the later time points by considering additional eigenvectors?
 
@@ -214,7 +220,7 @@ matched_ordering <-
         pseudotime_order_monocle
     )
 timepoint_ordered <- 
-    pseudotime_monocle[order(pseudotime_monocle$pseudotime), 1]
+    monocle_time_point[order(pseudotime_monocle$pseudotime)]
 plot(
     matched_ordering, 
     xlab = "Monocle Order", 
