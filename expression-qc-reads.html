@@ -26,7 +26,7 @@
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
   
-<meta name="date" content="2016-10-25">
+<meta name="date" content="2016-10-26">
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
@@ -343,7 +343,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="25" data-path="advanced-exercises.html"><a href="advanced-exercises.html"><i class="fa fa-check"></i><b>25</b> Advanced exercises</a></li>
 <li class="chapter" data-level="26" data-path="resources.html"><a href="resources.html"><i class="fa fa-check"></i><b>26</b> Resources</a><ul>
 <li class="chapter" data-level="26.1" data-path="resources.html"><a href="resources.html#scrna-seq-protocols"><i class="fa fa-check"></i><b>26.1</b> scRNA-seq protocols</a></li>
-<li class="chapter" data-level="26.2" data-path="resources.html"><a href="resources.html#scrna-seq-analysis-tools"><i class="fa fa-check"></i><b>26.2</b> scRNA-seq analysis tools</a></li>
+<li class="chapter" data-level="26.2" data-path="resources.html"><a href="resources.html#external-rna-control-consortium-ercc"><i class="fa fa-check"></i><b>26.2</b> External RNA Control Consortium (ERCC)</a></li>
+<li class="chapter" data-level="26.3" data-path="resources.html"><a href="resources.html#scrna-seq-analysis-tools"><i class="fa fa-check"></i><b>26.3</b> scRNA-seq analysis tools</a></li>
 </ul></li>
 <li class="chapter" data-level="27" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>27</b> References</a></li>
 <li class="divider"></li>
@@ -581,16 +582,6 @@ Figure 8.2: Histogram of the number of detected genes in all cells
 </table>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPhenoData</span>(
     reads,
-    <span class="kw">aes</span>(<span class="dt">x =</span> total_features, <span class="dt">y =</span> <span class="kw">log10</span>(total_counts), <span class="dt">colour =</span> batch)
-)</code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:total-features-vs-counts-reads"></span>
-<img src="07-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
-<p class="caption">
-Figure 8.3: Library size vs number of detected genes
-</p>
-</div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPhenoData</span>(
-    reads,
     <span class="kw">aes_string</span>(<span class="dt">x =</span> <span class="st">&quot;total_features&quot;</span>,
                <span class="dt">y =</span> <span class="st">&quot;pct_counts_feature_controls_MT&quot;</span>,
                <span class="dt">colour =</span> <span class="st">&quot;batch&quot;</span>)
@@ -598,7 +589,7 @@ Figure 8.3: Library size vs number of detected genes
 <div class="figure" style="text-align: center"><span id="fig:mt-vs-counts-reads"></span>
 <img src="07-exprs-qc-reads_files/figure-html/mt-vs-counts-reads-1.png" alt="Percentage of counts in MT genes" width="90%" />
 <p class="caption">
-Figure 8.4: Percentage of counts in MT genes
+Figure 8.3: Percentage of counts in MT genes
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotPhenoData</span>(
@@ -610,7 +601,7 @@ Figure 8.4: Percentage of counts in MT genes
 <div class="figure" style="text-align: center"><span id="fig:ercc-vs-counts-reads"></span>
 <img src="07-exprs-qc-reads_files/figure-html/ercc-vs-counts-reads-1.png" alt="Percentage of counts in ERCCs" width="90%" />
 <p class="caption">
-Figure 8.5: Percentage of counts in ERCCs
+Figure 8.4: Percentage of counts in ERCCs
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_by_ERCC &lt;-<span class="st"> </span>reads$batch !=<span class="st"> &quot;NA19098.r2&quot;</span> &amp;
@@ -870,7 +861,7 @@ scater::<span class="kw">plotPCA</span>(reads,
 <div class="figure" style="text-align: center"><span id="fig:auto-cell-filt-reads"></span>
 <img src="07-exprs-qc-reads_files/figure-html/auto-cell-filt-reads-1.png" alt="PCA plot used for automatic detection of cell outliers" width="90%" />
 <p class="caption">
-Figure 8.6: PCA plot used for automatic detection of cell outliers
+Figure 8.5: PCA plot used for automatic detection of cell outliers
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(
@@ -910,14 +901,14 @@ limma::<span class="kw">vennDiagram</span>(venn.diag,
 <div class="figure" style="text-align: center"><span id="fig:cell-filt-comp-reads"></span>
 <img src="07-exprs-qc-reads_files/figure-html/cell-filt-comp-reads-1.png" alt="Comparison of the default, automatic and manual cell filters" width="90%" />
 <p class="caption">
-Figure 8.7: Comparison of the default, automatic and manual cell filters
+Figure 8.6: Comparison of the default, automatic and manual cell filters
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">scater::<span class="kw">plotQC</span>(reads, <span class="dt">type =</span> <span class="st">&quot;highest-expression&quot;</span>)</code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:top50-gene-expr-reads"></span>
 <img src="07-exprs-qc-reads_files/figure-html/top50-gene-expr-reads-1.png" alt="Number of total counts consumed by the top 50 expressed genes" width="90%" />
 <p class="caption">
-Figure 8.8: Number of total counts consumed by the top 50 expressed genes
+Figure 8.7: Number of total counts consumed by the top 50 expressed genes
 </p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filter_genes &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">counts</span>(reads[, <span class="kw">pData</span>(reads)$use]), <span class="dv">1</span>, 
@@ -953,7 +944,7 @@ Figure 8.8: Number of total counts consumed by the top 50 expressed genes
 ##    16061      605</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(reads, <span class="dt">file =</span> <span class="st">&quot;blischak/reads.rds&quot;</span>)</code></pre></div>
 <p>If you want to further check yourself you can download our <a href="http://hemberg-lab.github.io/scRNA.seq.course/blischak/reads.rds"><code>reads</code></a> object. If you followed the steps above it should be exactly the same as yours.</p>
-<p>By comparing Figure <a href="expression-qc-umi.html#fig:cell-filt-comp">7.6</a> and Figure <a href="expression-qc-reads.html#fig:cell-filt-comp-reads">8.7</a>, it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.</p>
+<p>By comparing Figure <a href="expression-qc-umi.html#fig:cell-filt-comp">7.6</a> and Figure <a href="expression-qc-reads.html#fig:cell-filt-comp-reads">8.6</a>, it is clear that the reads based filtering removed 49 more cells than the UMI based analysis. If you go back and compare the results you should be able to conclude that the ERCC and MT filters are more strict for the reads-based analysis.</p>
 
 </div>
             </section>

@@ -176,19 +176,6 @@ TRUE                        744
 ```r
 scater::plotPhenoData(
     reads,
-    aes(x = total_features, y = log10(total_counts), colour = batch)
-)
-```
-
-<div class="figure" style="text-align: center">
-<img src="07-exprs-qc-reads_files/figure-html/total-features-vs-counts-reads-1.png" alt="Library size vs number of detected genes" width="90%" />
-<p class="caption">(\#fig:total-features-vs-counts-reads)Library size vs number of detected genes</p>
-</div>
-
-
-```r
-scater::plotPhenoData(
-    reads,
     aes_string(x = "total_features",
                y = "pct_counts_feature_controls_MT",
                colour = "batch")
