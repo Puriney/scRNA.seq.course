@@ -207,3 +207,11 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("MultiAssayExperiment")
 ```
 
+[SummarizedExperiment](https://bioconductor.org/packages/SummarizedExperiment) for working with [conquer](http://imlspenticton.uzh.ch:3838/conquer/) datasets:
+
+```r
+## try http:// if https:// URLs are not supported
+source("https://bioconductor.org/biocLite.R")
+biocLite("SummarizedExperiment")
+```
+
