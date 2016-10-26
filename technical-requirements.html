@@ -136,6 +136,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5" data-path="technical-requirements.html"><a href="technical-requirements.html#dropouts"><i class="fa fa-check"></i><b>2.5</b> Dropouts</a></li>
 <li class="chapter" data-level="2.6" data-path="technical-requirements.html"><a href="technical-requirements.html#pseudotime"><i class="fa fa-check"></i><b>2.6</b> Pseudotime</a></li>
 <li class="chapter" data-level="2.7" data-path="technical-requirements.html"><a href="technical-requirements.html#differential-expression"><i class="fa fa-check"></i><b>2.7</b> Differential Expression</a></li>
+<li class="chapter" data-level="2.8" data-path="technical-requirements.html"><a href="technical-requirements.html#extra-tools"><i class="fa fa-check"></i><b>2.8</b> Extra tools</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html"><i class="fa fa-check"></i><b>3</b> Introduction to single-cell RNA-seq</a><ul>
 <li class="chapter" data-level="3.1" data-path="introduction-to-single-cell-rna-seq.html"><a href="introduction-to-single-cell-rna-seq.html#bulk-rna-seq"><i class="fa fa-check"></i><b>3.1</b> Bulk RNA-seq</a></li>
@@ -466,6 +467,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /</code></pre></li>
 <li><p>See the <a href="http://hms-dbmi.github.io/scde/help.html">help page</a> for additional support.</p></li>
 </ul>
+</div>
+<div id="extra-tools" class="section level2">
+<h2><span class="header-section-number">2.8</span> Extra tools</h2>
+<p><a href="https://bioconductor.org/packages/MultiAssayExperiment">MultiAssayExperiment</a> for working with <a href="http://imlspenticton.uzh.ch:3838/conquer/">conquer</a> datasets:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## try http:// if https:// URLs are not supported
+<span class="kw">source</span>(<span class="st">&quot;https://bioconductor.org/biocLite.R&quot;</span>)
+<span class="kw">biocLite</span>(<span class="st">&quot;MultiAssayExperiment&quot;</span>)</code></pre></div>
 
 </div>
 </div>
