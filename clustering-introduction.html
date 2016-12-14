@@ -8,7 +8,7 @@
   <title>Analysis of single cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,14 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-  
-<meta name="date" content="2016-11-15">
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+<meta name="date" content="2016-12-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -428,9 +422,9 @@ Figure 17.2: The hierarchical clustering dendrogram
 <h3><span class="header-section-number">17.3.2</span> k-means</h3>
 <p>In <a href="https://en.wikipedia.org/wiki/K-means_clustering"><em>k</em>-means clustering</a>, the goal is to partition <em>N</em> cells into <em>k</em> different clusters. In an iterative manner, cluster centers are assigned and each cell is assigned to its nearest cluster:</p>
 <div class="figure" style="text-align: center"><span id="fig:clust-k-means"></span>
-<img src="figures/k-means.png" alt="Schematic representation of the _k_-means clustering" width="100%" />
+<img src="figures/k-means.png" alt="Schematic representation of the k-means clustering" width="100%" />
 <p class="caption">
-Figure 17.3: Schematic representation of the <em>k</em>-means clustering
+Figure 17.3: Schematic representation of the k-means clustering
 </p>
 </div>
 <p>Most methods for scRNA-seq analysis includes a <em>k</em>-means step at some point.</p>
@@ -542,6 +536,7 @@ Figure 17.5: SC3 pipeline
 require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
@@ -559,7 +554,7 @@ gitbook.start({
 "link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/16-clust-intro.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["scRNA-seq-course.pdf"],
 "toc": {
 "collapse": "section"
 },

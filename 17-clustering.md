@@ -121,46 +121,30 @@ res <- unique(scRNA.seq.funcs::merge_pcaReduce_results(pca.red, 3))
 pheatmap(res, legend = FALSE, show_rownames = FALSE, main = "Columns - cells, Rows - clusterings, Colors - clusters")
 ```
 
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-pca-reduce3-1} 
-
-}
-
-\caption{Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$}(\#fig:clust-pca-reduce3)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-pca-reduce3-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$" width="672" />
+<p class="caption">(\#fig:clust-pca-reduce3)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=3$</p>
+</div>
 
 __Exercise 6__: Run pcaReduce for $k=2$, $k=4$ and $k=5$. Is it easy to choose the optimal $k$?
 
 __Hint__: When running pcaReduce for different $k$s you do not need to rerun pcaReduce::PCAreduce function, just use already calculated `pca.red` object.
 
 __Our solutions__:
-\begin{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-pca-reduce2-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$." width="672" />
+<p class="caption">(\#fig:clust-pca-reduce2)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$.</p>
+</div>
 
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-pca-reduce2-1} 
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-pca-reduce4-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$." width="672" />
+<p class="caption">(\#fig:clust-pca-reduce4)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$.</p>
+</div>
 
-}
-
-\caption{Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=2$.}(\#fig:clust-pca-reduce2)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-pca-reduce4-1} 
-
-}
-
-\caption{Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=4$.}(\#fig:clust-pca-reduce4)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-pca-reduce5-1} 
-
-}
-
-\caption{Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$.}(\#fig:clust-pca-reduce5)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-pca-reduce5-1.png" alt="Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$." width="672" />
+<p class="caption">(\#fig:clust-pca-reduce5)Clustering solutions of pcaReduce method after running it for 10 times and selecting $k=5$.</p>
+</div>
 
 __Exercise 7__: Compare the results between `SC3` and `pcaReduce`. What is
 the main difference between the solutions provided by the two
@@ -181,14 +165,10 @@ ggplot2::ggplot(df_to_plot, aes_string(x = comps[1], y = comps[2])) +
     theme_bw()
 ```
 
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-tsne-1} 
-
-}
-
-\caption{tSNE map of the patient data}(\#fig:clust-tsne)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-tsne-1.png" alt="tSNE map of the patient data" width="672" />
+<p class="caption">(\#fig:clust-tsne)tSNE map of the patient data</p>
+</div>
 
 Note that all points on the plot above are black. This is different from what we saw before, when the cells were coloured based on the annotation. Here we do not have any annotation and all cells come from the same batch, therefore all dots are black.
 
@@ -212,14 +192,10 @@ ggplot2::ggplot(df_to_plot,
     theme_bw()
 ```
 
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-tsne-kmeans2-1} 
-
-}
-
-\caption{tSNE map of the patient data with 2 colored clusters, identified by the k-means clustering algorithm}(\#fig:clust-tsne-kmeans2)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-tsne-kmeans2-1.png" alt="tSNE map of the patient data with 2 colored clusters, identified by the k-means clustering algorithm" width="672" />
+<p class="caption">(\#fig:clust-tsne-kmeans2)tSNE map of the patient data with 2 colored clusters, identified by the k-means clustering algorithm</p>
+</div>
 
 __Exercise 7__: Make the same plots for $k=3$, $k=4$ and $k=5$.
 
@@ -242,32 +218,20 @@ __Exercise 9__: Visualize the different clustering solutions using a
 heatmap. Then run tSNE+kmeans algorithm with $k = 2$ or $k = 4$ and
 see how the clustering looks like in these cases.
 
-\begin{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-tsne-kmeans3-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$" width="672" />
+<p class="caption">(\#fig:clust-tsne-kmeans3)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$</p>
+</div>
 
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-tsne-kmeans3-1} 
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-tsne-kmeans2-mult-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$" width="672" />
+<p class="caption">(\#fig:clust-tsne-kmeans2-mult)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$</p>
+</div>
 
-}
-
-\caption{Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=3$}(\#fig:clust-tsne-kmeans3)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-tsne-kmeans2-mult-1} 
-
-}
-
-\caption{Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=2$}(\#fig:clust-tsne-kmeans2-mult)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-tsne-kmeans4-1} 
-
-}
-
-\caption{Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$}(\#fig:clust-tsne-kmeans4)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-tsne-kmeans4-1.png" alt="Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$" width="672" />
+<p class="caption">(\#fig:clust-tsne-kmeans4)Clustering solutions of tSNE+kmeans method after running it for 10 times and using $k=4$</p>
+</div>
 
 ## SNN-Cliq
 
@@ -355,14 +319,10 @@ __Exercise 11__: Visualize the SINCERA results as a heatmap. How do the
 results compare to the other methods? What happens if you choose $k = 3$?
 
 __Our answer:__
-\begin{figure}
-
-{\centering \includegraphics{17-clustering_files/figure-latex/clust-sincera-1} 
-
-}
-
-\caption{Clustering solutions of SINCERA method using $k=3$}(\#fig:clust-sincera)
-\end{figure}
+<div class="figure" style="text-align: center">
+<img src="17-clustering_files/figure-html/clust-sincera-1.png" alt="Clustering solutions of SINCERA method using $k=3$" width="672" />
+<p class="caption">(\#fig:clust-sincera)Clustering solutions of SINCERA method using $k=3$</p>
+</div>
 
 __Exercise 12__: Is using the singleton cluster criteria for finding __k__ a good idea?
 
@@ -400,9 +360,7 @@ d <- mean.var.plot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{17-clustering_files/figure-latex/unnamed-chunk-14-1} \end{center}
+<img src="17-clustering_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 # Run a PCA using the variable genes as input
@@ -477,9 +435,7 @@ d <- DBclust_dimension(
 tsne.plot(d, pt.size = 1)
 ```
 
-
-
-\begin{center}\includegraphics{17-clustering_files/figure-latex/unnamed-chunk-14-2} \end{center}
+<img src="17-clustering_files/figure-html/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 13__: As you can see DBSCAN could find only one cluster. It is known that DBSCAN cannot cluster data sets well with large differences in densities, since the _G.use_ parameter cannot then be chosen appropriately for all clusters. Try to change _G.use_ to be able to find more than one cluster in the data.
 

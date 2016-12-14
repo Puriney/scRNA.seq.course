@@ -52,9 +52,7 @@ dengclust <- TSCAN::exprmclust(procdeng, clusternum = 10)
 TSCAN::plotmclust(dengclust)
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/tscan-all-genes-1} \end{center}
+<img src="19-pseudotime_files/figure-html/tscan-all-genes-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 dengorderTSCAN <- TSCAN::TSCANorder(dengclust, orderonly = F)
@@ -93,9 +91,7 @@ plot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/tscan-vs-truth-1} \end{center}
+<img src="19-pseudotime_files/figure-html/tscan-vs-truth-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 1__ Compare results for different numbers of clusters (`clusternum`).
 
@@ -112,9 +108,7 @@ m3dGenes <- as.character(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/m3d-select-genes-1} \end{center}
+<img src="19-pseudotime_files/figure-html/m3d-select-genes-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 d <- deng[which(rownames(deng) %in% m3dGenes), ]
@@ -138,9 +132,7 @@ dCellDataSet <- monocle::orderCells(dCellDataSet, reverse = F, num_paths = 1)
 monocle::plot_spanning_tree(dCellDataSet)
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/monocle-all-genes-1} \end{center}
+<img src="19-pseudotime_files/figure-html/monocle-all-genes-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 # Store the ordering
@@ -174,9 +166,7 @@ plot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/monocle-vs-truth-1} \end{center}
+<img src="19-pseudotime_files/figure-html/monocle-vs-truth-1.png" width="672" style="display: block; margin: auto;" />
 
 ## Diffusion maps
 
@@ -211,9 +201,7 @@ plot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/destiny-deng-1} \end{center}
+<img src="19-pseudotime_files/figure-html/destiny-deng-1.png" width="672" style="display: block; margin: auto;" />
 
 Like the other methods, destiny does a good job at ordering the early time-points, but it is unable to distinguish the later ones.
 
@@ -242,9 +230,7 @@ plot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/tscan-monocle-compare-1} \end{center}
+<img src="19-pseudotime_files/figure-html/tscan-monocle-compare-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 4__ Compare destiny to TSCAN and Monocle.
 
@@ -261,9 +247,7 @@ TSCAN::singlegeneplot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/Obox6-tscan-1} \end{center}
+<img src="19-pseudotime_files/figure-html/Obox6-tscan-1.png" width="672" style="display: block; margin: auto;" />
 
 __Monocle__
 
@@ -274,8 +258,6 @@ monocle::plot_genes_in_pseudotime(
 )
 ```
 
-
-
-\begin{center}\includegraphics{19-pseudotime_files/figure-latex/Obox6-monocle-1} \end{center}
+<img src="19-pseudotime_files/figure-html/Obox6-monocle-1.png" width="672" style="display: block; margin: auto;" />
 
 __Exercise 5__: Repeat the exercise using a subset of the genes, e.g. the set of highly variable genes that can be obtained using M3Drop::Brennecke_getVariableGenes

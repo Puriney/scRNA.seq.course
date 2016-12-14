@@ -67,9 +67,7 @@ plotPCA(
     ggtitle("PCA - RUVg normalisation: k = 1")
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-5-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 plotPCA(
@@ -81,9 +79,7 @@ plotPCA(
     ggtitle("PCA - RUVg normalisation: k = 2")
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-5-2} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 plotPCA(
@@ -95,9 +91,7 @@ plotPCA(
     ggtitle("PCA - RUVs normalisation: k = 1")
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-5-3} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 plotPCA(
@@ -109,9 +103,7 @@ plotPCA(
     ggtitle("PCA - RUVs normalisation: k = 2")
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-5-4} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 plotPCA(
@@ -123,9 +115,7 @@ plotPCA(
     ggtitle("PCA - RUVs normalisation log2-cpm: k = 2")
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-5-5} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" />
 
 ## Effectiveness 2
 
@@ -142,9 +132,7 @@ boxplot(
 )
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-6-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" />
 
 ## Effectiveness 3
 
@@ -170,9 +158,7 @@ dge1 <- estimateDisp(dge1, design = design, trend.method = "none")
 plotBCV(dge1)
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-8-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 fit1 <- glmFit(dge1, design)
@@ -182,17 +168,17 @@ topTags(res1)
 
 ```
 ## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
-##                     logFC   logCPM       LR       PValue          FDR
-## ENSG00000138650 -7.678806 2.003747 33.84554 5.966578e-09 9.582922e-05
-## ENSG00000109743  7.667826 1.989344 31.97871 1.558716e-08 1.251727e-04
-## ENSG00000044446  6.087456 3.657979 29.89003 4.572581e-08 2.448007e-04
-## ENSG00000160307  6.768762 1.307775 27.95346 1.242684e-07 4.978484e-04
-## ENSG00000146021  5.784734 3.135279 27.52613 1.549867e-07 4.978484e-04
-## ENSG00000112137  6.132768 1.292363 27.14609 1.886459e-07 5.049737e-04
-## ENSG00000214188  6.988412 1.485779 25.73225 3.922183e-07 8.999170e-04
-## ENSG00000171551  6.742559 1.289356 25.12943 5.360833e-07 9.988565e-04
-## ENSG00000171208  6.307105 3.643464 25.04622 5.597228e-07 9.988565e-04
-## ENSG00000131849  6.618593 1.204518 23.98708 9.698418e-07 1.415977e-03
+##                     logFC    logCPM       LR       PValue         FDR
+## ENSG00000165115 -7.792113 2.3887218 26.19783 3.081679e-07 0.002884342
+## ENSG00000140280  7.300312 1.6569522 25.85753 3.675684e-07 0.002884342
+## ENSG00000105877 -6.966115 1.4022300 24.36423 7.973575e-07 0.002884342
+## ENSG00000155542  7.637098 2.0975586 23.91593 1.006354e-06 0.002884342
+## ENSG00000087116 -5.697505 0.6201158 23.87020 1.030550e-06 0.002884342
+## ENSG00000144476  7.094743 1.5421854 23.78440 1.077520e-06 0.002884342
+## ENSG00000177483 -5.788801 0.6504550 23.05738 1.572381e-06 0.002949070
+## ENSG00000165105 -6.407054 1.0143121 22.94208 1.669570e-06 0.002949070
+## ENSG00000057704 -7.953420 2.2337620 22.72356 1.870600e-06 0.002949070
+## ENSG00000105642  6.306497 0.9597862 22.47384 2.130253e-06 0.002949070
 ```
 
 ```r
@@ -201,9 +187,9 @@ summary(decideTestsDGE(res1))
 
 ```
 ##    [,1] 
-## -1   441
-## 0  14859
-## 1    761
+## -1   541
+## 0  14783
+## 1    737
 ```
 
 ```r
@@ -213,9 +199,7 @@ plotSmear(
 )
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-8-2} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" />
 
 ### DE (RUVg, k = 2)
 
@@ -226,12 +210,12 @@ head(design_ruvg)
 
 ```
 ##   (Intercept) ruvg$W[keep, ]W_1 ruvg$W[keep, ]W_2
-## 1           1       0.016561929      -0.008540817
-## 2           1      -0.025856039       0.027531992
-## 3           1      -0.009896783       0.019871106
-## 4           1       0.125910579       0.007593017
-## 5           1      -0.006315637       0.035765872
-## 6           1      -0.049085371      -0.010073119
+## 1           1       -0.01544610        0.04957296
+## 2           1        0.01829566        0.06354737
+## 3           1        0.01814940       -0.06327037
+## 4           1       -0.02585604        0.02753199
+## 5           1       -0.01483137        0.05209915
+## 6           1        0.01188452        0.06237138
 ##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
 ## 1                                0                                0
 ## 2                                0                                0
@@ -246,9 +230,7 @@ dge_ruvg <- estimateDisp(dge1, design = design_ruvg, trend.method = "none")
 plotBCV(dge_ruvg)
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-9-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 fit2 <- glmFit(dge_ruvg, design_ruvg)
@@ -259,16 +241,16 @@ topTags(res2)
 ```
 ## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
 ##                     logFC    logCPM       LR       PValue          FDR
-## ENSG00000138650 -7.710654 2.0040978 33.39202 7.533247e-09 0.0001209915
-## ENSG00000146021  6.307282 3.1352154 31.77292 1.732924e-08 0.0001391625
-## ENSG00000044446  6.303099 3.6579550 30.61585 3.145133e-08 0.0001683799
-## ENSG00000163219 -4.822317 0.8585435 26.69957 2.376748e-07 0.0007734088
-## ENSG00000160307  6.512451 1.3076718 26.48642 2.653971e-07 0.0007734088
-## ENSG00000112137  6.072095 1.2925307 26.32234 2.889267e-07 0.0007734088
-## ENSG00000189134 -4.366128 0.5390822 25.74219 3.902025e-07 0.0008764743
-## ENSG00000145431  7.026457 2.1802636 25.52551 4.365727e-07 0.0008764743
-## ENSG00000169403  8.557565 2.2185715 25.05101 5.583337e-07 0.0009963775
-## ENSG00000109743  6.501223 1.9894723 24.72481 6.612748e-07 0.0010620735
+## ENSG00000143127  6.393263 1.3905478 27.77041 1.365996e-07 0.0008543374
+## ENSG00000151014 -7.739377 1.4502069 26.67914 2.402013e-07 0.0008543374
+## ENSG00000204538 -5.703323 0.6028395 26.50373 2.630294e-07 0.0008543374
+## ENSG00000165959 -8.137890 2.2748771 26.16507 3.134420e-07 0.0008543374
+## ENSG00000083844 -7.456655 1.0307443 26.04695 3.332154e-07 0.0008543374
+## ENSG00000140280  7.452433 1.6571621 25.84269 3.704051e-07 0.0008543374
+## ENSG00000165698 -6.119602 0.8832588 25.19172 5.190466e-07 0.0008543374
+## ENSG00000105877 -6.746347 1.4023211 25.05371 5.575546e-07 0.0008543374
+## ENSG00000153208  8.123110 2.7499421 24.97353 5.812274e-07 0.0008543374
+## ENSG00000161381  6.157689 1.0884471 24.95866 5.857296e-07 0.0008543374
 ```
 
 ```r
@@ -277,9 +259,9 @@ summary(decideTestsDGE(res2))
 
 ```
 ##    [,1] 
-## -1   371
-## 0  15345
-## 1    345
+## -1   252
+## 0  15547
+## 1    262
 ```
 
 ```r
@@ -289,9 +271,7 @@ plotSmear(
 )
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-9-2} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" />
 
 ### DE (RUVs, k = 2)
 
@@ -302,12 +282,12 @@ head(design_ruvs)
 
 ```
 ##   (Intercept) ruvs$W[keep, ]W_1 ruvs$W[keep, ]W_2
-## 1           1         0.3393820         0.2006604
-## 2           1         0.2879353         0.1807737
-## 3           1         0.3176779         0.2226902
-## 4           1         0.3775897         0.1547174
-## 5           1         0.3144554         0.1941110
-## 6           1         0.2172195         0.1480125
+## 1           1         0.3093128         0.1938905
+## 2           1         0.2871249         0.2263144
+## 3           1         0.2702873         0.2169784
+## 4           1         0.2879353         0.1807737
+## 5           1         0.2947330         0.1690802
+## 6           1         0.3544075         0.2425527
 ##   reads.qc[, keep]$batchNA19101.r2 reads.qc[, keep]$batchNA19101.r3
 ## 1                                0                                0
 ## 2                                0                                0
@@ -322,9 +302,7 @@ dge_ruvs <- estimateDisp(dge1, design = design_ruvs, trend.method = "none")
 plotBCV(dge_ruvs)
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-10-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 fit3 <- glmFit(dge_ruvs, design_ruvs)
@@ -335,16 +313,16 @@ topTags(res3)
 ```
 ## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
 ##                     logFC    logCPM       LR       PValue          FDR
-## ENSG00000138650 -7.822534 2.0041784 35.62401 2.393199e-09 3.843717e-05
-## ENSG00000144962 -7.757015 1.8291101 33.01236 9.157473e-09 7.353908e-05
-## ENSG00000044446  6.258706 3.6579495 31.79771 1.710940e-08 9.159800e-05
-## ENSG00000169071 -6.816668 0.8677284 30.56531 3.228138e-08 9.302654e-05
-## ENSG00000128683 -5.977243 0.6514647 30.37054 3.569081e-08 9.302654e-05
-## ENSG00000108231  6.633075 1.4514755 30.12366 4.053558e-08 9.302654e-05
-## ENSG00000177483 -8.142323 1.9894202 30.00973 4.298845e-08 9.302654e-05
-## ENSG00000085276 -7.113673 1.8199658 29.86430 4.633661e-08 9.302654e-05
-## ENSG00000112619 -5.232082 0.6578571 28.80205 8.016642e-08 1.345195e-04
-## ENSG00000090554 -4.896455 0.8363723 28.71723 8.375540e-08 1.345195e-04
+## ENSG00000111424 -6.201651 0.8462288 46.63224 8.563976e-12 5.114170e-08
+## ENSG00000197980 -6.186708 0.8368680 46.52578 9.042109e-12 5.114170e-08
+## ENSG00000154227 -6.170589 0.8274457 46.41815 9.552649e-12 5.114170e-08
+## ENSG00000138823 -5.642913 0.5232302 42.63487 6.597285e-11 2.648975e-07
+## ENSG00000267882 -4.751404 0.1288729 36.21474 1.767284e-09 5.676868e-06
+## ENSG00000117152  6.604074 1.1446503 33.76140 6.230290e-09 1.667745e-05
+## ENSG00000184564  6.232844 0.8503488 32.35087 1.286993e-08 2.952913e-05
+## ENSG00000165046 -5.249966 0.4359222 30.27018 3.758596e-08 7.446001e-05
+## ENSG00000167759 -6.817094 1.3172810 29.99466 4.332372e-08 7.446001e-05
+## ENSG00000165115 -8.845112 2.3887858 29.86329 4.636076e-08 7.446001e-05
 ```
 
 ```r
@@ -353,9 +331,9 @@ summary(decideTestsDGE(res3))
 
 ```
 ##    [,1] 
-## -1   331
-## 0  15387
-## 1    343
+## -1   334
+## 0  15368
+## 1    359
 ```
 
 ```r
@@ -365,9 +343,7 @@ plotSmear(
 )
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-10-2} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" />
 
 
 ```r
@@ -377,9 +353,7 @@ dge_ruvs_sf <- estimateDisp(dge_ruvs, design = design_ruvs, trend.method = "none
 plotBCV(dge_ruvs_sf)
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-11-1} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
 
 ```r
 fit4 <- glmFit(dge_ruvs_sf, design_ruvs)
@@ -389,17 +363,17 @@ topTags(res4)
 
 ```
 ## Coefficient:  reads.qc[, keep]$batchNA19101.r3 
-##                     logFC     logCPM       LR       PValue          FDR
-## ENSG00000138650 -7.659682 1.67575067 33.87807 5.867651e-09 0.0000580736
-## ENSG00000044446  6.540458 3.67746787 33.47149 7.231629e-09 0.0000580736
-## ENSG00000144962 -7.676915 1.61779567 31.08434 2.470564e-08 0.0001322658
-## ENSG00000108231  6.591068 1.46349823 29.94053 4.455014e-08 0.0001788800
-## ENSG00000169071 -6.886334 0.72057266 29.36268 6.002242e-08 0.0001927710
-## ENSG00000128683 -5.900157 0.46520459 28.96348 7.375594e-08 0.0001927710
-## ENSG00000085276 -7.020925 1.55238975 28.62206 8.797410e-08 0.0001927710
-## ENSG00000177483 -8.071504 1.83803493 28.45263 9.601941e-08 0.0001927710
-## ENSG00000146021  5.446115 3.17203186 27.10201 1.929969e-07 0.0003256494
-## ENSG00000162989 -5.075773 0.09068354 26.70524 2.369776e-07 0.0003256494
+##                     logFC       logCPM       LR       PValue          FDR
+## ENSG00000111424 -6.281451  0.746154188 45.81432 1.300094e-11 7.757951e-08
+## ENSG00000197980 -6.266449  0.736500540 45.70864 1.372164e-11 7.757951e-08
+## ENSG00000154227 -6.250268  0.726781398 45.60179 1.449091e-11 7.757951e-08
+## ENSG00000138823 -5.720215  0.411697275 41.84588 9.875881e-11 3.965413e-07
+## ENSG00000267882 -4.824953 -0.001287811 35.47194 2.587517e-09 8.311623e-06
+## ENSG00000117152  6.628645  0.996321024 32.89300 9.737339e-09 2.606523e-05
+## ENSG00000184564  6.275212  0.786215495 31.91089 1.614099e-08 3.703434e-05
+## ENSG00000167759 -6.954394  1.078941938 29.29779 6.206642e-08 1.246061e-04
+## ENSG00000165115 -8.928370  2.273562041 28.70860 8.412926e-08 1.360266e-04
+## ENSG00000165046 -5.099561  0.288130401 28.41678 9.781367e-08 1.360266e-04
 ```
 
 ```r
@@ -408,9 +382,9 @@ summary(decideTestsDGE(res4))
 
 ```
 ##    [,1] 
-## -1   264
-## 0  15452
-## 1    345
+## -1   292
+## 0  15428
+## 1    341
 ```
 
 ```r
@@ -420,6 +394,4 @@ plotSmear(
 )
 ```
 
-
-
-\begin{center}\includegraphics{15-remove-conf-reads_files/figure-latex/unnamed-chunk-11-2} \end{center}
+<img src="15-remove-conf-reads_files/figure-html/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />

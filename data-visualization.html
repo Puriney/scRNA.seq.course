@@ -8,7 +8,7 @@
   <title>Analysis of single cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,14 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-  
-<meta name="date" content="2016-11-15">
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+<meta name="date" content="2016-12-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -396,11 +390,11 @@ endog_genes &lt;-<span class="st"> </span>!<span class="kw">fData</span>(umi.qc)
 <h2><span class="header-section-number">9.2</span> PCA plot</h2>
 <p>The easiest thing to overview the data is to transform it using the principal component analysis and then visualize the first two principal components.</p>
 <p><a href="https://en.wikipedia.org/wiki/Principal_component_analysis">Principal component analysis (PCA)</a> is a statistical procedure that uses a transformation to convert a set of observations into a set of values of linearly uncorrelated variables called principal components (PCs). The number of principal components is less than or equal to the number of original variables.</p>
-<p>Mathematically, the PCs correspond to the eigenvectors of the covariance matrix. Typically, the eigenvectors are sorted by eigenvalue so that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components.</p>
+<p>Mathematically, the PCs correspond to the eigenvectors of the covariance matrix. Typically, the eigenvectors are sorted by eigenvalue so that the first principal component accounts for as much of the variability in the data as possible, and each succeeding component in turn has the highest variance possible under the constraint that it is orthogonal to the preceding components (the figure below is taken from <a href="http://www.nlpca.org/pca_principal_component_analysis.html">here</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:clust-pca"></span>
-<img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction (taken from [here](http://www.nlpca.org/pca_principal_component_analysis.html))" width="100%" />
+<img src="figures/pca.png" alt="Schematic representation of PCA dimensionality reduction" width="100%" />
 <p class="caption">
-Figure 9.1: Schematic representation of PCA dimensionality reduction (taken from <a href="http://www.nlpca.org/pca_principal_component_analysis.html">here</a>)
+Figure 9.1: Schematic representation of PCA dimensionality reduction
 </p>
 </div>
 <div id="before-qc" class="section level3">
@@ -532,6 +526,7 @@ Figure 9.9: tSNE map of the blischak data (perplexity = 200)
 require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
@@ -549,7 +544,7 @@ gitbook.start({
 "link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/08-exprs-overview.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["scRNA-seq-course.pdf"],
 "toc": {
 "collapse": "section"
 },

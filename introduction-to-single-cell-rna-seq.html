@@ -8,7 +8,7 @@
   <title>Analysis of single cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,14 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-  
-<meta name="date" content="2016-11-15">
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+<meta name="date" content="2016-12-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -409,9 +403,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="protocol" class="section level2">
 <h2><span class="header-section-number">3.3</span> Protocol</h2>
 <div class="figure" style="text-align: center"><span id="fig:intro-rna-seq-workflow"></span>
-<img src="figures/RNA-Seq_workflow-5.pdf.jpg" alt="Single cell sequencing (taken from [here](https://en.wikipedia.org/wiki/Single_cell_sequencing))" width="90%" />
+<img src="figures/RNA-Seq_workflow-5.pdf.jpg" alt="Single cell sequencing (taken from Wikipedia)" width="90%" />
 <p class="caption">
-Figure 3.1: Single cell sequencing (taken from <a href="https://en.wikipedia.org/wiki/Single_cell_sequencing">here</a>)
+Figure 3.1: Single cell sequencing (taken from Wikipedia)
 </p>
 </div>
 <p>Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by <span class="citation">(Saliba et al. <a href="#ref-Saliba2014-dy">2014</a>)</span>, <span class="citation">(Handley et al. <a href="#ref-Handley2015-yi">2015</a>)</span> or <span class="citation">(Kolodziejczyk et al. <a href="#ref-Kolodziejczyk2015-xy">2015</a>)</span>.</p>
@@ -505,6 +499,7 @@ Figure 3.2: Flowchart of the scRNA-seq analysis
 require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
@@ -522,7 +517,7 @@ gitbook.start({
 "link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/02-intro.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["scRNA-seq-course.pdf"],
 "toc": {
 "collapse": "section"
 },

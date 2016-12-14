@@ -8,7 +8,7 @@
   <title>Analysis of single cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,14 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-  
-<meta name="date" content="2016-11-15">
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+<meta name="date" content="2016-12-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -399,7 +393,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="scater-workflow" class="section level2">
 <h2><span class="header-section-number">6.2</span> scater workflow</h2>
 <div class="figure">
-<img src="figures/scater_qc_workflow.png" alt="" />
+<img src="figures/scater_qc_workflow.png" />
 
 </div>
 </div>
@@ -447,6 +441,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
@@ -464,7 +459,7 @@ gitbook.start({
 "link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/05-scater.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["scRNA-seq-course.pdf"],
 "toc": {
 "collapse": "section"
 },

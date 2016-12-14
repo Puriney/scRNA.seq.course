@@ -8,7 +8,7 @@
   <title>Analysis of single cell RNA-seq data</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="Analysis of single cell RNA-seq data">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="Analysis of single cell RNA-seq data" />
   <meta property="og:type" content="book" />
@@ -25,14 +25,8 @@
 
 <meta name="author" content="Vladimir Kiselev, Tallulah Andrews, Davis McCarthy and Martin Hemberg">
 
-  
-<meta name="date" content="2016-11-15">
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+<meta name="date" content="2016-12-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -405,7 +399,7 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 <caption><span id="tab:unnamed-chunk-4">Table 7.1: </span>A table of the first 6 rows and 3 columns of the molecules table.</caption>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="right">NA19098.r1.A01</th>
 <th align="right">NA19098.r1.A02</th>
 <th align="right">NA19098.r1.A03</th>
@@ -413,37 +407,37 @@ anno &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span clas
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">ENSG00000237683</td>
+<td>ENSG00000237683</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000187634</td>
+<td>ENSG00000187634</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000188976</td>
+<td>ENSG00000188976</td>
 <td align="right">3</td>
 <td align="right">6</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000187961</td>
+<td>ENSG00000187961</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSG00000187583</td>
+<td>ENSG00000187583</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">ENSG00000187642</td>
+<td>ENSG00000187642</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -1011,6 +1005,7 @@ Figure 7.7: Number of total counts consumed by the top 50 expressed genes
 require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
+"github": false,
 "facebook": true,
 "twitter": true,
 "google": false,
@@ -1028,7 +1023,7 @@ gitbook.start({
 "link": "https://github.com/hemberg-lab/scRNA.seq.course/edit/master/06-exprs-qc.Rmd",
 "text": "Edit"
 },
-"download": null,
+"download": ["scRNA-seq-course.pdf"],
 "toc": {
 "collapse": "section"
 },
