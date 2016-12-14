@@ -34,7 +34,7 @@ knit: bookdown::preview_chapter
 
 }
 
-\caption{Single cell sequencing (taken from [here](https://en.wikipedia.org/wiki/Single_cell_sequencing))}(\#fig:intro-rna-seq-workflow)
+\caption{Single cell sequencing (taken from Wikipedia)}(\#fig:intro-rna-seq-workflow)
 \end{figure}
 
 Overall, experimental scRNA-seq protocols are similar to the methods used for bulk RNA-seq. For a discussion on experimental methods, please see reviews by [@Saliba2014-dy], [@Handley2015-yi] or [@Kolodziejczyk2015-xy].
