@@ -218,7 +218,7 @@ ggplot2::ggplot(df_to_plot,
 
 }
 
-\caption{tSNE map of the patient data with 2 colored clusters, identified by the _k_-means clustering algorithm}(\#fig:clust-tsne-kmeans2)
+\caption{tSNE map of the patient data with 2 colored clusters, identified by the k-means clustering algorithm}(\#fig:clust-tsne-kmeans2)
 \end{figure}
 
 __Exercise 7__: Make the same plots for $k=3$, $k=4$ and $k=5$.
