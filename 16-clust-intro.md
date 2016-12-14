@@ -90,7 +90,7 @@ assigned and each cell is assigned to its nearest cluster:
 
 }
 
-\caption{Schematic representation of the _k_-means clustering}(\#fig:clust-k-means)
+\caption{Schematic representation of the k-means clustering}(\#fig:clust-k-means)
 \end{figure}
 
 Most methods for scRNA-seq analysis includes a _k_-means step at some point.
