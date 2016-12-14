@@ -83,10 +83,14 @@ The KS-test quantifies the distance between the empirical cummulative distributi
 knitr::include_graphics("figures/KS2_Example.png")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="figures/KS2_Example.png" alt="Illustration of the two-sample Kolmogorov–Smirnov statistic. Red and blue lines each correspond to an empirical distribution function, and the black arrow is the two-sample KS statistic. (taken from [here](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test))" width="60%" />
-<p class="caption">(\#fig:ks-statistic)Illustration of the two-sample Kolmogorov–Smirnov statistic. Red and blue lines each correspond to an empirical distribution function, and the black arrow is the two-sample KS statistic. (taken from [here](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test))</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics[width=0.6\linewidth]{figures/KS2_Example} 
+
+}
+
+\caption{Illustration of the two-sample Kolmogorov–Smirnov statistic. Red and blue lines each correspond to an empirical distribution function, and the black arrow is the two-sample KS statistic. (taken from [here](https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test))}(\#fig:ks-statistic)
+\end{figure}
 
 
 ```r
@@ -175,10 +179,14 @@ perf <- ROCR::performance(pred, "tpr", "fpr")
 ROCR::plot(perf)  
 ```
 
-<div class="figure" style="text-align: center">
-<img src="21-de-synth_files/figure-html/synthetic-roc-curve-ks-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">(\#fig:synthetic-roc-curve-ks)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{21-de-synth_files/figure-latex/synthetic-roc-curve-ks-1} 
+
+}
+
+\caption{Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets}(\#fig:synthetic-roc-curve-ks)
+\end{figure}
 
 Often we are interested in comparing several ROC curves. To carry out
 such a comparison, we need to summarize the entire curve using only
@@ -237,10 +245,14 @@ perfDESeq <- performance(predDESeq, "tpr", "fpr")
 ROCR::plot(perfDESeq)  
 ```
 
-<div class="figure" style="text-align: center">
-<img src="21-de-synth_files/figure-html/synthetic-roc-curve-deseq-1.png" alt="Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">(\#fig:synthetic-roc-curve-deseq)Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{21-de-synth_files/figure-latex/synthetic-roc-curve-deseq-1} 
+
+}
+
+\caption{Different distributions of read counts for a single genes across 50 cells based on the Poisson-Beta model corresponding to different paramete sets}(\#fig:synthetic-roc-curve-deseq)
+\end{figure}
 
 ```r
 aucObjDESeq <- performance(predDESeq, "auc")
@@ -310,7 +322,8 @@ pValsSCDE <- p.adjust(pValsSCDE, method = "bonferroni")
 __Exercise:__ Calculate an AUROC value and compare to the other methods.
 
 __Our answer__:
-<img src="21-de-synth_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
+
+\begin{center}\includegraphics{21-de-synth_files/figure-latex/unnamed-chunk-8-1} \end{center}
 
 ```
 ## [1] 0.7830042
@@ -340,7 +353,9 @@ limma::vennDiagram(
     circle.col = c("magenta", "blue", "green", "red"))
 ```
 
-<img src="21-de-synth_files/figure-html/synthetic-differentially-expressed-combination-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{21-de-synth_files/figure-latex/synthetic-differentially-expressed-combination-1} \end{center}
 
 ```r
 allChangedInds <- intersect(
@@ -396,19 +411,24 @@ g2 <- synData$sample2
 ```
 
 __Our answer__:
-<img src="21-de-synth_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
+
+\begin{center}\includegraphics{21-de-synth_files/figure-latex/unnamed-chunk-9-1} \end{center}
 
 ```
 ## [1] 0.8460339
 ```
 
-<img src="21-de-synth_files/figure-html/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{21-de-synth_files/figure-latex/unnamed-chunk-9-2} \end{center}
 
 ```
 ## [1] 0.4982175
 ```
 
-<img src="21-de-synth_files/figure-html/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{21-de-synth_files/figure-latex/unnamed-chunk-9-3} \end{center}
 
 ```
 ## [1] 0.4993316

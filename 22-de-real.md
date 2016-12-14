@@ -40,7 +40,9 @@ pheatmap::pheatmap(
 )
 ```
 
-<img src="22-de-real_files/figure-html/de-real-deng-fpkm-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-deng-fpkm-1} \end{center}
 
 As you can see, the cells cluster well by their developmental stage.
 
@@ -150,7 +152,9 @@ vennDiagram(
 )
 ```
 
-<img src="22-de-real_files/figure-html/de-real-comparison-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-comparison-1} \end{center}
 
 __Exercise 1:__ How does this Venn diagram correspond to what you would expect based on the synthetic data? 
 
@@ -183,7 +187,9 @@ hist(log2(meanFoldChange[deSeqGenesChangedInds]),
      col = rgb(0, 0, 1, 1/4))
 ```
 
-<img src="22-de-real_files/figure-html/de-real-deng-hist-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-deng-hist-1} \end{center}
 
 __Exercise 2:__ Create the histogram of fold-changes for SCDE. Compare
 the estimated fold-changes between the different methods? What do the
@@ -215,7 +221,9 @@ points(log2(meanFoldChange[deSeqGenesChangedInds]),
        col = "blue")
 ```
 
-<img src="22-de-real_files/figure-html/de-real-deng-volcano-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-deng-volcano-1} \end{center}
 
 ### MA-plot
 
@@ -241,7 +249,9 @@ points(log2(rowMeans(group1[deSeqGenesChangedInds,])),
        col = "blue")
 ```
 
-<img src="22-de-real_files/figure-html/de-real-deng-ma-plot-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-deng-ma-plot-1} \end{center}
 
 __Exercise 3:__ The volcano and MA-plots for the SCDE are missing - can
 you generate them? Compare to the synthetic data, what do they tell
@@ -262,7 +272,9 @@ pheatmap::pheatmap(log2(1 + deng[allChangedInds,]),
                    show_rownames = FALSE)
 ```
 
-<img src="22-de-real_files/figure-html/de-real-deng-heatmap-1.png" width="672" style="display: block; margin: auto;" />
+
+
+\begin{center}\includegraphics{22-de-real_files/figure-latex/de-real-deng-heatmap-1} \end{center}
 
 __Exercise 4:__ Create heatmaps for the genes that were detected by at least 2/3 methods.
 

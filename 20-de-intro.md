@@ -69,10 +69,14 @@ hist(s,
      main = "Transcript distribution")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-plot-1.png" alt="Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model" width="672" />
-<p class="caption">(\#fig:poisson-beta-plot)Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-plot-1} 
+
+}
+
+\caption{Distribution of read counts for a single genes across 100 cells based on the Poisson-Beta model}(\#fig:poisson-beta-plot)
+\end{figure}
 
 The probability mass function of the Poisson-Beta distribution is
 challenging to work with since it involves special functions. However,
@@ -112,10 +116,14 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2, .3),
      breaks = seq(0, 120, 10))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-shapes-1.png" alt="Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets" width="672" />
-<p class="caption">(\#fig:poisson-beta-shapes)Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-shapes-1} 
+
+}
+
+\caption{Different distributions of read counts for a single genes across 100 cells based on the Poisson-Beta model corresponding to different paramete sets}(\#fig:poisson-beta-shapes)
+\end{figure}
 
 __Exercise 1__: Vary the parameters _a_, _b_ and _k_ to explore how the
 location and shape of the distribution changes.
@@ -141,10 +149,14 @@ hist(scRNA.seq.funcs::PoiBeta(10, .6, 1.2, 50),
      add = TRUE)
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-sample-size-1.png" alt="Effect of sampling size on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">(\#fig:poisson-beta-sample-size)Effect of sampling size on the distribution of read counts based on the Poisson-Beta model</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-sample-size-1} 
+
+}
+
+\caption{Effect of sampling size on the distribution of read counts based on the Poisson-Beta model}(\#fig:poisson-beta-sample-size)
+\end{figure}
 
 __Exercise 2__: Modify the number of samples (i.e. cells) drawn to
 explore how difficult it is to correctly infer the correct shape.
@@ -187,10 +199,14 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2, 3, 100, 100),
      xlim = c(0, 120))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-dropout-example-1.png" alt="Effect of dropouts on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">(\#fig:poisson-beta-dropout-example)Effect of dropouts on the distribution of read counts based on the Poisson-Beta model</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-dropout-example-1} 
+
+}
+
+\caption{Effect of dropouts on the distribution of read counts based on the Poisson-Beta model}(\#fig:poisson-beta-dropout-example)
+\end{figure}
 
 __Exercise 3__: Explore the different parameter regimes for the same
 drop-out rate. Do you think that we are more sensitive to drop-outs in
@@ -221,10 +237,14 @@ points(s,
        col = "blue")
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-analytical-1.png" alt="The mean and the variance of the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">(\#fig:poisson-beta-dispersion-analytical)The mean and the variance of the distribution of read counts based on the Poisson-Beta model</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-dispersion-analytical-1} 
+
+}
+
+\caption{The mean and the variance of the distribution of read counts based on the Poisson-Beta model}(\#fig:poisson-beta-dispersion-analytical)
+\end{figure}
 
 To illustrate the effect of the dispersion parameter on the distribution consider:
 
@@ -251,10 +271,14 @@ hist(scRNA.seq.funcs::PoiBeta(100, 2*10, 3*10, 100),
      xlim = c(0, 120))
 ```
 
-<div class="figure" style="text-align: center">
-<img src="20-de-intro_files/figure-html/poisson-beta-dispersion-effect-1.png" alt="Effect of dispersion on the distribution of read counts based on the Poisson-Beta model" width="672" />
-<p class="caption">(\#fig:poisson-beta-dispersion-effect)Effect of dispersion on the distribution of read counts based on the Poisson-Beta model</p>
-</div>
+\begin{figure}
+
+{\centering \includegraphics{20-de-intro_files/figure-latex/poisson-beta-dispersion-effect-1} 
+
+}
+
+\caption{Effect of dispersion on the distribution of read counts based on the Poisson-Beta model}(\#fig:poisson-beta-dispersion-effect)
+\end{figure}
 
 __Exercise 4__: Explore what happens when you have both drop-outs and
 under/over-dispersion. Can the effects be deconvoluted?
